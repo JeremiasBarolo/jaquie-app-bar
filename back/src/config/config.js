@@ -9,7 +9,6 @@ const config = {
     host: process.env.DB_HOST,
     dialect: 'mysql',
     operatorsAliases: '0',
-    imageFolder: "../public/images"
   },
   test: {
     username: process.env.DB_USER,

@@ -1,14 +1,15 @@
 
 // Requires
 const express = require("express")
-const { 
-    // personasRouter,
+// const { 
+//     personasRouter,
     
- } = require('./routes')
+//  } = require('./routes')
 const { initializeDB } = require('./db/initializeDB');
+require('dotenv').config();
 const cors = require("cors");
-const {checkAdmin} = require('./db/createAdminEntity');
-const { generarPdf } = require("./services/documentos");
+// const {checkAdmin} = require('./db/createAdminEntity');
+// const { generarPdf } = require("./services/documentos");
 
 
 // App Creation
