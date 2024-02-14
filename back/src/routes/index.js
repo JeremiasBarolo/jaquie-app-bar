@@ -6,6 +6,7 @@ const personaRouter = require('./personas');
 const usuariosRouter = require('./usuarios');
 const maestro_articulosRouter = require('./maestro_articulos');
 const disponibilidad_articulosRouter = require('./disponibilidad_articulos');
+const recetaRouter = require('./receta');
 
 module.exports = {
     TipoArticuloRouter,
@@ -14,5 +15,6 @@ module.exports = {
     personaRouter,
     usuariosRouter,
     maestro_articulosRouter,
-    disponibilidad_articulosRouter
+    disponibilidad_articulosRouter,
+    recetaRouter
 };

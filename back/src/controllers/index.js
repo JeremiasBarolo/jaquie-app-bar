@@ -5,6 +5,7 @@ const personasController= require('./personas');
 const usuariosController= require('./usuarios');
 const maestro_articulosController= require('./maestro_articulos');
 const disponibilidad_articulosController= require('./disponibilidad_articulos');
+const recetaController= require('./receta');
 
 
 module.exports= {
@@ -14,5 +15,6 @@ module.exports= {
     personasController,
     usuariosController,
     maestro_articulosController,
-    disponibilidad_articulosController
+    disponibilidad_articulosController,
+    recetaController
 }

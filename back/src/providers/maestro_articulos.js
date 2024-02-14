@@ -6,8 +6,18 @@
     try {
         const maestro_articulos = await models.maestro_articulos.findAll(
             {
-                include: [models.conversion_UM],
-                include: [models.tipo_articulo]
+                // include: {all:true},
+                include: [{
+                    model: models.receta, // Nombre del modelo de la receta
+                    include: [{
+                        model: models.disponibilidad_articulos, 
+                        include:[{
+                            model: models.maestro_articulos,
+                            attributes: ['descripcion'] 
+                        }]
+                        
+                    }]
+                }]
             }
             
         );
@@ -23,10 +33,20 @@
     try {
         const onemaestro_articulos= await models.maestro_articulos.findByPk(maestro_articulos_id, 
             
-                {
-                    include: [models.conversion_UM],
-                    include: [models.tipo_articulo]
-                }
+            {
+                // include: {all:true},
+                include: [{
+                    model: models.receta, // Nombre del modelo de la receta
+                    include: [{
+                        model: models.disponibilidad_articulos, 
+                        include:[{
+                            model: models.maestro_articulos,
+                            attributes: ['descripcion'] 
+                        }]
+                        
+                    }]
+                }]
+            }
             
         );
 

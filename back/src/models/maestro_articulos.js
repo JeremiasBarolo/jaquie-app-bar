@@ -22,14 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       });
 
 
-      // recetas de productos elaborados
-      maestro_articulos.belongsToMany(models.disponibilidad_articulos, {
-        through: 'receta',
-        foreignKey: 'maestroId',
-        onUpdate: 'CASCADE',  
-      });
 
-      
       maestro_articulos.hasOne(models.disponibilidad_articulos, {
         foreignKey: 'articuloId',
         onUpdate: 'CASCADE',
@@ -37,13 +30,17 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       // Ventas
-      maestro_articulos.belongsToMany(models.venta, {
-        through: 'pedido_produccion',
-        foreignKey: 'articuloId',
-        onUpdate: 'CASCADE',  
+      // maestro_articulos.belongsToMany(models.venta, {
+      //   through: 'pedido_produccion',
+      //   foreignKey: 'articuloId',
+      //   onUpdate: 'CASCADE',  
+      // });
+
+      maestro_articulos.hasMany(models.receta, {
+        foreignKey: 'maestroId',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       });
-
-
 
     }
   }

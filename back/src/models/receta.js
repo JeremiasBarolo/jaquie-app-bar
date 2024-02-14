@@ -10,6 +10,19 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
+       
+        receta.belongsTo(models.disponibilidad_articulos, {
+          foreignKey: 'articuloId',
+          onUpdate: 'CASCADE',
+          onDelete: 'CASCADE'
+        });
+
+        
+        receta.belongsTo(models.maestro_articulos, {
+          foreignKey: 'maestroId',
+          onUpdate: 'CASCADE',
+          onDelete: 'CASCADE'
+        });
     }
   }
   receta.init({

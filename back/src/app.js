@@ -8,7 +8,8 @@ const {
     personaRouter,
     usuariosRouter,
     maestro_articulosRouter,
-    disponibilidad_articulosRouter
+    disponibilidad_articulosRouter,
+    recetaRouter
     
  } = require('./routes')
 const { initializeDB } = require('./db/initializeDB');
@@ -34,6 +35,7 @@ app.use("/personas", personaRouter)
 app.use("/usuarios", usuariosRouter)
 app.use("/maestro_articulos", maestro_articulosRouter)
 app.use("/disponibilidad_articulos", disponibilidad_articulosRouter)
+app.use("/receta", recetaRouter)
 
 
 

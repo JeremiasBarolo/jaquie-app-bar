@@ -54,27 +54,27 @@ module.exports = {
 
 
 // <=============================== Pedido Stock y Produccion ===============================> 
-    await queryInterface.addColumn('pedido_stocks', 'articuloId', {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'maestro_articulos',
-        key: 'id'
-      },
-      onUpdate: 'CASCADE',
-      onDelete: 'CASCADE'
-    });
+    // await queryInterface.addColumn('pedido_stocks', 'articuloId', {
+    //   type: Sequelize.INTEGER,
+    //   allowNull: false,
+    //   references: {
+    //     model: 'maestro_articulos',
+    //     key: 'id'
+    //   },
+    //   onUpdate: 'CASCADE',
+    //   onDelete: 'CASCADE'
+    // });
 
-    await queryInterface.addColumn('pedido_produccions', 'articuloId', {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'maestro_articulos',
-        key: 'id'
-      },
-      onUpdate: 'CASCADE',
-      onDelete: 'CASCADE'
-    });
+    // await queryInterface.addColumn('pedido_produccions', 'articuloId', {
+    //   type: Sequelize.INTEGER,
+    //   allowNull: false,
+    //   references: {
+    //     model: 'maestro_articulos',
+    //     key: 'id'
+    //   },
+    //   onUpdate: 'CASCADE',
+    //   onDelete: 'CASCADE'
+    // });
 // <=============================== Fin Pedido Stock y Produccion ===============================> 
 
 
@@ -152,13 +152,13 @@ await queryInterface.addColumn('usuarios', 'personaId', {
     // <=============================== Fin Recetas ===============================> 
 
     // <=============================== Pedido Stock y Produccion ===============================> 
-    await queryInterface.removeColumn('pedido_stocks', 'articuloId');
-    await queryInterface.removeColumn('pedido_produccions', 'articuloId');
+    // await queryInterface.removeColumn('pedido_stocks', 'articuloId');
+    // await queryInterface.removeColumn('pedido_produccions', 'articuloId');
     // <=============================== Fin Pedido Stock y Produccion ===============================> 
 
     // <=============================== Disponibilidad de Articulos ===============================> 
     await queryInterface.removeColumn('disponibilidad_articulos', 'articuloId');
-    await queryInterface.removeColumn('disponibilidad_articulos', 'unidad_medida');
+    await queryInterface.removeColumn('disponibilidad_articulos', 'conversionId');
     // <=============================== Fin Disponibilidad de Articulos  ===============================> 
 
     // <=============================== Ventas ===============================> 
