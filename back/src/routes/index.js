@@ -5,7 +5,7 @@ const estadisticaRouter = require('./estadistica');
 const personaRouter = require('./personas');
 const usuariosRouter = require('./usuarios');
 const maestro_articulosRouter = require('./maestro_articulos');
-
+const disponibilidad_articulosRouter = require('./disponibilidad_articulos');
 
 module.exports = {
     TipoArticuloRouter,
@@ -13,5 +13,6 @@ module.exports = {
     estadisticaRouter,
     personaRouter,
     usuariosRouter,
-    maestro_articulosRouter
+    maestro_articulosRouter,
+    disponibilidad_articulosRouter
 };

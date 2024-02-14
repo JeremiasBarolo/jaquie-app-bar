@@ -5,6 +5,7 @@ const estadisticaProvider = require('./estadistica');
 const personasProvider = require('./personas');
 const usuariosProvider = require('./usuarios');
 const maestro_articulosProvider = require('./maestro_articulos');
+const disponibilidad_articulosProvider = require('./disponibilidad_articulos');
 
 
 
@@ -15,5 +16,6 @@ module.exports = {
     estadisticaProvider,
     personasProvider,
     usuariosProvider,
-    maestro_articulosProvider
+    maestro_articulosProvider,
+    disponibilidad_articulosProvider
 };

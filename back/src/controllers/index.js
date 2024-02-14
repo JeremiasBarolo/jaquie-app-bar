@@ -4,6 +4,7 @@ const estadisticaController= require('./estadistica');
 const personasController= require('./personas');
 const usuariosController= require('./usuarios');
 const maestro_articulosController= require('./maestro_articulos');
+const disponibilidad_articulosController= require('./disponibilidad_articulos');
 
 
 module.exports= {
@@ -12,5 +13,6 @@ module.exports= {
     estadisticaController,
     personasController,
     usuariosController,
-    maestro_articulosController
+    maestro_articulosController,
+    disponibilidad_articulosController
 }

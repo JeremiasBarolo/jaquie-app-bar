@@ -22,6 +22,12 @@
     const listOnemaestro_articulos= async (maestro_articulos_id) => {
     try {
         const onemaestro_articulos= await models.maestro_articulos.findByPk(maestro_articulos_id, 
+            
+                {
+                    include: [models.conversion_UM],
+                    include: [models.tipo_articulo]
+                }
+            
         );
 
         if (!onemaestro_articulos) {

@@ -10,7 +10,17 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      // relacion comversion
+      disponibilidad_articulos.belongsTo(models.conversion_UM, {
+        foreignKey: 'conversionId',
+        onUpdate: 'CASCADE',
+      });
+
+      disponibilidad_articulos.belongsTo(models.maestro_articulos, {
+        foreignKey: 'articuloId',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      });
     }
   }
   disponibilidad_articulos.init({

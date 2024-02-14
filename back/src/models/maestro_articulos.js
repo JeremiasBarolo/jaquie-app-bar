@@ -29,11 +29,11 @@ module.exports = (sequelize, DataTypes) => {
         onUpdate: 'CASCADE',  
       });
 
-      // Disponibilidad de Articulos
-      maestro_articulos.belongsToMany(models.disponibilidad_articulos, {
-        through: 'pedido_stock',
+      
+      maestro_articulos.hasOne(models.disponibilidad_articulos, {
         foreignKey: 'articuloId',
-        onUpdate: 'CASCADE',  
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       });
 
       // Ventas

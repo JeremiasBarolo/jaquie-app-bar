@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       })
 
       conversion_UM.hasMany(models.disponibilidad_articulos, {
-        foreignKey: 'unidad_medida'
+        foreignKey: 'conversionId'
       })
     }
   }
