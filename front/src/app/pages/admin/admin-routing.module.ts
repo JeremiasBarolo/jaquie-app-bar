@@ -10,9 +10,15 @@ import { AdminComponent } from './admin.component';
 
 
 const routes: Routes = [
-  { path: '', component: AdminComponent},
-  { path: 'inicio', component: InicioComponent},
-  { path: '**', redirectTo: 'inicio' },
+  {
+    path: '', component: AdminComponent,
+    children: [
+      { path: 'inicio', component: InicioComponent},
+      { path: '**', redirectTo: 'inicio' },
+    
+    ]
+
+  }
 
     
 
