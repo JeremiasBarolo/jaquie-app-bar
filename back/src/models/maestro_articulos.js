@@ -22,21 +22,6 @@ module.exports = (sequelize, DataTypes) => {
       });
 
 
-
-      // Para crear articulos por pedidos
-      maestro_articulos.hasMany(models.pedido_stock, {
-        foreignKey: 'articuloId',
-        onUpdate: 'CASCADE',
-      });
-
-
-      // Para crear pedidos de las mesas
-      maestro_articulos.hasMany(models.pedido_produccion, {
-        foreignKey: 'articuloId',
-        onUpdate: 'CASCADE',
-      });
-
-
       // recetas de productos elaborados
       maestro_articulos.belongsToMany(models.disponibilidad_articulos, {
         through: 'receta',
@@ -45,14 +30,14 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       // Disponibilidad de Articulos
-      maestro_articulos.hasMany(models.disponibilidad_articulos, {
+      maestro_articulos.belongsToMany(models.disponibilidad_articulos, {
         through: 'pedido_stock',
         foreignKey: 'articuloId',
         onUpdate: 'CASCADE',  
       });
 
       // Ventas
-      maestro_articulos.hasMany(models.venta, {
+      maestro_articulos.belongsToMany(models.venta, {
         through: 'pedido_produccion',
         foreignKey: 'articuloId',
         onUpdate: 'CASCADE',  

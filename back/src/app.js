@@ -1,10 +1,14 @@
 
 // Requires
 const express = require("express")
-// const { 
-//     personasRouter,
+const { 
+    TipoArticuloRouter,
+    conversion_UMRouter,
+    estadisticaRouter,
+    personaRouter,
+    usuariosRouter
     
-//  } = require('./routes')
+ } = require('./routes')
 const { initializeDB } = require('./db/initializeDB');
 require('dotenv').config();
 const cors = require("cors");
@@ -21,7 +25,11 @@ app.use(express.json())
 app.use(cors());
 
 // Routes
-// app.use("/personas", personasRouter)
+app.use("/tipo_articulo", TipoArticuloRouter)
+app.use("/conversion_UM", conversion_UMRouter)
+app.use("/estadistica", estadisticaRouter)
+app.use("/personas", personaRouter)
+app.use("/usuarios", usuariosRouter)
 
 
 
