@@ -6,7 +6,8 @@ const {
     conversion_UMRouter,
     estadisticaRouter,
     personaRouter,
-    usuariosRouter
+    usuariosRouter,
+    maestro_articulosRouter
     
  } = require('./routes')
 const { initializeDB } = require('./db/initializeDB');
@@ -30,6 +31,7 @@ app.use("/conversion_UM", conversion_UMRouter)
 app.use("/estadistica", estadisticaRouter)
 app.use("/personas", personaRouter)
 app.use("/usuarios", usuariosRouter)
+app.use("/maestro_articulos", maestro_articulosRouter)
 
 
 

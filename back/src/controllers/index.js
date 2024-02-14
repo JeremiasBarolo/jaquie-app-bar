@@ -3,6 +3,7 @@ const conversion_UMController= require('./conversion_UM');
 const estadisticaController= require('./estadistica');
 const personasController= require('./personas');
 const usuariosController= require('./usuarios');
+const maestro_articulosController= require('./maestro_articulos');
 
 
 module.exports= {
@@ -10,5 +11,6 @@ module.exports= {
     conversion_UMController,
     estadisticaController,
     personasController,
-    usuariosController
+    usuariosController,
+    maestro_articulosController
 }

@@ -4,6 +4,7 @@ const conversion_UMService = require('./conversion_UM');
 const estadisticaService = require('./estadistica');
 const personasService = require('./personas');
 const usuariosService = require('./usuarios');
+const maestro_articulosService = require('./maestro_articulos');
 
 
 
@@ -12,5 +13,6 @@ module.exports = {
     conversion_UMService,
     estadisticaService,
     personasService,
-    usuariosService
+    usuariosService,
+    maestro_articulosService
 };

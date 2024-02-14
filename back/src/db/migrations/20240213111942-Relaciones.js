@@ -4,9 +4,9 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
 
 // <=============================== Maestro de articulos ===============================> 
-    await queryInterface.addColumn('maestro_articulos', 'tipo_articulo', {
+    await queryInterface.addColumn('maestro_articulos', 'tipoId', {
       type: Sequelize.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: 'tipo_articulos',
         key: 'id'
@@ -15,9 +15,9 @@ module.exports = {
       onDelete: 'CASCADE'
     });
 
-    await queryInterface.addColumn('maestro_articulos', 'unidad_medida', {
+    await queryInterface.addColumn('maestro_articulos', 'conversionId', {
       type: Sequelize.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: 'conversion_UMs',
         key: 'id'
@@ -82,7 +82,7 @@ module.exports = {
 // <=============================== Disponibilidad de Articulos ===============================> 
     await queryInterface.addColumn('disponibilidad_articulos', 'articuloId', {
       type: Sequelize.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: 'maestro_articulos',
         key: 'id'
@@ -91,7 +91,7 @@ module.exports = {
       onDelete: 'CASCADE'
     });
 
-    await queryInterface.addColumn('disponibilidad_articulos', 'unidad_medida', {
+    await queryInterface.addColumn('disponibilidad_articulos', 'conversionId', {
       type: Sequelize.INTEGER,
       allowNull: false,
       references: {
@@ -142,8 +142,8 @@ await queryInterface.addColumn('usuarios', 'personaId', {
   down: async (queryInterface, Sequelize) => {
     
     // <=============================== Maestro de articulos ===============================> 
-    await queryInterface.removeColumn('maestro_articulos', 'tipo_articulo');
-    await queryInterface.removeColumn('maestro_articulos', 'unidad_medida');
+    await queryInterface.removeColumn('maestro_articulos', 'tipoId');
+    await queryInterface.removeColumn('maestro_articulos', 'conversionId');
     // <=============================== Fin Maestro de articulos ===============================> 
 
     // <=============================== Recetas ===============================> 

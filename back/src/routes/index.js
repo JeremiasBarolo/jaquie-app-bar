@@ -4,6 +4,7 @@ const conversion_UMRouter = require('./conversion_UM');
 const estadisticaRouter = require('./estadistica');
 const personaRouter = require('./personas');
 const usuariosRouter = require('./usuarios');
+const maestro_articulosRouter = require('./maestro_articulos');
 
 
 module.exports = {
@@ -11,5 +12,6 @@ module.exports = {
     conversion_UMRouter,
     estadisticaRouter,
     personaRouter,
-    usuariosRouter
+    usuariosRouter,
+    maestro_articulosRouter
 };

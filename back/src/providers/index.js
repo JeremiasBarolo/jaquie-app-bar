@@ -4,6 +4,8 @@ const conversion_UMProvider = require('./conversion_UM');
 const estadisticaProvider = require('./estadistica');
 const personasProvider = require('./personas');
 const usuariosProvider = require('./usuarios');
+const maestro_articulosProvider = require('./maestro_articulos');
+
 
 
 
@@ -12,5 +14,6 @@ module.exports = {
     conversion_UMProvider,
     estadisticaProvider,
     personasProvider,
-    usuariosProvider
+    usuariosProvider,
+    maestro_articulosProvider
 };
