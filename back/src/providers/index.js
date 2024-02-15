@@ -7,6 +7,7 @@ const usuariosProvider = require('./usuarios');
 const maestro_articulosProvider = require('./maestro_articulos');
 const disponibilidad_articulosProvider = require('./disponibilidad_articulos');
 const recetaProvider = require('./receta');
+const ventaProvider = require('./venta');
 
 
 
@@ -19,5 +20,6 @@ module.exports = {
     usuariosProvider,
     maestro_articulosProvider,
     disponibilidad_articulosProvider,
-    recetaProvider
+    recetaProvider,
+    ventaProvider
 };

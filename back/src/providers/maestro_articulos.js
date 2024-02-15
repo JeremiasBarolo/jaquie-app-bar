@@ -6,9 +6,9 @@
     try {
         const maestro_articulos = await models.maestro_articulos.findAll(
             {
-                // include: {all:true},
+                include: {all:true},
                 include: [{
-                    model: models.receta, // Nombre del modelo de la receta
+                    model: models.receta, 
                     include: [{
                         model: models.disponibilidad_articulos, 
                         include:[{
@@ -34,9 +34,10 @@
         const onemaestro_articulos= await models.maestro_articulos.findByPk(maestro_articulos_id, 
             
             {
-                // include: {all:true},
+                include: [{model: models.tipo_articulo}],
+                include: [{model: models.conversion_UM}],
                 include: [{
-                    model: models.receta, // Nombre del modelo de la receta
+                    model: models.receta, 
                     include: [{
                         model: models.disponibilidad_articulos, 
                         include:[{

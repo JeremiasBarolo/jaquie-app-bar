@@ -29,12 +29,13 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: 'CASCADE'
       });
 
-      // Ventas
-      // maestro_articulos.belongsToMany(models.venta, {
-      //   through: 'pedido_produccion',
-      //   foreignKey: 'articuloId',
-      //   onUpdate: 'CASCADE',  
-      // });
+      // Venta - Maestro de Articulos
+      maestro_articulos.belongsToMany(models.venta, {
+        through: models.pedido_produccion,
+        foreignKey: 'maestroId',
+      }
+         
+      );
 
       maestro_articulos.hasMany(models.receta, {
         foreignKey: 'maestroId',
