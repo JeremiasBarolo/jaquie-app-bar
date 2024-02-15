@@ -8,57 +8,55 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
 
 
-      // relacion con tipo de articulo
+      // Relacion con tipo de articulo
       maestro_articulos.belongsTo(models.tipo_articulo, {
         foreignKey: 'tipoId',
         onUpdate: 'CASCADE',
       });
 
 
-      // relacion comversion
+      // Relacion comversion
       maestro_articulos.belongsTo(models.conversion_UM, {
         foreignKey: 'conversionId',
         onUpdate: 'CASCADE',
       });
 
 
+      // Disponibilidad de Articulos
+      maestro_articulos.hasOne(models.disponibilidad_articulos, {
+        foreignKey: 'articuloId',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      });
 
-      // Para crear articulos por pedidos
+      // Venta - Maestro de Articulos
+      maestro_articulos.belongsToMany(models.venta, {
+        through: models.pedido_produccion,
+        foreignKey: 'maestroId',
+      }
+         
+      );
+
+      // Recetas
+      maestro_articulos.hasMany(models.receta, {
+        foreignKey: 'maestroId',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      });
+
+      // Pedido de Stock  
       maestro_articulos.hasMany(models.pedido_stock, {
         foreignKey: 'articuloId',
-        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
       });
 
-
-      // Para crear pedidos de las mesas
+      // Pedido de Produccion
       maestro_articulos.hasMany(models.pedido_produccion, {
-        foreignKey: 'articuloId',
-        onUpdate: 'CASCADE',
-      });
-
-
-      // recetas de productos elaborados
-      maestro_articulos.belongsToMany(models.disponibilidad_articulos, {
-        through: 'receta',
         foreignKey: 'maestroId',
-        onUpdate: 'CASCADE',  
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
       });
-
-      // Disponibilidad de Articulos
-      maestro_articulos.hasMany(models.disponibilidad_articulos, {
-        through: 'pedido_stock',
-        foreignKey: 'articuloId',
-        onUpdate: 'CASCADE',  
-      });
-
-      // Ventas
-      maestro_articulos.hasMany(models.venta, {
-        through: 'pedido_produccion',
-        foreignKey: 'articuloId',
-        onUpdate: 'CASCADE',  
-      });
-
-
 
     }
   }

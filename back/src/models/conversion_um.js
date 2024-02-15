@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       conversion_UM.hasMany(models.maestro_articulos, {
-        foreignKey: 'conversionId'
+        foreignKey: 'conversionId',
       })
 
       conversion_UM.hasMany(models.disponibilidad_articulos, {

@@ -10,9 +10,15 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      pedido_stock.belongsToMany(models.disponibilidad_articulos, {
-        foreignKey: 'pedidoId',
-        onUpdate: 'CASCADE',
+
+      // Relación con Maestro de Artículos
+      pedido_stock.belongsTo(models.maestro_articulos, { 
+        foreignKey: 'articuloId' 
+      });
+
+    // Relación con Disponibilidad de Artículos
+      pedido_stock.hasOne(models.disponibilidad_articulos, { 
+        foreignKey: 'articuloId' 
       });
     }
   }

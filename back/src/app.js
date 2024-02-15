@@ -1,10 +1,20 @@
 
 // Requires
 const express = require("express")
-// const { 
-//     personasRouter,
+const { 
+    TipoArticuloRouter,
+    conversion_UMRouter,
+    estadisticaRouter,
+    personaRouter,
+    usuariosRouter,
+    maestro_articulosRouter,
+    disponibilidad_articulosRouter,
+    recetaRouter,
+    ventaRouter,
+    pedido_stockRouter,
+    pedido_produccionRouter
     
-//  } = require('./routes')
+ } = require('./routes')
 const { initializeDB } = require('./db/initializeDB');
 require('dotenv').config();
 const cors = require("cors");
@@ -21,7 +31,17 @@ app.use(express.json())
 app.use(cors());
 
 // Routes
-// app.use("/personas", personasRouter)
+app.use("/tipo_articulo", TipoArticuloRouter)
+app.use("/conversion_UM", conversion_UMRouter)
+app.use("/estadistica", estadisticaRouter)
+app.use("/personas", personaRouter)
+app.use("/usuarios", usuariosRouter)
+app.use("/maestro_articulos", maestro_articulosRouter)
+app.use("/disponibilidad_articulos", disponibilidad_articulosRouter)
+app.use("/receta", recetaRouter)
+app.use("/venta", ventaRouter)
+app.use("/pedido_stock", pedido_stockRouter)
+app.use("/pedido_produccion", pedido_produccionRouter)
 
 
 
