@@ -8,6 +8,8 @@ const maestro_articulosService = require('./maestro_articulos');
 const disponibilidad_articulosService = require('./disponibilidad_articulos');
 const recetaService = require('./receta');
 const ventaService = require('./venta');
+const pedido_stockService = require('./pedido_stock');
+const pedido_produccionService = require('./pedido_produccion');
 
 
 
@@ -20,5 +22,7 @@ module.exports = {
     maestro_articulosService,
     disponibilidad_articulosService,
     recetaService,
-    ventaService
+    ventaService,
+    pedido_stockService,
+    pedido_produccionService
 };

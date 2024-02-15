@@ -10,7 +10,9 @@ const {
     maestro_articulosRouter,
     disponibilidad_articulosRouter,
     recetaRouter,
-    ventaRouter
+    ventaRouter,
+    pedido_stockRouter,
+    pedido_produccionRouter
     
  } = require('./routes')
 const { initializeDB } = require('./db/initializeDB');
@@ -38,6 +40,8 @@ app.use("/maestro_articulos", maestro_articulosRouter)
 app.use("/disponibilidad_articulos", disponibilidad_articulosRouter)
 app.use("/receta", recetaRouter)
 app.use("/venta", ventaRouter)
+app.use("/pedido_stock", pedido_stockRouter)
+app.use("/pedido_produccion", pedido_produccionRouter)
 
 
 

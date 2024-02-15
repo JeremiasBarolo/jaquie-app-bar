@@ -41,12 +41,6 @@
         
         return newventa;
 
-        // const newventa= await models.pedido_produccion.create(Dataventa);
-        
-        // return newventa;
-
-        
-
         
         
     } catch (err) {

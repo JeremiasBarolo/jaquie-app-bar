@@ -8,21 +8,21 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
 
 
-      // relacion con tipo de articulo
+      // Relacion con tipo de articulo
       maestro_articulos.belongsTo(models.tipo_articulo, {
         foreignKey: 'tipoId',
         onUpdate: 'CASCADE',
       });
 
 
-      // relacion comversion
+      // Relacion comversion
       maestro_articulos.belongsTo(models.conversion_UM, {
         foreignKey: 'conversionId',
         onUpdate: 'CASCADE',
       });
 
 
-
+      // Disponibilidad de Articulos
       maestro_articulos.hasOne(models.disponibilidad_articulos, {
         foreignKey: 'articuloId',
         onUpdate: 'CASCADE',
@@ -37,10 +37,25 @@ module.exports = (sequelize, DataTypes) => {
          
       );
 
+      // Recetas
       maestro_articulos.hasMany(models.receta, {
         foreignKey: 'maestroId',
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
+      });
+
+      // Pedido de Stock  
+      maestro_articulos.hasMany(models.pedido_stock, {
+        foreignKey: 'articuloId',
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
+      });
+
+      // Pedido de Produccion
+      maestro_articulos.hasMany(models.pedido_produccion, {
+        foreignKey: 'maestroId',
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
       });
 
     }

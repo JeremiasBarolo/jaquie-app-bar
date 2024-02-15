@@ -7,6 +7,8 @@ const maestro_articulosController= require('./maestro_articulos');
 const disponibilidad_articulosController= require('./disponibilidad_articulos');
 const recetaController= require('./receta');
 const ventaController= require('./venta');
+const pedido_stockController= require('./pedido_stock');
+const pedido_produccionController= require('./pedido_produccion');
 
 
 module.exports= {
@@ -18,5 +20,7 @@ module.exports= {
     maestro_articulosController,
     disponibilidad_articulosController,
     recetaController,
-    ventaController
+    ventaController,
+    pedido_stockController,
+    pedido_produccionController
 }

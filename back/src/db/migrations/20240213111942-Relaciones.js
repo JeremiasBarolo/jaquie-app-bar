@@ -76,6 +76,17 @@ module.exports = {
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE'
     });
+
+    await queryInterface.addColumn('pedido_stocks', 'articuloId', {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'maestro_articulos',
+        key: 'id'
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE'
+    });
 // <=============================== Fin Pedido Stock y Produccion ===============================> 
     
 
@@ -138,6 +149,7 @@ await queryInterface.addColumn('usuarios', 'personaId', {
     // <=============================== Pedido Stock y Produccion ===============================> 
     await queryInterface.removeColumn('pedido_produccions', 'ventaId');
     await queryInterface.removeColumn('pedido_produccions', 'maestroId');
+    await queryInterface.removeColumn('pedido_stocks', 'articuloId');
     // <=============================== Fin Pedido Stock y Produccion ===============================> 
 
     // <=============================== Disponibilidad de Articulos ===============================> 

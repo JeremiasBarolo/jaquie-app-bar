@@ -4,23 +4,28 @@
 
     const listAllmaestro_articulos= async () => {
     try {
-        const maestro_articulos = await models.maestro_articulos.findAll(
-            {
-                include: {all:true},
-                include: [{
-                    model: models.receta, 
-                    include: [{
-                        model: models.disponibilidad_articulos, 
-                        include:[{
-                            model: models.maestro_articulos,
-                            attributes: ['descripcion'] 
-                        }]
-                        
-                    }]
-                }]
-            }
-            
-        );
+        const maestro_articulos = await models.maestro_articulos.findAll({
+                include: [
+                    { model: models.tipo_articulo },
+                    { model: models.conversion_UM },
+                    { model: models.pedido_stock },
+                    { model: models.pedido_produccion },
+                    {
+                        model: models.receta,
+                        include: [
+                            {
+                                model: models.disponibilidad_articulos,
+                                include: [
+                                    {
+                                        model: models.maestro_articulos,
+                                        attributes: ['descripcion']
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            });
         console.log('✅ maestro_articulos were found');
         return maestro_articulos;
     } catch (err) {
@@ -29,37 +34,37 @@
     }
     };
 
-    const listOnemaestro_articulos= async (maestro_articulos_id) => {
-    try {
-        const onemaestro_articulos= await models.maestro_articulos.findByPk(maestro_articulos_id, 
-            
-            {
-                include: [{model: models.tipo_articulo}],
-                include: [{model: models.conversion_UM}],
-                include: [{
-                    model: models.receta, 
-                    include: [{
-                        model: models.disponibilidad_articulos, 
-                        include:[{
-                            model: models.maestro_articulos,
-                            attributes: ['descripcion'] 
-                        }]
-                        
-                    }]
-                }]
+    const listOnemaestro_articulos = async (maestro_articulos_id) => {
+        try {
+            const onemaestro_articulos = await models.maestro_articulos.findByPk(maestro_articulos_id, {
+                include: [
+                    { model: models.tipo_articulo },
+                    { model: models.conversion_UM },
+                    { model: models.pedido_stock, as: 'pedido_stock' },
+                    {
+                        model: models.receta,
+                        include: [
+                            {
+                                model: models.disponibilidad_articulos,
+                                include: [
+                                    {
+                                        model: models.maestro_articulos,
+                                        attributes: ['descripcion']
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            });
+    
+            if (!onemaestro_articulos) {
+                return null;
             }
-            
-        );
-
-        if (!onemaestro_articulos) {
-        
-        return null;
+            return onemaestro_articulos;
+        } catch (err) {
+            throw err;
         }
-        return onemaestro_articulos;
-    } catch (err) {
-        
-        throw err;
-    }
     };
 
     const createmaestro_articulos= async (Datamaestro_articulos) => {
@@ -70,6 +75,7 @@
         const newmaestro_articulos= await models.maestro_articulos.create(Datamaestro_articulos);
         
         return newmaestro_articulos;
+
         
     } catch (err) {
         console.error('🛑 Error when creating maestro_articulos', err);
