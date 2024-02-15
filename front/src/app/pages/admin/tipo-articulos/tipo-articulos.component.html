@@ -1,0 +1,212 @@
+<app-breadcrumbs [titulo]= 'breadcrumbItems'></app-breadcrumbs>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h3>Tipos de Artículos</h3>
+            <div class="text-right">
+                <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#modalCrearTipo" aria-label="Editar Tipo">Agregar Tipo</button>
+            </div>
+            <section style="margin: 16px">
+                <table class="table table-hover">
+                   
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Descripción</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr *ngFor="let tipo of tipoArticulos" data-target="#Modal" data-toggle="modal">
+                            <th scope="row">{{ tipo.id }}</th>
+                            <td>{{ tipo.description }}</td>
+                            <td>
+                                <!-- Botones para editar y borrar el tipo de artículo -->
+                                <div class="wrapper d-flex justify-content-end">
+                                    <button (click)="editarTipo(tipo)" type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#modalCrearTipo" aria-label="Editar Tipo" >
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-danger ms-4" data-toggle="modal" data-target="#EliminarTipo" (click)="DataEntidad(tipo)" aria-label="Borrar Tipo">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+        <div class="col">
+            <h3>Unidades de Medida</h3>
+            <div class="text-right">
+                <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#modalCrearConversion">Agregar Unidad de Medida</button>
+            </div>
+            <section style="margin: 16px">
+                <table class="table table-hover">
+                   
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Unidad Principal</th>
+                            <th scope="col"></th>
+                            <th scope="col">Unidad Secundaria</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr *ngFor="let conversion of conversionUm" data-target="#Modal" data-toggle="modal">
+                            <th scope="row">{{ conversion.id }}</th>
+                            <td>{{ conversion.cant_principal}} {{ conversion.uni_medida }}</td>
+                            <td>====></td>
+                            <td>{{ conversion.cant_secundaria }} {{ conversion.seg_umedida }}</td>
+                            <td>
+                                <!-- Botones para editar y borrar el tipo de artículo -->
+                                <div class="wrapper d-flex justify-content-end">
+                                    <button  routerLinkActive="router-link-active" type="button" class="btn btn-outline-primary" 
+                                    data-toggle="modal" data-target="#modalCrearConversion" (click)="editarConversion(conversion)" aria-label="Editar Tipo">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-danger ms-4" 
+                                    data-toggle="modal" data-target="#EliminarConversion" (click)="DataEntidad(conversion)">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </div>
+</div>
+
+
+<!-- <======================================= MODALES ===================================> -->
+
+<!-- Modal para crear un nuevo tipo de artículo -->
+<div class="modal fade" id="modalCrearTipo" tabindex="-1" role="dialog" aria-labelledby="modalCrearTipoLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCrearTipoLabel">Crear/Editar Tipo de Artículo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="tipoForm" (ngSubmit)="guardarNuevoTipo()">
+                    <div class="form-group">
+                      <label for="nombreTipo">Descricion</label>
+                      <input type="text" class="form-control" id="nombreTipo" formControlName="description">
+                      <div *ngIf="tipoForm.get('nombre')?.invalid && tipoForm.get('nombre')?.touched" class="text-danger">
+                        Descripcion del tipo es requerido
+                      </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para eliminar tipo de artículo -->
+<div class="modal fade" id="EliminarTipo" tabindex="-1" role="dialog" aria-labelledby="modalCrearTipoLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCrearTipoLabel">Desea usted eliminar este Tipo de Articulo?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                
+                <p>Eliminar este tipo de Articulo causara que todas las entidades que estes enlazadas a el queden sin un tipo de articulo definido.</p>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" (click)="EliminarArticulo()">Eliminar</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Volver</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal para crear un nuevo tipo de artículo -->
+<div class="modal fade" id="modalCrearConversion" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="">Crear/Editar Tipo de Artículo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="conversionForm" (ngSubmit)="guardarNuevaConversion()" >
+                    <div class="form-group">
+
+                      <label for="nombreTipo">Unidad Principal</label>
+                      <input type="text" class="form-control" id="nombreTipo" formControlName="uni_medida">
+                      <div *ngIf="tipoForm.get('uni_medida')?.invalid && tipoForm.get('uni_medida')?.touched" class="text-danger">
+                        La Unidad Principal es requerida.
+                      </div>
+
+                      <label for="nombreTipo">Valor Principal</label>
+                      <input type="text" class="form-control" id="nombreTipo" formControlName="cant_principal">
+                      <div *ngIf="tipoForm.get('seg_umedida')?.invalid && tipoForm.get('seg_umedida')?.touched" class="text-danger">
+                        
+                        La Cantidad Principal es requerida.
+                      </div>
+
+                      <label for="nombreTipo">Unidad Secundaria</label>
+                      <input type="text" class="form-control" id="nombreTipo" formControlName="seg_umedida">
+                      <div *ngIf="tipoForm.get('cant_principal')?.invalid && tipoForm.get('cant_principal')?.touched" class="text-danger">
+                        La Unidad Secundaria es requerida.
+                      </div>
+
+                      <label for="nombreTipo">Valor Secundario</label>
+                      <input type="text" class="form-control" id="nombreTipo" formControlName="cant_secundaria">
+                      <div *ngIf="tipoForm.get('nombre')?.invalid && tipoForm.get('nombre')?.touched" class="text-danger">
+                         La Cantidad Secundaria es requerida.
+                      </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para eliminar Conversion-->
+<div class="modal fade" id="EliminarConversion" tabindex="-1" role="dialog" aria-labelledby="modalCrearTipoLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCrearTipoLabel">Desea usted eliminar esta Conversion?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                
+                <p>Eliminar esta conversion causara que todas las entidades que estes enlazadas a ella queden sin una conversion definida.</p>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" (click)="EliminarConversion()">Eliminar</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Volver</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
