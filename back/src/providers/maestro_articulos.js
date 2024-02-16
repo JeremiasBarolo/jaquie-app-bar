@@ -71,8 +71,14 @@
     
 
     try {
+        const maestroNuevo= {
+            costo_unitario: Datamaestro_articulos.costo_unitario,
+            descripcion: Datamaestro_articulos.descripcion,
+            tipoId: Datamaestro_articulos.tipoArticulo,
+            conversionId: Datamaestro_articulos.conversionUM
+        }
         
-        const newmaestro_articulos= await models.maestro_articulos.create(Datamaestro_articulos);
+        const newmaestro_articulos= await models.maestro_articulos.create(maestroNuevo);
         
         return newmaestro_articulos;
 
@@ -84,13 +90,18 @@
     };
 
     const updatemaestro_articulos= async (maestro_articulos_id, dataUpdated) => {
-    
+        const maestroNuevo= {
+            costo_unitario: dataUpdated.costo_unitario,
+            descripcion: dataUpdated.descripcion,
+            tipoId: dataUpdated.tipoArticulo,
+            conversionId: dataUpdated.conversionUM
+        }
 
     try {
 
         const oldmaestro_articulos= await models.maestro_articulos.findByPk(maestro_articulos_id);
         
-        let newmaestro_articulos = await oldmaestro_articulos.update(dataUpdated);
+        let newmaestro_articulos = await oldmaestro_articulos.update(maestroNuevo);
 
         return newmaestro_articulos;
     } catch (err) {

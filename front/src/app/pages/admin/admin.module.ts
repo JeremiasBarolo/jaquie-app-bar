@@ -8,6 +8,7 @@ import { InicioComponent } from './inicio/inicio.component';
 import { AdminComponent } from './admin.component';
 import { TipoArticulosComponent } from './tipo-articulos/tipo-articulos.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MaestroArticulosComponent } from './maestro-articulos/maestro-articulos.component';
 
 
 
@@ -17,7 +18,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   declarations: [
     AdminComponent,
     InicioComponent,
-    TipoArticulosComponent
+    TipoArticulosComponent,
+    MaestroArticulosComponent
   ],
   imports: [
     CommonModule,
