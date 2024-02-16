@@ -9,6 +9,7 @@ import { AdminComponent } from './admin.component';
 import { TipoArticulosComponent } from './tipo-articulos/tipo-articulos.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaestroArticulosComponent } from './maestro-articulos/maestro-articulos.component';
+import { DisponibilidadComponent } from './disponibilidad/disponibilidad.component';
 
 
 
@@ -19,7 +20,8 @@ import { MaestroArticulosComponent } from './maestro-articulos/maestro-articulos
     AdminComponent,
     InicioComponent,
     TipoArticulosComponent,
-    MaestroArticulosComponent
+    MaestroArticulosComponent,
+    DisponibilidadComponent
   ],
   imports: [
     CommonModule,

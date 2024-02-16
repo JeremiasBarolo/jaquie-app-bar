@@ -6,8 +6,10 @@
     try {
         const disponibilidad_articulos = await models.disponibilidad_articulos.findAll(
             {
-                include: [models.conversion_UM],
-                include: [models.maestro_articulos]
+                include: [ 
+                    { model: models.maestro_articulos },
+                    { model: models.conversion_UM },],
+               
             }
         
         );
@@ -42,8 +44,14 @@
     
 
     try {
-        
-        const newdisponibilidad_articulos= await models.disponibilidad_articulos.create(Datadisponibilidad_articulos);
+        const nuevoArticulo ={
+            cant_fisica: Datadisponibilidad_articulos.cant_fisica,
+            cant_comprometida: Datadisponibilidad_articulos.cant_comprometida,
+            cant_disponible: Datadisponibilidad_articulos.cant_disponible,
+            articuloId: Datadisponibilidad_articulos.maestro,
+            conversionId: Datadisponibilidad_articulos.conversionUM
+        }
+        const newdisponibilidad_articulos= await models.disponibilidad_articulos.create(nuevoArticulo);
         
         return newdisponibilidad_articulos;
         
@@ -54,15 +62,37 @@
     };
 
     const updatedisponibilidad_articulos= async (disponibilidad_articulos_id, dataUpdated) => {
-    
+        
 
     try {
+        if(dataUpdated.add){
+            // <================================== SUMAR CANTIDAD =================================>
+            const nuevaCantidad = {
+                cant_fisica: dataUpdated.cant_fisica_nueva
+            }
 
-        const olddisponibilidad_articulos= await models.disponibilidad_articulos.findByPk(disponibilidad_articulos_id);
+            const olddisponibilidad_articulos= await models.disponibilidad_articulos.findByPk(disponibilidad_articulos_id);
         
-        let newdisponibilidad_articulos = await olddisponibilidad_articulos.update(dataUpdated);
+            let newdisponibilidad_articulos = await olddisponibilidad_articulos.update(nuevaCantidad);
+    
+            return newdisponibilidad_articulos;
+            
+        }else{
+            // <================================== UPDATE NORMAL =================================>
+            const nuevoArticulo ={
+                cant_fisica: dataUpdated.cant_fisica,
+                cant_comprometida: dataUpdated.cant_comprometida,
+                cant_disponible: dataUpdated.cant_disponible,
+                articuloId: dataUpdated.maestro,
+                conversionId: dataUpdated.conversionUM
+            }
 
-        return newdisponibilidad_articulos;
+            const olddisponibilidad_articulos= await models.disponibilidad_articulos.findByPk(disponibilidad_articulos_id);
+        
+            let newdisponibilidad_articulos = await olddisponibilidad_articulos.update(nuevoArticulo);
+    
+            return newdisponibilidad_articulos;
+        }
     } catch (err) {
         console.error('🛑 Error when updating disponibilidad_articulos', err);
         throw err;

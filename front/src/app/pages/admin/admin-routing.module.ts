@@ -6,6 +6,7 @@ import { InicioComponent } from './inicio/inicio.component';
 import { AdminComponent } from './admin.component';
 import { TipoArticulosComponent } from './tipo-articulos/tipo-articulos.component';
 import { MaestroArticulosComponent } from './maestro-articulos/maestro-articulos.component';
+import { DisponibilidadComponent } from './disponibilidad/disponibilidad.component';
 
 
 
@@ -18,6 +19,7 @@ const routes: Routes = [
       { path: 'inicio', component: InicioComponent},
       { path: 'padrones', component: TipoArticulosComponent},
       { path: 'maestro', component: MaestroArticulosComponent},
+      { path: 'disponibilidad', component: DisponibilidadComponent},
       { path: '**', redirectTo: 'inicio' },
     
     ]

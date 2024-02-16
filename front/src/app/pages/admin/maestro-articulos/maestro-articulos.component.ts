@@ -12,7 +12,7 @@ import { TipoArticulosService } from '../../../services/tipo-articulos.service';
   templateUrl: './maestro-articulos.component.html',
   styleUrl: './maestro-articulos.component.css'
 })
-export class MaestroArticulosComponent {
+export class MaestroArticulosComponent implements OnInit {
   breadcrumbItems: string[] = ['Maestro de Articulos','Inicio', 'Maestro de Articulos'];
   listMaestro: any[] = [];
   conversionUm: any[] = [];
