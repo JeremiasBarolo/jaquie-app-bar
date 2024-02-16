@@ -6,19 +6,26 @@ import { SharedModule } from '../../shared/shared.module';
 import { AdminRoutingModule } from './admin-routing.module';
 import { InicioComponent } from './inicio/inicio.component';
 import { AdminComponent } from './admin.component';
+import { TipoArticulosComponent } from './tipo-articulos/tipo-articulos.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+
 
 
 
 @NgModule({
   declarations: [
     AdminComponent,
-    InicioComponent
+    InicioComponent,
+    TipoArticulosComponent
   ],
   imports: [
     CommonModule,
     RouterModule,
     SharedModule,
-    AdminRoutingModule
+    AdminRoutingModule,
+    ReactiveFormsModule,
+    FormsModule,
   ]
 })
 export class AdminModule { }
