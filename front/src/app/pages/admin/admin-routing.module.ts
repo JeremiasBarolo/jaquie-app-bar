@@ -7,6 +7,8 @@ import { AdminComponent } from './admin.component';
 import { TipoArticulosComponent } from './tipo-articulos/tipo-articulos.component';
 import { MaestroArticulosComponent } from './maestro-articulos/maestro-articulos.component';
 import { DisponibilidadComponent } from './disponibilidad/disponibilidad.component';
+import { RecetasComponent } from './recetas/recetas.component';
+import { CrearEditarComponent } from './recetas/crear-editar/crear-editar.component';
 
 
 
@@ -20,6 +22,9 @@ const routes: Routes = [
       { path: 'padrones', component: TipoArticulosComponent},
       { path: 'maestro', component: MaestroArticulosComponent},
       { path: 'disponibilidad', component: DisponibilidadComponent},
+      { path: 'recetas', component: RecetasComponent},
+      { path: 'recetas/crear-editar', component: CrearEditarComponent},
+      { path: 'recetas/crear-editar/:id', component: CrearEditarComponent},
       { path: '**', redirectTo: 'inicio' },
     
     ]

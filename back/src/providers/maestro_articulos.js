@@ -40,7 +40,8 @@
                 include: [
                     { model: models.tipo_articulo },
                     { model: models.conversion_UM },
-                    { model: models.pedido_stock, as: 'pedido_stock' },
+                    { model: models.pedido_stock },
+                    { model: models.pedido_produccion },
                     {
                         model: models.receta,
                         include: [
@@ -69,7 +70,7 @@
 
     const createmaestro_articulos= async (Datamaestro_articulos) => {
     
-
+        
     try {
         const maestroNuevo= {
             costo_unitario: Datamaestro_articulos.costo_unitario,

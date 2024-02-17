@@ -1,0 +1,81 @@
+<div class="container mt-5">
+    <div class="card mb-3 border border-0 mx-auto">
+      <div class="card-body">
+        <form [formGroup]="form">
+
+            <div class="form-group">
+                <label for="maestro">Artículo para la receta:</label>
+                <select class="form-control" id="maestro" formControlName="maestro">
+                    <option *ngFor="let maestro of listMaestro" [value]="maestro.id">{{maestro.descripcion}}</option>
+                </select>
+                <div *ngIf="form.get('maestro')?.invalid && form.get('maestro')?.touched" class="text-danger">
+                    Campo requerido
+                </div>
+            </div>
+
+            <label for="nombreTipo">Cantidad Física</label>
+            <input type="number" class="form-control" id="cant_fisica" formControlName="cant_fisica">
+            <div *ngIf="form.get('cant_fisica')?.invalid && form.get('cant_fisica')?.touched" class="text-danger">
+                Campo requerido
+            </div>
+
+            <label for="nombreTipo">Número de Línea</label>
+            <input type="number" class="form-control" id="n_linea" formControlName="n_linea">
+            <div *ngIf="form.get('n_linea')?.invalid && form.get('n_linea')?.touched" class="text-danger">
+                Campo requerido
+            </div>
+
+        </form>
+      </div>
+  
+      <div class="row mt-4">
+        <div class="col-md-6 text-center">
+          <h6>Articulos Disponibles</h6>
+          <div class="card mb-" style="height: 550px; overflow-y: auto;">
+            <div class="card-body">
+              <ul class="list-group" *ngFor="let entity of listDisponibilidad">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  {{ entity.maestro_articulo.descripcion }}
+                  <button class="btn btn-success" (click)="selectedEntity(entity)">Agregar a Receta</button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Lista de Insumos Seleccionados -->
+        <div class="col-md-5 text-center">
+          <h6>Articulos Seleccionados</h6>
+          <div class="card mb-3" style="height: 550px; overflow-y: auto;">
+            <div class="card-body">
+              <ul class="list-group" *ngFor="let entity of selectedEntities; let i = index">
+                <li class="list-group-item">
+                  <div>
+                    <p>{{ entity.maestro_articulo.descripcion }}</p>
+                  </div>
+                  <div>
+                    <label for="quantity{{ i }}">Cantidad:</label>
+                    <input type="number" name="quantity{{ i }}" [(ngModel)]="entity.cantidad"/>
+                  </div>
+                  <button type="button" class="btn btn-outline-danger" aria-label="Eliminar Entidad" (click)="returnEntities(entity)">
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="row mt-5">
+        <div class="col-md-6 offset-md-3 text-center">
+          <button [disabled]="form.invalid || selectedEntities.length === 0" routerLinkActive="router-link-active" type="submit" class="btn btn-success" (click)="addReceta()">Aceptar</button>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-md-6 offset-md-3 text-center">
+          <button [routerLink]="['/admin/recetas']" type="button" class="btn btn-info">Volver</button>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -10,6 +10,8 @@ import { TipoArticulosComponent } from './tipo-articulos/tipo-articulos.componen
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaestroArticulosComponent } from './maestro-articulos/maestro-articulos.component';
 import { DisponibilidadComponent } from './disponibilidad/disponibilidad.component';
+import { RecetasComponent } from './recetas/recetas.component';
+import { CrearEditarComponent } from './recetas/crear-editar/crear-editar.component';
 
 
 
@@ -21,7 +23,9 @@ import { DisponibilidadComponent } from './disponibilidad/disponibilidad.compone
     InicioComponent,
     TipoArticulosComponent,
     MaestroArticulosComponent,
-    DisponibilidadComponent
+    DisponibilidadComponent,
+    RecetasComponent,
+    CrearEditarComponent
   ],
   imports: [
     CommonModule,

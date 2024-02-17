@@ -35,14 +35,27 @@
     }
     };
 
-    const createreceta= async (Datareceta) => {
+    const createreceta= async (dataReceta) => {
     
 
     try {
+        const receta = {   
+            cant_fisica:dataReceta.cant_fisica,
+            maestroId:dataReceta.maestro,
+            n_linea:dataReceta.n_linea
+        }
+        dataReceta.insumos.forEach(async element => {
+
+            const newreceta= await models.receta.create({
+                ...receta, 
+                cant_necesarias: element.cantidad, 
+                articuloId: element.id
+            });
         
-        const newreceta= await models.receta.create(Datareceta);
+            return newreceta;
+        });
+
         
-        return newreceta;
         
     } catch (err) {
         console.error('🛑 Error when creating receta', err);
