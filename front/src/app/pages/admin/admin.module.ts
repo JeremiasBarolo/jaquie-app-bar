@@ -12,6 +12,7 @@ import { MaestroArticulosComponent } from './maestro-articulos/maestro-articulos
 import { DisponibilidadComponent } from './disponibilidad/disponibilidad.component';
 import { RecetasComponent } from './recetas/recetas.component';
 import { CrearEditarComponent } from './recetas/crear-editar/crear-editar.component';
+import { PedidoStockComponent } from './pedido-stock/pedido-stock.component';
 
 
 
@@ -25,7 +26,8 @@ import { CrearEditarComponent } from './recetas/crear-editar/crear-editar.compon
     MaestroArticulosComponent,
     DisponibilidadComponent,
     RecetasComponent,
-    CrearEditarComponent
+    CrearEditarComponent,
+    PedidoStockComponent
   ],
   imports: [
     CommonModule,

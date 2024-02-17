@@ -1,6 +1,7 @@
 
 
-    var models = require('../models');
+    const { where } = require('sequelize');
+var models = require('../models');
 
     const listAllpedido_stock = async () => {
         try {
@@ -32,23 +33,30 @@
     }
     };
 
-    const createpedido_stock= async (Datapedido_stock) => {
-    
+    const createpedido_stock = async (Datapedido_stock) => {
 
-    try {
-        
-        const newpedido_stock= await models.pedido_stock.create(Datapedido_stock);
-        
-        return newpedido_stock;
-        
-    } catch (err) {
-        console.error('🛑 Error when creating pedido_stock', err);
-        throw err;
+        try {
+            
+            const existingPedidoStock = await models.pedido_stock.findOne({ where: { articuloId: Datapedido_stock.articuloId } });
+    
+            if (existingPedidoStock) {
+                
+                const suma = existingPedidoStock.cant_requerida += Datapedido_stock.cant_requerida;
+                await existingPedidoStock.update({ cant_requerida: suma });
+            } else {
+                
+                const newPedidoStock = await models.pedido_stock.create(Datapedido_stock);
+                return newPedidoStock;
+            }
+        } catch (err) {
+            console.error('🛑 Error when creating or updating pedido_stock', err);
+            throw err;
+        }
     }
-    };
-
-    const updatepedido_stock= async (pedido_stock_id, dataUpdated) => {
     
+    
+    const updatepedido_stock= async (pedido_stock_id, dataUpdated) => {
+
 
     try {
 

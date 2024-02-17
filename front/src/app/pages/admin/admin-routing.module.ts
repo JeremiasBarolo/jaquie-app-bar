@@ -9,6 +9,7 @@ import { MaestroArticulosComponent } from './maestro-articulos/maestro-articulos
 import { DisponibilidadComponent } from './disponibilidad/disponibilidad.component';
 import { RecetasComponent } from './recetas/recetas.component';
 import { CrearEditarComponent } from './recetas/crear-editar/crear-editar.component';
+import { PedidoStockComponent } from './pedido-stock/pedido-stock.component';
 
 
 
@@ -25,6 +26,7 @@ const routes: Routes = [
       { path: 'recetas', component: RecetasComponent},
       { path: 'recetas/crear-editar', component: CrearEditarComponent},
       { path: 'recetas/crear-editar/:id', component: CrearEditarComponent},
+      { path: 'pedido-stock', component: PedidoStockComponent},
       { path: '**', redirectTo: 'inicio' },
     
     ]

@@ -10,6 +10,7 @@ const recetaProvider = require('./receta');
 const ventaProvider = require('./venta');
 const pedido_stockProvider = require('./pedido_stock');
 const pedido_produccionProvider = require('./pedido_produccion');
+const sumarPedidos = require('./sumarPedidos');
 
 
 
@@ -25,5 +26,6 @@ module.exports = {
     recetaProvider,
     ventaProvider,
     pedido_stockProvider,
-    pedido_produccionProvider
+    pedido_produccionProvider,
+    sumarPedidos
 };
