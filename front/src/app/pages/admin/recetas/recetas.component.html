@@ -1,7 +1,7 @@
 
 <app-breadcrumbs [titulo]= 'breadcrumbItems'></app-breadcrumbs>
 <div class="text-right">
-    <button type="button" class="btn btn-success mr-2" aria-label="Editar Tipo" routerLink="admin/recetas/crear-editar">Agregar Receta</button>
+    <button type="button" class="btn btn-success mr-2" aria-label="Editar Tipo" [routerLink]="['crear-editar']">Agregar Receta</button>
 </div>
 
 <div class="container">
@@ -44,7 +44,7 @@
                             <td>
                                 <!-- Botones para editar y borrar el tipo de artículo -->
                                 <div class="wrapper d-flex justify-content-end">
-                                    <button (click)="editarTipo(tipo)" type="button" data-toggle="modal" data-target="#modalRecetaCrear" class="btn btn-outline-primary" aria-label="Editar Tipo">
+                                    <button type="button" [routerLink]="['crear-editar', tipo.id]" class="btn btn-outline-primary" >
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </button>
                                     <button type="button" class="btn btn-outline-danger ms-4" data-toggle="modal" data-target="#EliminarMaestro" (click)="DataEntidad(tipo)" aria-label="Borrar Tipo">
@@ -70,18 +70,18 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalCrearTipoLabel">Desea usted eliminar este Articulo?</h5>
+                <h5 class="modal-title" id="modalCrearTipoLabel">Desea usted eliminar este Receta?</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body text-center">
                 
-                <p>Eliminar este Articulo causara que todas las entidades que estes enlazadas a el queden sin un Articulo definido.</p>
+                <p>Esta seguro de que quiere eliminar esta Receta?</p>
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" (click)="EliminarArticulo()">Eliminar</button>
+                <button type="button" class="btn btn-danger" (click)="RecetaArticulo()">Eliminar</button>
                 <button type="button" class="btn btn-primary" data-dismiss="modal">Volver</button>
             </div>
         </div>
@@ -106,15 +106,12 @@
                     <h6 class="text-center">Receta:</h6>
 
                     <span class="card text-center" *ngFor="let item of dataModal.receta">
-                        <div class="card-header text-center"> 
+                        <div class="card-header text-center bg-success"> 
                             {{item.disponibilidad_articulo.maestro_articulo.descripcion}}
-                                <button (click)="editarTipo(item)" type="button" data-toggle="modal" data-target="#modalRecetaCrear" class="btn btn-outline-primary text-right" aria-label="Editar Tipo">
-                                    <i class="fa-solid fa-pen-to-square"></i>
-                                </button>
                         </div>
                         <div class="card-body">
                           <p><strong>Cantidad Necesaria:</strong> {{item.cant_necesaria}} </p>
-                          <p><strong>Cantidad Fisica:</strong> {{item.cant_fisica}}</p>
+                          <!-- <p><strong>Cantidad Fisica:</strong> {{item.cant_fisica}}</p> -->
                         </div>
                     </span>
                 </ng-container>

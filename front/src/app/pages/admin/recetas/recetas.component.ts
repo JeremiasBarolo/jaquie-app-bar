@@ -107,35 +107,15 @@ export class RecetasComponent {
 
 
   // <============ Eliminar Tipo ==========>
-  EliminarArticulo(){
+  RecetaArticulo(){
     this.recetasService.delete(this.EntidadEliminar.id).subscribe(() => {
       setTimeout(() => {
         window.location.reload();
       }, 600)
 
-      this.toastr.success('Articulo Eliminado', 'Exito');
+      this.toastr.success('Receta Eliminado', 'Exito');
     })
   }
 
-  SumarCantidades(){
-    const cant_fisica_nueva = this.sumarForm.value.cant_fisica_sumada + this.dataModal.cant_fisica;
-    this.cantidadNueva = {
-      cant_fisica_nueva: cant_fisica_nueva,
-      id: this.dataModal.id,
-      add: true
-    }
-    try {
-      this.recetasService.update(this.cantidadNueva.id, this.cantidadNueva ).subscribe(() => {
-        setTimeout(() => {
-          window.location.reload();
-        }, 600)
-
-        this.toastr.success('Articulo actualizado', 'Exito');
-
-      });
-      
-    } catch (error) {
-      console.log(error);
-    }
-   }
+  
 }

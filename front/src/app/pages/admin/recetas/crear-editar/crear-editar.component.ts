@@ -14,6 +14,7 @@ import { RecetasService } from '../../../../services/recetas.service';
   styleUrl: './crear-editar.component.css'
 })
 export class CrearEditarComponent {
+  breadcrumbItems: string[] = ['Crear/Editar Recetas','Inicio', 'Recetas'];
   form: FormGroup;
   id: number;
   selectedEntities: any[] = [];
@@ -41,7 +42,9 @@ export class CrearEditarComponent {
 
   ngOnInit(): void {
     this.loadAllEntities();
-    // this.loadSelectedProducts();
+    this.loadSelectedProducts();
+    
+    
   }
 
   addReceta() {
@@ -76,7 +79,13 @@ export class CrearEditarComponent {
  
 
   selectedEntity(entity: any) {
-    this.selectedEntities.push({ ...entity, cantidad: 1 });
+    this.selectedEntities.push({ 
+      ...entity, 
+      cantidad: 1,
+      maestro_articulo: {
+        descripcion: entity.maestro_articulo.descripcion 
+      }
+      });
     this.listDisponibilidad = this.listDisponibilidad.filter(item => item.id !== entity.id);
   }
 
@@ -86,20 +95,35 @@ export class CrearEditarComponent {
   }
 
   loadAllEntities() {
-    // Cargar lista de maestros de artículos
-    this.maestroArticulosService.getAll().subscribe(
-      (maestros: any[]) => {
-        this.listMaestro = maestros.filter(maestro => maestro.tipo_articulo.description === 'Productos Elaborados');
-      },
-      error => {
-        console.error('Error al cargar los maestros de artículos:', error);
-      }
-    );
+    if(this.id !==0){
+      this.maestroArticulosService.getAll().subscribe(
+        (maestros: any[]) => {
+          this.listMaestro = maestros
+          console.log(this.listMaestro);
+          
+        },
+        error => {
+          console.error('Error al cargar los maestros de artículos:', error);
+        }
+      );
+    }else{
+      this.maestroArticulosService.getAll().subscribe(
+
+        
+        (maestros: any[]) => {
+          this.listMaestro = maestros.filter(maestro => maestro.tipo_articulo.description === 'Productos Elaborados' && (!maestro.receta || maestro.receta.length === 0));
+        },
+        error => {
+          console.error('Error al cargar los maestros de artículos:', error);
+        }
+      );
+    }
+    
 
     // Cargar lista de disponibilidad de artículos
     this.disponibilidadService.getAll().subscribe(
       (data: any[]) => {
-        this.listDisponibilidad = data;
+         this.listDisponibilidad = data
       },
       error => {
         console.error('Error al cargar la disponibilidad de artículos:', error);
@@ -107,30 +131,51 @@ export class CrearEditarComponent {
     );
   }
   
-  // loadSelectedProducts() {
-  //   if (this.id) {
-  //     this.maestroArticulosService.getById(this.id).subscribe(
-  //       (res: any) => {
-  //         if (res.InsumosEntities && res.InsumosEntities.length > 0) {
+  loadSelectedProducts() {
+    if (this.id) {
+      this.maestroArticulosService.getById(this.id).subscribe(
+        (res: any) => {
+          if (res.receta && res.receta.length > 0) {
+            
+            const selectedEntitiesWithDescription = res.receta.map((item: { articuloId: any; cant_necesaria: any; disponibilidad_articulo: { maestro_articulo: { descripcion: any; }; }; })  => {
+              return {
+                id: item.articuloId,
+                cantidad: item.cant_necesaria,
+                maestro_articulo: {
+                  descripcion: item.disponibilidad_articulo.maestro_articulo.descripcion
+                }
+              };
+            });
+  
+            // Asignar los elementos con la descripción al array selectedEntities
+            this.selectedEntities = [...selectedEntitiesWithDescription];
+            console.log('SelectedEntites:',this.selectedEntities);
+            console.log('listDisponibilidad:',this.listDisponibilidad);
             
             
-  //           this.selectedEntities = [...res.InsumosEntities];
-  //           this.Insumos = this.Insumos.filter(insumo => !this.selectedEntities.some(selected => selected.id === insumo.id));
-  //         }
-  //       }
-  //     )
-  //   }
-  // }
+  
+            // Filtrar los elementos de listDisponibilidad que no están en la receta
+            this.listDisponibilidad = this.listDisponibilidad.filter(insumo =>
+              !this.selectedEntities.some(selected => selected.id === insumo.id)
+            );
+  
+            // Asignar los valores al formulario
+            this.form.patchValue({
+              maestro: res.id,
+              cant_fisica: res.receta[0].cant_fisica,
+              n_linea: res.receta[0].n_linea
+            });
+          } else {
+            
+            this.listDisponibilidad = res; // O cualquier otra lógica para cargar los elementos disponibles
+          }
+        }
+      );
+    }
+  }
+  
+  
+  
 
-  getProductEntity(id: number) {
-    this.maestroArticulosService.getById(id).subscribe((data: any)=> {
-      this.form.setValue({
-        maestro: data.descripcion,
-        n_linea: data.description,
-        cant_fisica: data.uni_medida,
-        
-
-      });
-    });
-}
+  
 }
