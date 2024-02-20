@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MaestroArticulosService } from '../../../services/maestro-articulos.service';
 import { PedidoProduccionService } from '../../../services/pedido-produccion.service';
+import { MesasService } from '../../../services/mesas.service';
 
 @Component({
   selector: 'app-pedido-produccion',
@@ -28,9 +29,11 @@ export class PedidoProduccionComponent {
   depositos: any[] = [] 
   selectedDepositoId: number | undefined;
   pedidoNuevo: any
+  listMesas: any[] = []
 
   constructor(
     private pedidoProduccion: PedidoProduccionService,
+    private mesasService: MesasService,
     private maestroService: MaestroArticulosService,
     private toastr: ToastrService,
     private route: ActivatedRoute,
@@ -54,14 +57,10 @@ export class PedidoProduccionComponent {
       this.listPedido = data
     });
 
-    this.maestroService.getAll().subscribe(maestros => {
-      maestros.forEach(maestro => {
-        if(maestro.tipo_articulo.description !== 'Insumos'){
-          this.listMaestro.push(maestro)
-        }
-      })
-      
+    this.mesasService.getAll().subscribe(data =>{
+      this.listMesas = data;
     })
+
   }
 
   editarPedido(card: any) {  

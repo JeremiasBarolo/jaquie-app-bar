@@ -21,7 +21,13 @@
 
     const listOneventa= async (venta_id) => {
     try {
-        const oneventa= await models.venta.findByPk(venta_id, 
+        const oneventa= await models.venta.findByPk(venta_id,{ 
+            include: [
+                {
+                    all: true,
+                }
+            ]
+        }
         );
         if (!oneventa) {
         

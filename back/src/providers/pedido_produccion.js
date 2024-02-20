@@ -24,7 +24,10 @@
 
     const listOnepedido_produccion= async (pedido_produccion_id) => {
     try {
-        const onepedido_produccion= await models.pedido_produccion.findByPk(pedido_produccion_id, 
+        const onepedido_produccion= await models.pedido_produccion.findByPk(pedido_produccion_id, {
+            include: [{ all:true}],
+            attributes: ['id', 'cant_requerida', 'updatedAt', 'createdAt']
+        }
         );
         if (!onepedido_produccion) {
         
@@ -39,24 +42,25 @@
 
     const createpedido_produccion= async (Datapedido_produccion) => {
     
-        return await models.pedido_produccion.create(Datapedido_produccion)
-    //     try {
-    //         const newPedidoStock = Datapedido_produccion.insumos.forEach(async insumo => {
-    //             await models.pedido_produccion.create(
-    //                 {
-    //                     maestroId: insumo.id,
-    //                     cant_requerida: insumo.cantidad
-    //                 }
-    //             );
-    //         });
-    //         return newPedidoStock;
+        // return await models.pedido_produccion.create(Datapedido_produccion)
+        try {
+            const newPedidoStock = Datapedido_produccion.insumos.forEach(async insumo => {
+                await models.pedido_produccion.create(
+                    {
+                        maestroId: insumo.id,
+                        cant_requerida: insumo.cantidad,
+                        ventaId: Datapedido_produccion.mesa
+                    }
+                );
+            });
+            return newPedidoStock;
                 
                 
             
-    //     } catch (err) {
-    //         console.error('🛑 Error when creating or updating pedido_stock', err);
-    //         throw err;
-    //     }
+        } catch (err) {
+            console.error('🛑 Error when creating or updating pedido_stock', err);
+            throw err;
+        }
  };
 
     const updatepedido_produccion= async (pedido_produccion_id, dataUpdated) => {
@@ -64,11 +68,30 @@
 
     try {
 
-        const oldpedido_produccion= await models.pedido_produccion.findByPk(pedido_produccion_id);
+        const oldpedido_produccion= await models.venta.findByPk(pedido_produccion_id, {include: [{ all:true}]});
         
-        let newpedido_produccion = await oldpedido_produccion.update(dataUpdated);
+        try {
+            oldpedido_produccion.maestro_articulos.forEach(maestro => {
+                dataUpdated.insumos.forEach(insumo => {
+                    if (maestro.id === insumo.id) {
+                        maestro.pedido_produccion.update({
+                            cant_requerida: insumo.cantidad,
+                        })
+                    }
+                })
+            })
+                
+            const newpedido_produccion=oldpedido_produccion.update(
+                {id: dataUpdated.mesa }
+            )
 
-        return newpedido_produccion;
+            return newpedido_produccion;
+        } catch (err) {
+            console.error('🛑 Error when creating or updating pedido_stock', err);
+            throw err;
+        }
+
+        
     } catch (err) {
         console.error('🛑 Error when updating pedido_produccion', err);
         throw err;

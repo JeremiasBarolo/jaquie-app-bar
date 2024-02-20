@@ -7,6 +7,7 @@ import { DisponibilidadArticulosService } from '../../../../services/disponibili
 import { MaestroArticulosService } from '../../../../services/maestro-articulos.service';
 import { RecetasService } from '../../../../services/recetas.service';
 import { PedidoProduccionService } from '../../../../services/pedido-produccion.service';
+import { MesasService } from '../../../../services/mesas.service';
 
 @Component({
   selector: 'app-crear-editar-pedido-produccion',
@@ -21,6 +22,7 @@ export class CrearEditarPedidoProduccionComponent {
   ProductEntityData: any;
   listMeaesto: any[] = []
   recetaData: any = {}
+  listMesas: any[] = []
 
   constructor(
     private fb: FormBuilder,
@@ -28,10 +30,11 @@ export class CrearEditarPedidoProduccionComponent {
     private aRoute: ActivatedRoute,
     private maestroArticulosService: MaestroArticulosService,
     private pedidoProduccionService: PedidoProduccionService,
+    private mesasService: MesasService,
     private toastr: ToastrService
   ) {
     this.form = this.fb.group({
-      
+      mesa: ['', Validators.required],
     });
     this.id = Number(aRoute.snapshot.paramMap.get('id'));
   }
@@ -45,8 +48,10 @@ export class CrearEditarPedidoProduccionComponent {
 
   addReceta() {
     this.recetaData = {
-      insumos: this.selectedEntities.map(entity => ({ id: entity.id, cantidad: entity.cantidad }))
+      insumos: this.selectedEntities.map(entity => ({ id: entity.id, cantidad: entity.cantidad })),
+      mesa: this.form.value.mesa
     };
+    
     
 
     if (this.id !== 0) {
@@ -60,7 +65,6 @@ export class CrearEditarPedidoProduccionComponent {
       }
     } else {
       try {
-        console.log(this.recetaData.insumos);
         this.pedidoProduccionService.create(this.recetaData).subscribe(() => {
           this.router.navigate(['admin/pedido-produccion']);
           this.toastr.success('Pedido Creado Exitosamente');
@@ -89,7 +93,7 @@ export class CrearEditarPedidoProduccionComponent {
   }
 
   loadAllEntities() {
-    if(this.id !==0){
+    if(this.id !== 0){
       this.maestroArticulosService.getAll().subscribe(
         (maestros: any[]) => {
          this.listMeaesto = maestros
@@ -100,10 +104,18 @@ export class CrearEditarPedidoProduccionComponent {
           console.error('Error al cargar los maestros de artículos:', error);
         }
       );
+
+      this.mesasService.getAll().subscribe(
+        (mesas: any[]) => {
+          this.listMesas = mesas
+        
+
+        }
+      )
     }else{
       this.maestroArticulosService.getAll().subscribe(
 
-        
+        // todos los que no sean insumos si es crear
         (maestros: any[]) => {
           this.listMeaesto = maestros.filter(maestro => maestro.tipo_articulo.description !== 'Insumos')
         },
@@ -111,22 +123,32 @@ export class CrearEditarPedidoProduccionComponent {
           console.error('Error al cargar los maestros de artículos:', error);
         }
       );
+
+        // todos los no tengan pedido
+      this.mesasService.getAll().subscribe(
+        (mesas: any[]) => {
+          this.listMesas = mesas.filter(mesa => mesa.maestro_articulos.length === 0)
+
+        }
+      )
     }
+
+    
     
   }
   
   loadSelectedProducts() {
     if (this.id) {
-      this.maestroArticulosService.getById(this.id).subscribe(
+      this.mesasService.getById(this.id).subscribe(
         (res: any) => {
-          if (res.receta && res.receta.length > 0) {
+          if (res.maestro_articulos && res.maestro_articulos.length > 0) {
             
-            const selectedEntitiesWithDescription = res.receta.map((item: { articuloId: any; cant_necesaria: any; disponibilidad_articulo: { maestro_articulo: { descripcion: any; }; }; })  => {
+            const selectedEntitiesWithDescription = res.maestro_articulos.map((item: { id: any; pedido_produccion: { cant_requerida: any; }; descripcion: any; })  => {
               return {
-                id: item.articuloId,
-                cantidad: item.cant_necesaria,
+                id: item.id,
+                cantidad: item.pedido_produccion.cant_requerida,
                 maestro_articulo: {
-                  descripcion: item.disponibilidad_articulo.maestro_articulo.descripcion
+                  descripcion: item.descripcion
                 }
               };
             });
@@ -142,17 +164,15 @@ export class CrearEditarPedidoProduccionComponent {
               !this.selectedEntities.some(selected => selected.id === insumo.id)
             );
   
-            // Asignar los valores al formulario
-            this.form.patchValue({
-              maestro: res.id,
-              cant_fisica: res.receta[0].cant_fisica,
-              n_linea: res.receta[0].n_linea
-            });
-          } else {
             
           }
+          this.form.patchValue({
+            mesa: res.id,
+          }) 
         }
       );
+
+      
     }
   }
 }
