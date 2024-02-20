@@ -102,14 +102,16 @@
 
     const deletepedido_produccion = async (pedido_produccion_id) => {
     try {
-        const deletedpedido_produccion = await models.pedido_produccion.findByPk(pedido_produccion_id, 
+        const deletedpedido_produccion = await models.venta.findByPk(pedido_produccion_id, 
+            {include: [{ all:true}]}
         );
 
-        if (!deletedpedido_produccion) {
-        return null;
-        }
+        deletedpedido_produccion.maestro_articulos.forEach(maestro => {
+            maestro.pedido_produccion.destroy();
+            })
         
-        await models.pedido_produccion.destroy({ where: { id: pedido_produccion_id } });
+        
+        // await models.pedido_produccion.destroy({ where: { id: pedido_produccion_id } });
 
 
         return deletedpedido_produccion;

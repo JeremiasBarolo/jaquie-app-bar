@@ -10,9 +10,7 @@
   <div class="container">
     <div class="row">
         <div class="col">
-            <div class="text-right">
-                <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#modalCrearTipo" aria-label="Editar Tipo">Agregar Tipo</button>
-            </div>
+           
             <section style="margin: 16px">
                 <table class="table table-hover">
                    
@@ -47,7 +45,7 @@
                                     <button type="button" class="btn btn-outline-primary"  aria-label="Editar Tipo" [routerLink]="['crear-editar', mesa.id]" >
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </button>
-                                    <button type="button" class="btn btn-outline-danger ms-4" data-toggle="modal" data-target="#EliminarTipo" (click)="showCardDetails(mesa)" aria-label="Borrar Tipo">
+                                    <button type="button" class="btn btn-outline-danger ms-4" data-toggle="modal" data-target="#eliminarPedido" (click)="showCardDetails(mesa)" aria-label="Borrar Tipo">
                                         <i class="fa-solid fa-trash"></i>
                                     </button>
                                 </div>
@@ -104,7 +102,27 @@
 </div>
          
 
+<div class="modal fade" id="eliminarPedido" tabindex="-1" role="dialog" aria-labelledby="modalCrearTipoLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="modalCrearTipoLabel">Desea usted eliminar esta pedido de la mesa {{cardData.mesa}}?</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body text-center">
+              
+              <p>Eliminar este pedido solo eliminara el pedido de la mesa.</p>
 
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-danger" (click)="eliminarPedido(cardData.id)">Eliminar</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Volver</button>
+          </div>
+      </div>
+  </div>
+</div>
  
 
     
