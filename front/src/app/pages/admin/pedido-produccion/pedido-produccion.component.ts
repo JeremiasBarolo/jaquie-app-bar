@@ -63,43 +63,49 @@ export class PedidoProduccionComponent {
 
   }
 
-  editarPedido(card: any) {  
-    this.DataArticulos = {...card, editar:true};  
-    console.log(this.DataArticulos);
+  editarPedido(card: any) {
+    if(card.estado ==="FINALIZADO"){
+      this.toastr.error(`No se puede editar el pedido, este esta ${card.estado}`)
+    }else if(card.maestro_articulos.length === 0){
+      this.toastr.error(`No se puede editar ya que no contiene un pedido asignado.`)
+    }else{
+      this.router.navigate(['admin/pedido-produccion/crear-editar', card.id]);
+    }
     
-    this.form.patchValue({
-      maestroId: this.DataArticulos.maestroId,
-      cant_requerida: this.DataArticulos.cant_requerida,
-      ventaId: this.DataArticulos.ventaId
-      
-    });
+   
 }
 
   
 showCardDetails(card: any) {  
   this.cardData = card;  
-  console.log(this.cardData);
+  this.cardData.subtotal = this.calcularSubtotal(card);
+  console.log(card);
+  
 }
 
-updateEntidad(id:number){
-  this.router.navigate(['dashboard/pedidos-compra/crear-editar', id]);
-}
-
-calcularSubtotal(pedido: any): any {
+  calcularSubtotal(pedido?: any): any{
     let subtotal = 0
+    
+    pedido?.maestro_articulos?.forEach((item: any) => {
+      
+      subtotal += item?.pedido_produccion?.cant_requerida * item?.costo_unitario;
+      
+    })
 
+    return subtotal;
+    
 
-     return subtotal += pedido?.cant_requerida * pedido?.maestro_articulo?.costo_unitario;
+     
      
      
 };
 
-calcularSubtotalGeneral(): number {
+
+calcularSubtotalGeneral(): any {
   let subtotalGeneral = 0;
   
   this.listPedido.forEach(item => {
-      
-      subtotalGeneral += this.calcularSubtotal(item);
+      subtotalGeneral += item.maestro_articulo.costo_unitario * item.cant_requerida
   });
   return subtotalGeneral;
 }
@@ -108,13 +114,19 @@ calcularSubtotalGeneral(): number {
 
 
 
-eliminarPedido(id?: number){
+eliminarPedido(id?: number, pedido?:any){
+ if(pedido.estado ==="COMIENDO" || pedido.estado ==="FINALIZADO" ){
+  this.toastr.error(`No se puede eliminar el pedido, este esta ${pedido.estado}`)
+ }else{
   this.pedidoProduccion.delete(id!).subscribe(() => {
     setTimeout(() => {
       window.location.reload();
     }, 600)
     this.toastr.success('Entidad eliminado exitosamente')
 
-  })
+    })
+  }
 }
+ 
+ 
 }

@@ -96,7 +96,7 @@ export class CrearEditarPedidoProduccionComponent {
     if(this.id !== 0){
       this.maestroArticulosService.getAll().subscribe(
         (maestros: any[]) => {
-         this.listMeaesto = maestros
+          maestros.filter(maestro => maestro.tipo_articulo.description !== 'Insumos')
           
           
         },
@@ -115,7 +115,6 @@ export class CrearEditarPedidoProduccionComponent {
     }else{
       this.maestroArticulosService.getAll().subscribe(
 
-        // todos los que no sean insumos si es crear
         (maestros: any[]) => {
           this.listMeaesto = maestros.filter(maestro => maestro.tipo_articulo.description !== 'Insumos')
         },

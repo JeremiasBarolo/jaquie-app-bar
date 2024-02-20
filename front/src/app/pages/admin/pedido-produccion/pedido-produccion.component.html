@@ -42,7 +42,7 @@
                             <td>
                                 <!-- Botones para editar y borrar el tipo de artículo -->
                                 <div class="wrapper d-flex justify-content-end">
-                                    <button type="button" class="btn btn-outline-primary"  aria-label="Editar Tipo" [routerLink]="['crear-editar', mesa.id]" >
+                                    <button type="button" class="btn btn-outline-primary"  aria-label="Editar Tipo" (click)="editarPedido(mesa)" >
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </button>
                                     <button type="button" class="btn btn-outline-danger ms-4" data-toggle="modal" data-target="#eliminarPedido" (click)="showCardDetails(mesa)" aria-label="Borrar Tipo">
@@ -92,7 +92,7 @@
                 </tr>
               </tbody>
             </table>
-            <p><strong>Subtotal de Mesa:</strong> {{cardData.precio | currency}}</p>
+            <p><strong>Subtotal de Mesa:</strong> {{cardData.subtotal | currency}}</p>
           </div>
         
 
@@ -117,7 +117,7 @@
 
           </div>
           <div class="modal-footer">
-              <button type="button" class="btn btn-danger" (click)="eliminarPedido(cardData.id)">Eliminar</button>
+              <button type="button" class="btn btn-danger" (click)="eliminarPedido(cardData.id, cardData)">Eliminar</button>
               <button type="button" class="btn btn-primary" data-dismiss="modal">Volver</button>
           </div>
       </div>

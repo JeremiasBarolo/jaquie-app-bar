@@ -108,7 +108,7 @@
 
         deletedpedido_produccion.maestro_articulos.forEach(maestro => {
             maestro.pedido_produccion.destroy();
-            })
+        })
         
         
         // await models.pedido_produccion.destroy({ where: { id: pedido_produccion_id } });
