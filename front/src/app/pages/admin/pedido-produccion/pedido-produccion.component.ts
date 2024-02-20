@@ -57,9 +57,13 @@ export class PedidoProduccionComponent {
       this.listPedido = data
     });
 
-    this.mesasService.getAll().subscribe(data =>{
-      this.listMesas = data;
-    })
+    this.mesasService.getAll().subscribe(data => {
+      this.listMesas = data.filter(mesa => 
+        mesa.maestro_articulos.some((item: { pedido_produccion: { estado: string; }; }) =>
+          item.pedido_produccion.estado !== "FINALIZADO"
+        )
+      );
+    });
 
   }
 

@@ -96,7 +96,7 @@ cambiarEstado(id?: number, pedido?: any, estado?: string, devolverInsumos?: any,
      
       pedido.subtotal = this.calcularSubtotal(pedido);
 
-      this.mesasService.update(id, pedido).subscribe(() => {
+      this.mesasService.update(id, {...pedido, estado:"FINALIZADO"}).subscribe(() => {
       this.toastr.success(`Mesa ${pedido.name} ${estado} exitosamente`)
       setTimeout(() => {
         window.location.reload();

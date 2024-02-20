@@ -49,7 +49,8 @@
                     {
                         maestroId: insumo.id,
                         cant_requerida: insumo.cantidad,
-                        ventaId: Datapedido_produccion.mesa
+                        ventaId: Datapedido_produccion.mesa,
+                        estado: Datapedido_produccion.estado
                     }
                 );
             });

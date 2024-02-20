@@ -12,6 +12,9 @@ module.exports = {
       cant_requerida: {
         type: Sequelize.INTEGER
       },
+      estado: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

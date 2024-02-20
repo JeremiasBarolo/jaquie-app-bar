@@ -62,9 +62,22 @@
 
     try {
 
-        const oldventa= await models.venta.findByPk(venta_id);
+        const oldventa= await models.venta.findByPk(venta_id, {include:{all:true}});
         
-        let newventa = await oldventa.update({...dataUpdated, precio:dataUpdated.precio, total:dataUpdated.precio});
+        if(dataUpdated.estado === 'FINALIZADO'){
+            
+            let newventa = await oldventa.update({...dataUpdated, precio:dataUpdated.precio, total:dataUpdated.precio});
+            await oldventa.maestro_articulos.forEach(element => {
+            element.pedido_produccion.update({
+                estado: dataUpdated.estado
+            })
+            return true
+        });
+        }else{
+            let newventa = await oldventa.update({...dataUpdated, precio:dataUpdated.precio, total:dataUpdated.precio});
+            return true
+        }
+        
 
         return newventa;
     } catch (err) {

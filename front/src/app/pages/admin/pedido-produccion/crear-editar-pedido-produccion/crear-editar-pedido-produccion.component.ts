@@ -49,7 +49,8 @@ export class CrearEditarPedidoProduccionComponent {
   addReceta() {
     this.recetaData = {
       insumos: this.selectedEntities.map(entity => ({ id: entity.id, cantidad: entity.cantidad })),
-      mesa: this.form.value.mesa
+      mesa: this.form.value.mesa,
+      estado: 'PENDIENTE'
     };
     
     

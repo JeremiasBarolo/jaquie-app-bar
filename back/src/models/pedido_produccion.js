@@ -12,7 +12,9 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   pedido_produccion.init({
-    cant_requerida: DataTypes.INTEGER
+    cant_requerida: DataTypes.INTEGER,
+    estado: DataTypes.STRING,
+
   }, {
     sequelize,
     modelName: 'pedido_produccion',
