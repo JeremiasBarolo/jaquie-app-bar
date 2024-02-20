@@ -3,18 +3,20 @@
     var models = require('../models');
 
     const listAllventa= async () => {
-    try {
-        const venta = await models.venta.findAll({
-
-            include: [{model: models.pedido_produccion}],
-
-        });
-        console.log('✅ venta were found');
-        return venta;
-    } catch (err) {
-        console.error('🛑 Error when fetching venta', err);
-        throw err;
-    }
+        try {
+            const ventas = await models.venta.findAll({
+                include: [
+                    {
+                        all: true,
+                    }
+                ]
+            });
+            console.log('✅ Ventas were found', ventas);
+            return ventas;
+        } catch (err) {
+            console.error('🛑 Error when fetching ventas', err);
+            throw err;
+        }
     };
 
     const listOneventa= async (venta_id) => {
@@ -56,7 +58,7 @@
 
         const oldventa= await models.venta.findByPk(venta_id);
         
-        let newventa = await oldventa.update(dataUpdated);
+        let newventa = await oldventa.update({...dataUpdated, precio:dataUpdated.precio, total:dataUpdated.precio});
 
         return newventa;
     } catch (err) {

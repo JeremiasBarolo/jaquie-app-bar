@@ -10,6 +10,9 @@ import { DisponibilidadComponent } from './disponibilidad/disponibilidad.compone
 import { RecetasComponent } from './recetas/recetas.component';
 import { CrearEditarComponent } from './recetas/crear-editar/crear-editar.component';
 import { PedidoStockComponent } from './pedido-stock/pedido-stock.component';
+import { PedidoProduccionComponent } from './pedido-produccion/pedido-produccion.component';
+import { CrearEditarPedidoProduccionComponent } from './pedido-produccion/crear-editar-pedido-produccion/crear-editar-pedido-produccion.component';
+import { MesasComponent } from './mesas/mesas.component';
 
 
 
@@ -27,6 +30,10 @@ const routes: Routes = [
       { path: 'recetas/crear-editar', component: CrearEditarComponent},
       { path: 'recetas/crear-editar/:id', component: CrearEditarComponent},
       { path: 'pedido-stock', component: PedidoStockComponent},
+      { path: 'pedido-produccion', component: PedidoProduccionComponent},
+      { path: 'pedido-produccion/crear-editar', component: CrearEditarPedidoProduccionComponent},
+      { path: 'pedido-produccion/crear-editar/:id', component: CrearEditarPedidoProduccionComponent},
+      { path: 'mesas', component: MesasComponent},
       { path: '**', redirectTo: 'inicio' },
     
     ]

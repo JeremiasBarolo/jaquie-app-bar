@@ -13,6 +13,9 @@ import { DisponibilidadComponent } from './disponibilidad/disponibilidad.compone
 import { RecetasComponent } from './recetas/recetas.component';
 import { CrearEditarComponent } from './recetas/crear-editar/crear-editar.component';
 import { PedidoStockComponent } from './pedido-stock/pedido-stock.component';
+import { PedidoProduccionComponent } from './pedido-produccion/pedido-produccion.component';
+import { CrearEditarPedidoProduccionComponent } from './pedido-produccion/crear-editar-pedido-produccion/crear-editar-pedido-produccion.component';
+import { MesasComponent } from './mesas/mesas.component';
 
 
 
@@ -27,7 +30,10 @@ import { PedidoStockComponent } from './pedido-stock/pedido-stock.component';
     DisponibilidadComponent,
     RecetasComponent,
     CrearEditarComponent,
-    PedidoStockComponent
+    PedidoStockComponent,
+    PedidoProduccionComponent,
+    CrearEditarPedidoProduccionComponent,
+    MesasComponent
   ],
   imports: [
     CommonModule,

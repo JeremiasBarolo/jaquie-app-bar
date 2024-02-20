@@ -57,7 +57,7 @@ module.exports = {
 
     await queryInterface.addColumn('pedido_produccions', 'ventaId', {
       type: Sequelize.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: 'venta',
         key: 'id'
