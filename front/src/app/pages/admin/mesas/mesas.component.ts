@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { MesasService } from '../../../services/mesas.service';
 import { LoginComponent } from '../../../auth/login/login.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { EstadisticaService } from '../../../services/estadistica.service';
 
 
 @Component({
@@ -30,6 +31,7 @@ export class MesasComponent implements OnInit{
   }  
   IdsInsumosCantidad: any[] = []
   recetaData: any;
+  costoTotal: number = 0;
 
 
   constructor(
@@ -39,6 +41,7 @@ export class MesasComponent implements OnInit{
     private viewport: ViewportScroller,
     private mesasService: MesasService,
     private fb: FormBuilder,
+    private estadisticaService: EstadisticaService
 
 
 
@@ -79,7 +82,10 @@ cambiarEstado(id?: number, pedido?: any, estado?: string, devolverInsumos?: any,
         
         this.toastr.error(`Debe asiganrle un pedido a la mesa de ${pedido.mesa}`)
       }else{
-        pedido.precio = this.calcularSubtotal(pedido);
+
+        pedido.subtotal = this.calcularSubtotal(pedido);
+        
+        
         this.mesasService.update(id, pedido).subscribe(() => {
         this.toastr.success(`Mesa ${pedido.name} ${estado} exitosamente`)
         setTimeout(() => {
@@ -102,10 +108,7 @@ cambiarEstado(id?: number, pedido?: any, estado?: string, devolverInsumos?: any,
         window.location.reload();
       }, 600)
     })
-      
-
-
-      this.router.navigate(['dashboard/productos']);
+    
 
 
     }else{
@@ -148,7 +151,7 @@ showCardDetails(card: any) {
   this.cardData = card;  
   console.log(this.cardData);
   let subtotal = this.calcularSubtotal(card) 
-  this.cardData.precio = subtotal
+  this.cardData.total = subtotal
   console.log(subtotal);
   
 }
@@ -168,11 +171,14 @@ calcularSubtotal(ventas: any) {
   return subtotal;
 }
 
-eliminarPedido(id?: number){
- 
+cerrarCaja(){
+  this.estadisticaService.create({cerrarCaja: true}).subscribe((res) => {
+    this.toastr.success('Caja cerrada exitosamente');
+    console.log(res);
+    
+
+
+  })
 }
 
-onAceptarClick() { 
-  this.cambiarEstado(this.cardData.id, this.cardData, 'FINALIZADO');
-}
 }

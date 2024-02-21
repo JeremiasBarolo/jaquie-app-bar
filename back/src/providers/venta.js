@@ -1,13 +1,25 @@
 
 
     var models = require('../models');
+    const {calcularCosto} = require('./cerrarCaja');
 
     const listAllventa= async () => {
         try {
             const ventas = await models.venta.findAll({
                 include: [
                     {
-                        all: true,
+                        model: models.maestro_articulos,
+                        include: [
+                            {
+                                model: models.pedido_produccion,
+                                include: [
+                                    {
+                                        model: models.maestro_articulos,
+                                        attributes: ['descripcion', 'costo_unitario' ]
+                                    }
+                                ]
+                            }
+                        ]
                     }
                 ]
             });
@@ -23,8 +35,19 @@
     try {
         const oneventa= await models.venta.findByPk(venta_id,{ 
             include: [
-                {
-                    all: true,
+                {   
+                    model: models.maestro_articulos,
+                    include: [
+                        {
+                            model: models.pedido_produccion,
+                            include: [
+                                {
+                                    model: models.maestro_articulos,
+                                    attributes: ['descripcion', 'costo_unitario' ]
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         }
@@ -62,11 +85,11 @@
 
     try {
 
-        const oldventa= await models.venta.findByPk(venta_id, {include:{all:true}});
+        const oldventa= await listOneventa(venta_id);
         
         if(dataUpdated.estado === 'FINALIZADO'){
-            
-            let newventa = await oldventa.update({...dataUpdated, precio:dataUpdated.precio, total:dataUpdated.precio});
+            let costo = await calcularCosto(oldventa.maestro_articulos)
+            let newventa = await oldventa.update({...dataUpdated, total:dataUpdated.subtotal, precio: costo});
             await oldventa.maestro_articulos.forEach(element => {
             element.pedido_produccion.update({
                 estado: dataUpdated.estado
@@ -74,12 +97,12 @@
             return true
         });
         }else{
-            let newventa = await oldventa.update({...dataUpdated, precio:dataUpdated.precio, total:dataUpdated.precio});
+            let costo = await calcularCosto(oldventa.maestro_articulos)
+            let newventa = await oldventa.update({...dataUpdated, total:dataUpdated.subtotal, precio:costo});
             return true
         }
         
 
-        return newventa;
     } catch (err) {
         console.error('🛑 Error when updating venta', err);
         throw err;

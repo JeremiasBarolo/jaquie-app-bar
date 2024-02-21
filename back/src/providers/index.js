@@ -11,6 +11,7 @@ const ventaProvider = require('./venta');
 const pedido_stockProvider = require('./pedido_stock');
 const pedido_produccionProvider = require('./pedido_produccion');
 const sumarPedidos = require('./sumarPedidos');
+const cerrarCaja = require('./cerrarCaja'); 
 
 
 
@@ -27,5 +28,6 @@ module.exports = {
     ventaProvider,
     pedido_stockProvider,
     pedido_produccionProvider,
-    sumarPedidos
+    sumarPedidos,
+    cerrarCaja
 };

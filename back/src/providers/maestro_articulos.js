@@ -1,6 +1,7 @@
 
 
-    var models = require('../models');
+var models = require('../models');
+
 
     const listAllmaestro_articulos= async () => {
     try {
@@ -9,7 +10,7 @@
                     { model: models.tipo_articulo },
                     { model: models.conversion_UM },
                     { model: models.pedido_stock },
-                    { model: models.pedido_produccion },
+                    { model: models.pedido_produccion,  attributes: ['id','cant_requerida', 'updatedAt', 'createdAt'] },
                     {
                         model: models.receta,
                         include: [
@@ -18,7 +19,7 @@
                                 include: [
                                     {
                                         model: models.maestro_articulos,
-                                        attributes: ['descripcion']
+                                        attributes: ['descripcion', 'costo_unitario' ]
                                     }
                                 ]
                             }
@@ -41,7 +42,7 @@
                     { model: models.tipo_articulo },
                     { model: models.conversion_UM },
                     { model: models.pedido_stock },
-                    { model: models.pedido_produccion },
+                    { model: models.pedido_produccion},
                     {
                         model: models.receta,
                         include: [
@@ -50,7 +51,7 @@
                                 include: [
                                     {
                                         model: models.maestro_articulos,
-                                        attributes: ['descripcion']
+                                        attributes: ['descripcion', 'costo_unitario']
                                     }
                                 ]
                             }

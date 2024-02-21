@@ -1,8 +1,9 @@
 <app-breadcrumbs [titulo]= 'breadcrumbItems' class="mb-3" ></app-breadcrumbs>
+
 <div class="text-right">
     <button type="button" id="agregar" class="btn btn-success mr-2"  [routerLink]="['crear-editar']"> Agregar
         Pedido de Stock</button>
-  </div>
+</div>
 
   <h4 class="text-left mb-5 ml-2">Subtotal general: {{calcularSubtotalGeneral() | currency}}</h4>
 
