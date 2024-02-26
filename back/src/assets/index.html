@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Factura de Ejemplo</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .firma-rectangulo {
+    border: 1px solid #000;
+    width: 100%;
+    height: 160px;
+    margin-top: 20px;
+    padding: 10px;
+    }
+
+    .firma-rectangulo-info {
+        border: 1px solid #000;
+        width: 100%;
+        height: 200px;
+        margin-top: 20px;
+        padding: 10px;
+    }
+
+    #info-empresa, #info-factura {
+        margin-top: 20px;
+    }
+    </style>
+</head>
+<body>
+
+<h4 class="text-center">Fecha: {{Fecha}}</h4>
+    
+<div class="container mt-4">
+   
+
+    <h2 class="mt-4">Detalles de los Productos</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Cantidad</th>
+                <th>Unidad de Medida</th>
+                <th>Precio unit.</th>
+                <th>Cost. Produccion</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+                {{productosHTML}}
+        </tbody>
+    </table>
+    <br>
+    <br>
+    <div class="firma-rectangulo">
+        <div class="text-right mb-2">
+            <p class="text-left"><strong></strong> <span id="subtotalBruto"></span></p>
+            <p><strong>Subtotal:</strong> <span id="subtotalNeto">${{subtotalTotal}}</span></p>
+            <p><strong>Costo Produccion Total:</strong> <span id="subtotalNeto">${{costoTotal}}</span></p>
+            <p ><strong>Ganancia</strong> <span id="subtotalFinal">${{Profit}}</span></p>
+            
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+
