@@ -70,6 +70,8 @@ export class CrearEditarPedidoProduccionComponent {
           this.router.navigate(['admin/pedido-produccion']);
           this.toastr.success('Pedido Creado Exitosamente');
         });
+
+        
       } catch (error) {
         console.log(error);
       }

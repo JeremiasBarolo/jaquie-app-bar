@@ -23,7 +23,6 @@
                     }
                 ]
             });
-            console.log('✅ Ventas were found', ventas);
             return ventas;
         } catch (err) {
             console.error('🛑 Error when fetching ventas', err);
