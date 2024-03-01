@@ -3,6 +3,8 @@
     const {listOnemaestro_articulos} = require('./maestro_articulos');
     const {listOnedisponibilidad_articulos} = require('./disponibilidad_articulos');
 
+    
+
     const listAllpedido_produccion = async () => {
         try {
             const pedido_produccion = await models.pedido_produccion.findAll({
@@ -38,8 +40,8 @@
     };
 
     const createpedido_produccion= async (Datapedido_produccion) => {
-        let insumos_recorridos = [];
     
+        let insumos_recorridos = [];
         try {
             await Promise.all(Datapedido_produccion.insumos.map(async insumo => {
                 await models.pedido_produccion.create({
@@ -79,14 +81,20 @@
             }));
     
             
-            insumos_recorridos.map(async (receta) => {
+            await Promise.all(insumos_recorridos.map(async (receta) => {
                 let disponibilidad = await listOnedisponibilidad_articulos(receta.id);
-                disponibilidad.update({
+                await disponibilidad.update({
                     cant_fisica: disponibilidad.cant_fisica - receta.cant_necesaria,
                     cant_disponible: disponibilidad.cant_disponible - receta.cant_necesaria,
                     cant_comprometida: disponibilidad.cant_comprometida + receta.cant_necesaria,
                 });
-            });
+                console.log(`sume a el id ${receta.id} la cantidad de: 
+                cant_fisica:${receta.cant_necesaria}, 
+                cant_disponible:${  receta.cant_necesaria},
+                cant_comprometida:${ receta.cant_necesaria},
+                
+                `);
+            }));
     
             return insumos_recorridos;
         } catch (err) {
@@ -96,78 +104,83 @@
     };
 
     const updatepedido_produccion = async (pedido_produccion_id, dataUpdated) => {
-        let insumos_recorridos = [];
         try {
-
-            await Promise.all(dataUpdated.insumos.map(async insumo => {
-
+           
+            let insumos_recorridos = [];
+            // Iteramos sobre los insumos enviados
+            for (const insumo of dataUpdated.insumos) {
                 const maestro = await listOnemaestro_articulos(insumo.id);
+                const lol = await models.disponibilidad_articulos.findAll();
     
+               
+                let pedidoExistente = await models.pedido_produccion.findOne({
+                    where: { maestroId: insumo.id, ventaId: dataUpdated.mesa }
+                });
+    
+                if (!pedidoExistente) {
+                    pedidoExistente = await models.pedido_produccion.create({
+                        maestroId: insumo.id,
+                        ventaId: dataUpdated.mesa,
+                        cant_requerida: insumo.cantidad
+                    });
+                } 
+    
+                
                 if (maestro.tipo_articulo.description === "Bebidas" || maestro.tipo_articulo.description === "Productos Elaborados") {
-                    await Promise.all(maestro.receta.map(async receta => {
-                        const disponibilidad = await listOnedisponibilidad_articulos(receta.disponibilidad_articulo.id);
-                        const existente = insumos_recorridos.find(item => item.id === disponibilidad.id);
-                        const cantidad_anterior = await models.pedido_produccion.findOne({ where: { maestroId: maestro.id, ventaId: dataUpdated.mesa } });
-
-                        if (!existente) {
-                            insumos_recorridos.push({
-                                id: disponibilidad.id,
-                                cant_necesaria: insumo.cantidad,
-                                cantidad_anterior: cantidad_anterior.cant_requerida,
-                            });
-                        } else {
-                            existente.cant_necesaria += insumo.cantidad;
-                            existente.cantidad_anterior += cantidad_anterior;
-                        }
-                      
-                    }));
+                    for (const receta of maestro.receta) {
+                        const disponibilidad = await  models.disponibilidad_articulos.findByPk(receta.disponibilidad_articulo.id);
+                        await insumoRecorridos(disponibilidad.id, dataUpdated.mesa, maestro.id, insumo.cantidad, pedidoExistente, insumos_recorridos);
+                    }
                 } else {
                     const disponibilidad = await models.disponibilidad_articulos.findOne({ where: { articuloId: maestro.id } });
-                    const existente = insumos_recorridos.find(item => item.id === disponibilidad.id);
-                    const cantidad_anterior = await models.pedido_produccion.findOne({ where: { maestroId: maestro.id, ventaId: dataUpdated.mesa } });
-
-                    if (!existente) {
-                        insumos_recorridos.push({
-                            id: disponibilidad.id,
-                            cant_necesaria: insumo.cantidad,
-                            cantidad_anterior: cantidad_anterior.cant_requerida,
-                        });
-                    } else {
-                        existente.cant_necesaria += insumo.cantidad;
-                        existente.cantidad_anterior += cantidad_anterior;
-                    }
+                    await insumoRecorridos(disponibilidad.id, dataUpdated.mesa, maestro.id, insumo.cantidad, pedidoExistente, insumos_recorridos);
                 }
-            }));
-
-            insumos_recorridos.map(async (disponibilidad_art) => {
+            }
+    
+            // Actualizamos las cantidades en la disponibilidad de artículos
+            for (const disponibilidad_art of insumos_recorridos) {
                 let disponibilidad = await listOnedisponibilidad_articulos(disponibilidad_art.id);
+                const stock_real = disponibilidad.cant_fisica + disponibilidad_art.cantidad_anterior;
+                
+                const cant_fisica_nueva = stock_real - disponibilidad_art.cant_necesaria;
+                const cant_disponible_nueva = stock_real - disponibilidad_art.cant_necesaria;
 
-                disponibilidad.update({
-                    cant_fisica: disponibilidad.cant_fisica + disponibilidad_art.cantidad_anterior - disponibilidad_art.cant_necesaria,
-                    cant_disponible: disponibilidad.cant_disponible + disponibilidad_art.cantidad_anterior - disponibilidad_art.cant_necesaria,
-                    cant_comprometida: disponibilidad.cant_comprometida - disponibilidad_art.cantidad_anterior + disponibilidad_art.cant_necesaria,
+                const cant_comprometida_real = disponibilidad.cant_comprometida- disponibilidad_art.cantidad_anterior;
+                const cant_comprometida_nueva = cant_comprometida_real + disponibilidad_art.cant_necesaria;
+                
+                await disponibilidad.update({
+                    cant_fisica: cant_fisica_nueva,
+                    cant_disponible: cant_disponible_nueva,
+                    cant_comprometida: cant_comprometida_nueva
                 });
-            });
-
-            // actualizar pedido
+            
+                console.log(`Se actualizó la disponibilidad para el artículo ${disponibilidad_art.id}:
+                    cant_fisica: ${cant_fisica_nueva},
+                    cant_disponible: ${cant_disponible_nueva},
+                    cant_comprometida: ${cant_comprometida_nueva}
+                `);
+            }
+            console.log('Insumos recorridos:', insumos_recorridos);
+            // Actualizamos los pedidos existentes
             const oldpedido_produccion = await models.venta.findByPk(pedido_produccion_id, { include: [{ all: true }] });
         
-            await Promise.all(oldpedido_produccion.maestro_articulos.map(async maestro => {
-                dataUpdated.insumos.forEach(async insumo => {
+            for (const maestro of oldpedido_produccion.maestro_articulos) {
+                for (const insumo of dataUpdated.insumos) {
                     if (maestro.id === insumo.id) {
                         await maestro.pedido_produccion.update({
                             cant_requerida: insumo.cantidad,
                         });
                     }
-                });
-            }));
+                }
+            }
     
             return dataUpdated;
         } catch (err) {
-            console.error('🛑 Error when updating pedido_produccion', err);
+            console.error('🛑 Error al actualizar pedido_produccion', err);
             throw err;
         }
     };
+    
     
 
 
@@ -218,4 +231,44 @@
     listAllpedido_produccion, listOnepedido_produccion, createpedido_produccion, updatepedido_produccion, deletepedido_produccion,
     };
 
+    
+    const insumoRecorridos = async (disponibilidad_id, mesa_id, maestro_id, insumo_cantidad, pedido_existente, insumos_recorridos) => {
+        const existente = insumos_recorridos.find(item => item.id === disponibilidad_id);
+        const cantidad_anterior_data = await models.pedido_produccion.findOne({ where: { maestroId: maestro_id, ventaId: mesa_id } });
+        const cantidad_anterior = 
+        cantidad_anterior_data 
+        ? cantidad_anterior_data.cant_requerida 
+        : 0;
+    
+        if (!existente) {
+            if (!pedido_existente || !cantidad_anterior) {
+                // por si lo creamos o no tenemos cantidad anterior
+                insumos_recorridos.push({
+                    id: disponibilidad_id,
+                    cant_necesaria: insumo_cantidad,
+                    cantidad_anterior: 0,
+                });
+            } else {
+                insumos_recorridos.push({
+                    id: disponibilidad_id,
+                    cant_necesaria: insumo_cantidad,
+                    cantidad_anterior: cantidad_anterior,
+                });
+            }
+        } else {
+            if (!pedido_existente || !cantidad_anterior) {
+                // por si lo creamos o no tenemos cantidad anterior
+                existente.cant_necesaria += insumo_cantidad;
+                existente.cantidad_anterior += 0;
+            } else {
+                existente.cant_necesaria += insumo_cantidad;
+            }
+        }
+    };
+    
+    
+
+        
+            
+                
     

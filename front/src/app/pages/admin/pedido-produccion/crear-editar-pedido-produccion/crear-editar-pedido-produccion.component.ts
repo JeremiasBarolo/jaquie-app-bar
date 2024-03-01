@@ -99,45 +99,42 @@ export class CrearEditarPedidoProduccionComponent {
     if(this.id !== 0){
       this.maestroArticulosService.getAll().subscribe(
         (maestros: any[]) => {
-          maestros.filter(maestro => maestro.tipo_articulo.description !== 'Insumos')
-          
-          
+          this.listMeaesto = maestros.filter(maestro => maestro.tipo_articulo.description !== 'Insumos');
         },
         error => {
           console.error('Error al cargar los maestros de artículos:', error);
         }
       );
-
+  
       this.mesasService.getAll().subscribe(
         (mesas: any[]) => {
-          this.listMesas = mesas
-        
-
+          this.listMesas = mesas;
+        },
+        error => {
+          console.error('Error al cargar las mesas:', error);
         }
-      )
-    }else{
+      );
+    } else {
       this.maestroArticulosService.getAll().subscribe(
-
         (maestros: any[]) => {
-          this.listMeaesto = maestros.filter(maestro => maestro.tipo_articulo.description !== 'Insumos')
+          this.listMeaesto = maestros.filter(maestro => maestro.tipo_articulo.description !== 'Insumos');
         },
         error => {
           console.error('Error al cargar los maestros de artículos:', error);
         }
       );
-
-        // todos los no tengan pedido
+  
       this.mesasService.getAll().subscribe(
         (mesas: any[]) => {
-          this.listMesas = mesas.filter(mesa => mesa.maestro_articulos.length === 0)
-
+          this.listMesas = mesas.filter(mesa => mesa.maestro_articulos.length === 0);
+        },
+        error => {
+          console.error('Error al cargar las mesas:', error);
         }
-      )
+      );
     }
-
-    
-    
   }
+  
   
   loadSelectedProducts() {
     if (this.id) {

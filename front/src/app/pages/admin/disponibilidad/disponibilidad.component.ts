@@ -177,5 +177,19 @@ export class DisponibilidadComponent implements OnInit{
       console.log(error);
     }
    }
+
+
+   set_Numbers(){
+    this.listDisponibilidad.map((dispo)=>{
+      this.disponibilidadService.update(dispo.id, {...dispo, cant_fisica: 1000, cant_disponible:1000, cant_comprometida:0} ).subscribe(() => {
+        setTimeout(() => {
+          window.location.reload();
+        }, 600)
+
+        this.toastr.success('Articulo actualizado', 'Exito');
+
+      });
+    })
+   }
   
 }

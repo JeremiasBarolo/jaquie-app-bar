@@ -3,8 +3,8 @@ const { validateResult } = require('../helpers/validateHelper');
 const models = require('../models');
 const { listOnedisponibilidad_articulos } = require('../providers/disponibilidad_articulos');
 
-// Lista para llevar un seguimiento de los pedidos revisados
-let pedidos_revisados_reales = [];
+
+
 
 // Validador para el pedido
 const pedidoValidator = [
@@ -15,6 +15,7 @@ const pedidoValidator = [
         .isArray()
         .custom(async (insumos, { req, res }) => {
             const errors = [];
+            let pedidos_revisados_reales = [];
 
             for (const insumo of insumos) {
                 if (insumo.cantidad <= 0) {
@@ -73,7 +74,6 @@ const pedidoValidator = [
                 await restaurar(pedidos_revisados_reales);
                 throw new Error(errors.join(', '));
             }
-
             await restaurar(pedidos_revisados_reales);
             return true;
         }),
