@@ -31,8 +31,8 @@ export class MesasService {
   }
 
   // update
-  update(id: number, Entity: FormData): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${id}`, Entity)
+  update(id: number, Entity: FormData, devolver?:any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${id}`, {...Entity, devolver:devolver})
 
   }
 

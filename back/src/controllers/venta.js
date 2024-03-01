@@ -47,8 +47,17 @@ const updateventa = async (req, res) => {
 
 const deleteventa = async (req, res) => {
   const id = req.params.venta_id;
+
+  const devolver = req.body.devolver;
   try {
-    await ventaService.deleteventa(id);
+  if(devolver){
+    await ventaService.deleteventa(id, devolver);
+  }else{
+    await ventaService.deleteventa(id, devolver=false);
+  }
+
+ 
+    
     res.json('');
   } catch (err) {
     res.status(500).json({ action: 'deleteventa', error: err.message });

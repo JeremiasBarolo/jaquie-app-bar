@@ -23,7 +23,7 @@
               <div class="card-footer">
                 <a class="btn btn-success mr-1" (click)="cambiarEstado(preparacion.id, preparacion, 'COMIENDO')">Llego su comida</a>
                 <a class="btn btn-warning ml-1" href="admin/pedido-produccion">Crear Pedido</a>
-                <a class="btn btn-outline-danger ml-1" (click)="cambiarEstado(preparacion.id, preparacion, 'CANCELADO')">Cancelado</a>
+                <a class="btn btn-outline-danger ml-1" data-target="#cancelarMesa" data-toggle="modal"(click)="showCardDetails(preparacion)" >Cancelado</a>
               </div>
             </div>
           </div>
@@ -43,7 +43,7 @@
     
             <div class="card-footer">
               <button class="btn btn-success"  (click)="showCardDetails(comiendo)" (click)="cambiarEstado(comiendo.id, comiendo, 'FINALIZADO')">Finalizar</button>
-              <a class="btn btn-outline-danger ml-1" (click)="cambiarEstado(comiendo.id, comiendo, 'FINALIZADO')" >Cancelado</a>
+              <a class="btn btn-warning ml-1" href="admin/pedido-produccion" >Agregar a Pedido...</a>
             </div>
           </div>
         </div>
@@ -217,7 +217,7 @@
   </div>
 </div>
 
-<!-- Modal para finalizar una mesa -->
+<!-- Modal para cerrar caja -->
 <div class="modal fade" id="cerrarCaja" tabindex="-1" role="dialog" aria-labelledby="crearMesa" aria-hidden="true">
   <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -232,6 +232,26 @@
           </div>
           <div class="modal-footer">
             <button type="button" id="agregar" class="btn btn-outline-danger mr-2" (click)="cerrarCaja()" > Aceptar</button>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- Modal para cancelar mesa -->
+<div class="modal fade" id="cancelarMesa" tabindex="-1" role="dialog" aria-labelledby="crearMesa" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header bg-danger">
+              <h5 class="modal-title" id="modalCrearTipoLabel">Desea cancelar la mesa {{cardData?.mesa}}?</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+              <strong>Recuerde que esta accion devolvera todos los ingredientes de laca entidad del pedido</strong>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="agregar" class="btn btn-outline-danger mr-2" (click)="cambiarEstado(cardData.id,cardData, 'DEVOLVER')" > Aceptar</button>
           </div>
       </div>
   </div>

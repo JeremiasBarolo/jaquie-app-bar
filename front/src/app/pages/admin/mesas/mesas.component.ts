@@ -111,13 +111,22 @@ cambiarEstado(id?: number, pedido?: any, estado?: string, devolverInsumos?: any,
     
 
 
-    }else{
+    }else if (estado === 'DEVOLVER'){
 
-      this.mesasService.update(id, {...pedido, devolverInsumos:devolverInsumos}).subscribe(() => {
+      this.mesasService.update(id, {...pedido}).subscribe(() => {
       this.toastr.success(`Mesa ${pedido.name} ${estado} exitosamente`)
       setTimeout(() => {
         window.location.reload();
       }, 600);
+      })
+
+
+    }else{
+      this.mesasService.update(id, {...pedido, devolverInsumos:devolverInsumos}).subscribe(() => {
+        this.toastr.success(`Mesa ${pedido.name} ${estado} exitosamente`)
+        setTimeout(() => {
+          window.location.reload();
+        }, 600);
     }
       
     
@@ -180,5 +189,7 @@ cerrarCaja(){
 
   })
 }
+
+
 
 }
