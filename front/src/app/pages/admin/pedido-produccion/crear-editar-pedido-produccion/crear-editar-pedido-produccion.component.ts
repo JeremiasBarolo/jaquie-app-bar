@@ -40,11 +40,18 @@ export class CrearEditarPedidoProduccionComponent {
   }
 
   ngOnInit(): void {
-    setTimeout(() => {
-      this.loadAllEntities();
-      this.loadSelectedProducts();
-    }, 200)
+    if(this.id !== 0){
+      for (let i = 0; i < 2; i++){
+        setTimeout(() => {
+          this.loadAllEntities();
+          this.loadSelectedProducts();
+        }, 50)
+      }
+    }
     
+    
+    this.loadAllEntities();
+        this.loadSelectedProducts();
     
     
   }

@@ -1,0 +1,53 @@
+<div class="container mt-5">
+    <h2>Panel de Empleados - Gestión de Bar</h2>
+    <div class="row mt-4">
+      <div class="col-md-3">
+        <div class="list-group">
+          <button type="button" class="list-group-item list-group-item-action" >Gestionar Mesas</button>
+          <button type="button" class="list-group-item list-group-item-action" >Ver Stock</button>
+          <button type="button" class="list-group-item list-group-item-action" >Cerrar Caja</button>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <div >
+          <!-- Aquí se mostrarían las mesas disponibles y ocupadas en una tabla -->
+          <h3>Mesas</h3>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Número de Mesa</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let table ">
+                <td>{{ table.number }}</td>
+                <td>{{ table.status }}</td>
+                <td><button class="btn btn-primary btn-sm">Detalles</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div >
+          <!-- Aquí se mostraría el stock disponible en una tabla -->
+          <h3>Stock Disponible</h3>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item">
+                <td>{{ item.name }}</td>
+                <td>{{ item.quantity }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- Otras secciones para editar el stock, agregar productos, etc. -->
+      </div>
+    </div>
+  </div>
