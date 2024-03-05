@@ -1,11 +1,16 @@
 
 
 const { estadisticaService } = require("../services");
+const moment = require('moment');
 
 
 const listAllestadistica = async (req, res) => {
   try {
-    const estadistica = await estadisticaService.listAllestadistica();
+    let estadistica = await estadisticaService.listAllestadistica();
+    
+    await formattedStats(estadistica)
+    
+
     res.json(estadistica);
   } catch (err) {
     res.status(500).json({ action: "listAll", error: err.message });
@@ -15,15 +20,13 @@ const listAllestadistica = async (req, res) => {
 const listOneestadistica = async (req, res) => {
   try {
     const id = req.params.estadistica_id;
-    const estadistica = await estadisticaService.listOneestadistica(id);
+    let estadistica = await estadisticaService.listOneestadistica(id);
+    formattedStats(estadistica)
     res.json(estadistica);
-
   } catch (err) {
     res.status(500).json({ action: "listOneestadistica", error: err.message });
   }
-
 };
-
 const createestadistica = async (req, res) => {
 
   try {
@@ -60,3 +63,16 @@ const deleteestadistica = async (req, res) => {
 module.exports = {
   listAllestadistica, listOneestadistica, createestadistica, updateestadistica, deleteestadistica, 
 };
+
+const formattedStats = async (stats) => {
+  
+
+  return stats.forEach(stat => ({
+    id: stat.id,
+    ganancia: stat.ganancia,
+    recaudacionTotal: stat.recaudacionTotal,
+    costo: stat.costo,
+    createdAt: moment(stat.createdAt).format('DD-MM-YYYY'),
+    updatedAt: moment(stat.updatedAt).format('DD-MM-YYYY')
+  }));
+}

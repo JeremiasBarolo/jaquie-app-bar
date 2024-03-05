@@ -16,6 +16,10 @@ import { PedidoStockComponent } from './pedido-stock/pedido-stock.component';
 import { PedidoProduccionComponent } from './pedido-produccion/pedido-produccion.component';
 import { CrearEditarPedidoProduccionComponent } from './pedido-produccion/crear-editar-pedido-produccion/crear-editar-pedido-produccion.component';
 import { MesasComponent } from './mesas/mesas.component';
+import { EstadisticaComponent } from './estadistica/estadistica.component';
+import { NgApexchartsModule } from 'ng-apexcharts';
+
+
 
 
 
@@ -33,7 +37,8 @@ import { MesasComponent } from './mesas/mesas.component';
     PedidoStockComponent,
     PedidoProduccionComponent,
     CrearEditarPedidoProduccionComponent,
-    MesasComponent
+    MesasComponent,
+    EstadisticaComponent
   ],
   imports: [
     CommonModule,
@@ -42,6 +47,8 @@ import { MesasComponent } from './mesas/mesas.component';
     AdminRoutingModule,
     ReactiveFormsModule,
     FormsModule,
+    NgApexchartsModule,
+
   ]
 })
 export class AdminModule { }

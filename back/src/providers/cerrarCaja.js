@@ -46,7 +46,7 @@ const cerrarCaja = async () => {
 
 
 
-// <=================================== Costo Total =====================================>
+    // <=================================== Costo Total =====================================>
         // for (const maestroArticulo of maestros) {
         //     let costoTotalMesa = 0;
 
@@ -76,51 +76,53 @@ const cerrarCaja = async () => {
             costoTotal += element.precio;
             return costoTotal;
         })
-// <=================================== Final de  Costo Total =====================================>
+    // <=================================== Final de  Costo Total =====================================>
 
 
-// <========================= Recaudacion =============================>
-        await mesas.forEach(element => {
-            recaudacionTotal += element.total;
-            console.log(recaudacionTotal);
-            return recaudacionTotal;
-        })
-// <========================= Final Recaudacion =============================>
+    // <========================= Recaudacion =============================>
+            await mesas.forEach(element => {
+                recaudacionTotal += element.total;
+                console.log(recaudacionTotal);
+                return recaudacionTotal;
+            })
+    // <========================= Final Recaudacion =============================>
 
-// <========================= Ganancia =============================>
+    // <========================= Ganancia =============================>
 
-    let ganacia = recaudacionTotal - costoTotal;
+        let ganacia = recaudacionTotal - costoTotal;
 
-// // <========================= Final Ganancia =============================>
-
-
-
-
-
-// <================ Creacion de Estadistica ===========================>
-// await models.estadistica.create({
-//     recaudacion: recaudacionTotal,
-//     costo_total: costoTotal,
-//     profit: ganacia,
-// })
-
-
-// ACA VA LA INTEGRACION DEL PDF
-generarPdf(maestros, recaudacionTotal, costoTotal, ganacia)
-
-// <=================== Eliminar Pedidos ===========================>
-// await models.pedido_produccion.destroy({
-//     where: { estado: 'FINALIZADO' }
-// });
-
-// await models.venta.destroy({
-//     where: { estado: 'FINALIZADO' }
-// });
+    // // <========================= Final Ganancia =============================>
 
 
 
 
-return {recaudacion: recaudacionTotal, costo: costoTotal, ganancia: ganacia}
+
+    // <================ Creacion de Estadistica ===========================>
+    await models.estadistica.create({
+        recaudacion: recaudacionTotal,
+        costo_total: costoTotal,
+        profit: ganacia,
+    })
+
+
+
+
+    // ACA VA LA INTEGRACION DEL PDF
+    generarPdf(maestros, recaudacionTotal, costoTotal, ganacia)
+
+    // <=================== Eliminar Pedidos ===========================>
+    await models.pedido_produccion.destroy({
+        where: { estado: 'FINALIZADO' }
+    });
+
+    await models.venta.destroy({
+        where: { estado: 'FINALIZADO' }
+    });
+
+
+
+
+    return {recaudacion: recaudacionTotal, costo: costoTotal, ganancia: ganacia}
         
     } catch (error) {
         console.error('Error al cerrar la caja:', error);

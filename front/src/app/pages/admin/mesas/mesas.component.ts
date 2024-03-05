@@ -183,7 +183,9 @@ calcularSubtotal(ventas: any) {
 cerrarCaja(){
   this.estadisticaService.create({cerrarCaja: true}).subscribe((res) => {
     this.toastr.success('Caja cerrada exitosamente');
-    console.log(res);
+    setTimeout(() => {
+      window.location.reload();
+    }, 600)
     
 
 

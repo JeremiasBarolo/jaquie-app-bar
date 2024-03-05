@@ -1,0 +1,28 @@
+<app-breadcrumbs [titulo]= 'breadcrumbItems'></app-breadcrumbs>
+<div class="container">
+    <div class="row ">
+        <div class="col-md-8">
+            <h3>Estadisticas del Año</h3>
+            <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [xaxis]="chartOptions.xaxis"></apx-chart>
+        </div>
+        <div class="col-md-4">
+            <h3>Recaudacion Mes a Mes</h3>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Mes</th>
+                        <th>Profit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let mes of profitPorMes">
+                        <td>{{ mes.mes }}</td>
+                        <td>{{ mes.profit | currency }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+    
+</div>
