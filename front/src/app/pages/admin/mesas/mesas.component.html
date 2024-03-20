@@ -201,16 +201,16 @@
               </button>
           </div>
           <div class="modal-body">
-              <form [formGroup]="form" (ngSubmit)="guardarMesa('Finalizar')">
+              <form [formGroup]="form" (ngSubmit)="cambiarEstado(cardData.id, cardData, 'FINALIZADO')">
                   <div class="form-group">
-                    <label for="nombreTipo">Nombre de la Mesa</label>
+                    <label for="nombreTipo">Forma de pago:</label>
                     <input type="text" class="form-control" id="pago" formControlName="pago">
                     <div *ngIf="form.get('pago')?.invalid && form.get('pago')?.touched" class="text-danger">
                       Descripcion del tipo es requerido
                     </div>
                   </div>
                   
-                  <button type="submit" class="btn btn-primary">enviar</button>
+                  <button type="submit" class="btn btn-primary" >enviar</button>
               </form>
           </div>
       </div>

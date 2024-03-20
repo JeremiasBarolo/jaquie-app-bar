@@ -88,7 +88,7 @@
             
             if (dataUpdated.estado === 'FINALIZADO') {
                 let costo = await calcularCosto(oldventa.maestro_articulos);
-                let newventa = await oldventa.update({...dataUpdated, total: dataUpdated.subtotal, precio: costo});
+                let newventa = await oldventa.update({...dataUpdated, total: dataUpdated.subtotal, precio: costo, forma_pago: dataUpdated.forma_pago});
                 let pedidos = await models.pedido_produccion.findAll({ where: { ventaId: venta_id } });
 
                 //<================ CAMBIO DE ESTADO ==================>

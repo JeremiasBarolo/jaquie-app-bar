@@ -18,6 +18,7 @@ import { CrearEditarPedidoProduccionComponent } from './pedido-produccion/crear-
 import { MesasComponent } from './mesas/mesas.component';
 import { EstadisticaComponent } from './estadistica/estadistica.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
+import { TableModule } from 'primeng/table';
 
 
 
@@ -48,6 +49,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
     ReactiveFormsModule,
     FormsModule,
     NgApexchartsModule,
+    TableModule
 
   ]
 })

@@ -153,15 +153,30 @@
                     cant_disponible: cant_disponible_nueva,
                     cant_comprometida: cant_comprometida_nueva
                 });
-            
-                console.log(`Se actualizó la disponibilidad para el artículo ${disponibilidad_art.id}:
-                    cant_fisica: ${cant_fisica_nueva},
-                    cant_disponible: ${cant_disponible_nueva},
-                    cant_comprometida: ${cant_comprometida_nueva}
-                `);
             }
-            console.log('Insumos recorridos:', insumos_recorridos);
-            // Actualizamos los pedidos existentes
+
+
+
+
+            // <========================================= Filtrado de insumos inexistentes ===============================>
+
+            const insumos_en_pedido = await models.pedido_produccion.findAll({
+            where: {
+                ventaId: dataUpdated.mesa,
+            }
+            });
+
+            for(insumo_existentes of insumos_en_pedido){
+                const existe = dataUpdated.insumos.find(existente => existente.id === insumo_existentes.maestroId);
+
+            
+                if (!existe) {
+                    await insumo_existentes.destroy();
+                }
+            }
+
+            
+        // <========================================= Actualizamos los pedidos existentes ===============================>
             const oldpedido_produccion = await models.venta.findByPk(pedido_produccion_id, { include: [{ all: true }] });
         
             for (const maestro of oldpedido_produccion.maestro_articulos) {
