@@ -1,1 +1,224 @@
-<p>disponibilidad-empleados works!</p>
+<app-title-empleados [titulo]= 'breadcrumbItems'></app-title-empleados>
+
+<div class="text-right">
+    <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#modalMaestroCrear" aria-label="Editar Tipo">Agregar Articulo</button>
+    <button type="button" class="btn btn-danger mr-2"  aria-label="Editar Tipo" (click)="set_Numbers()">SET NUMBERS</button>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            
+            
+            <section style="margin: 16px">
+                <input pInputText type="text" (input)="applyFilter($event)" placeholder="Buscar por nombre.." class="mb-3 bg-dark">
+                <p-table #dt [value]="filteredDisp" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20]" class="custom-datatable">
+                <ng-template  pTemplate="header"  class="p-overlaypanel-header p-component-header">
+                    <tr >
+                    
+                        <th pSortableColumn="descripcion">
+                            Descripcion
+                            
+                        </th>
+                        <th pSortableColumn="costo_unitario">
+                            Costo Unit
+                            
+                        </th>
+                        <th pSortableColumn="conversion_UM">
+                            Unidad de Medida
+                            
+                        </th>
+                        <th pSortableColumn="cant_fisica">
+                            Can. Fisica
+                            <p-sortIcon field="cant_fisica" style="margin: 16px"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="cant_disponible">
+                            Can. Disponible
+                            <p-sortIcon field="cant_disponible" style="margin: 16px"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="cant_comprometida">
+                            Can. Comprometida
+                            <p-sortIcon field="cant_comprometida" style="margin: 16px"></p-sortIcon>
+                        </th>
+                        <th>
+                            Acciones
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowData>
+                    <tr>
+                        
+                        <td data-target="#Modal" data-toggle="modal" >{{ rowData?.maestro_articulo?.descripcion }}</td>
+                        <td data-target="#Modal" data-toggle="modal" >{{ rowData.maestro_articulo.costo_unitario }}</td>
+                        <td data-target="#Modal" data-toggle="modal" >{{ rowData.conversion_UM.uni_medida}} / {{ rowData.conversion_UM.seg_umedida}}</td>
+                        <td data-target="#Modal" data-toggle="modal" >{{ rowData.cant_fisica}}</td>
+                        <td data-target="#Modal" data-toggle="modal" >{{ rowData.cant_disponible}}</td>
+                        <td data-target="#Modal" data-toggle="modal" >{{ rowData.cant_comprometida}}</td>
+                    
+                    <td> 
+                        <button (click)="editarTipo(rowData)" type="button" data-toggle="modal" data-target="#SumarCantidad" class="btn btn-outline-success" aria-label="Editar Tipo">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                        <button (click)="editarTipo(rowData)" type="button" data-toggle="modal" data-target="#modalMaestroCrear" class="btn btn-outline-primary " aria-label="Editar Tipo">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <button type="button" class="btn btn-outline-danger " data-toggle="modal" data-target="#EliminarMaestro" (click)="DataEntidad(rowData)" aria-label="Borrar Tipo">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                    
+                    </tr>
+                </ng-template>
+                </p-table>
+            </section>
+        </div>
+    </div>
+</div>
+
+
+<!-- <======================================= MODALES ===================================> -->
+
+<!-- Modal para crear un nuevo tipo de artículo -->
+<div class="modal fade" id="modalMaestroCrear" tabindex="-1" role="dialog" aria-labelledby="modalCrearTipoLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content bg-dark">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCrearTipoLabel">Crear/Editar Tipo de Artículo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="disponibilidadForm" (ngSubmit)="guardarNuevoMaetro()">
+                    <div class="form-group">
+
+                      <label for="nombreTipo">Cantidad Fisica</label>
+                      <input type="number" class="form-control" id="nombreTipo" formControlName="cant_fisica">
+                      <div *ngIf="disponibilidadForm.get('cant_fisica')?.invalid && disponibilidadForm.get('cant_fisica')?.touched" class="text-danger">
+                        Cantidad Fisica es requerido
+                      </div>
+
+                      <label for="nombreTipo">Cantidad Comprometida</label>
+                      <input type="number" class="form-control" id="costo_unit" formControlName="cant_comprometida">
+                      <div *ngIf="disponibilidadForm.get('cant_comprometida')?.invalid && disponibilidadForm.get('cant_comprometida')?.touched" class="text-danger">
+                        Cantidad Comprometida es requerido
+                      </div>
+
+                      <label for="nombreTipo">Cantidad Disponible</label>
+                      <input type="number" class="form-control" id="costo_unit" formControlName="cant_disponible">
+                      <div *ngIf="disponibilidadForm.get('cant_disponible')?.invalid && disponibilidadForm.get('cant_disponible')?.touched" class="text-danger">
+                        Cantidad Disponible es requerido
+                      </div>
+
+                        <div class="form-group">
+                                <label for="maestro">Articulo para Generar Stock</label>
+                                <select class="form-control" id="tipoArticulo" formControlName="maestro">
+                                    <option *ngFor="let maestro of listMaestro" [value]="maestro.id">{{ maestro.descripcion }}</option>
+                                </select>
+                                <div *ngIf="disponibilidadForm.get('maestro')?.invalid && disponibilidadForm.get('maestro')?.touched" class="text-danger">
+                                    Tipo de artículo es requerido
+                                </div>
+                        </div>
+
+
+                        <!-- Campo de selección para Conversión de Unidad de Medida -->
+                            <div class="form-group">
+                                <label for="conversionUM">Conversión de Unidad de Medida</label>
+                                <select class="form-control" id="conversionUM" formControlName="conversionUM">
+                                    <option *ngFor="let conversion of conversionesUM" [value]="conversion.id">{{ conversion.uni_medida }} / {{ conversion.seg_umedida }}</option>
+                                </select>
+                                <div *ngIf="disponibilidadForm.get('conversionUM')?.invalid && disponibilidadForm.get('conversionUM')?.touched" class="text-danger">
+                                    Conversión de unidad de medida es requerida
+                                </div>
+                            </div>
+
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" [disabled]="!disponibilidadForm.valid">Guardar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para eliminar tipo de artículo -->
+<div class="modal fade" id="EliminarMaestro" tabindex="-1" role="dialog" aria-labelledby="modalCrearTipoLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content bg-dark">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCrearTipoLabel">Desea usted eliminar este Articulo?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                
+                <p>Eliminar este Articulo causara que todas las entidades que estes enlazadas a el queden sin un Articulo definido.</p>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" (click)="EliminarArticulo()">Eliminar</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Volver</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content bg-dark">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCrearTipoLabel">{{ dataModal?.maestro_articulo?.descripcion }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-left">
+                <p><strong>Costo Unditario:</strong>  {{ dataModal?.maestro_articulo?.costo_unitario }}</p>
+                <p><strong>Unidad de Medida:</strong>  {{ dataModal?.conversion_UM?.uni_medida}} / {{ dataModal?.conversion_UM?.seg_umedida}}</p>
+                <p><strong>Can. Fisica:</strong>  {{ dataModal?.cant_fisica}}</p>
+                <p><strong>Can. Disponible:</strong>  {{ dataModal?.cant_disponible}}</p>
+                <p><strong>Can. Comprometida:</strong>  {{ dataModal?.cant_comprometida}}</p>
+
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="SumarCantidad" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content bg-dark">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCrearTipoLabel">{{ DataArticulos?.maestro_articulo?.descripcion }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-left">
+                <form [formGroup]="sumarForm" (ngSubmit)="SumarCantidades()">
+                    <div class="form-group">
+
+                      <label for="nombreTipo">Cuanta cantidad fisica deseas sumar a {{ DataArticulos?.maestro_articulo?.descripcion }}?</label>
+                      <input type="number" class="form-control" id="nombreTipo" formControlName="cant_fisica_sumada">
+                      <div *ngIf="disponibilidadForm.get('cant_fisica_sumada')?.invalid && disponibilidadForm.get('cant_fisica_sumada')?.touched" class="text-danger">
+                        Este campo es requerido es requerido
+                      </div>
+
+
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" [disabled]="!disponibilidadForm.valid">Guardar</button>
+                </form>
+
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+
+
+
+
