@@ -19,8 +19,8 @@
             return await ventaProvider.updateventa(venta_id, updateventa);
         };
 
-        const deleteventa = async (venta_id) => {
-            return await ventaProvider.deleteventa(venta_id);
+        const deleteventa = async (venta_id, devolver) => {
+            return await ventaProvider.deleteventa(venta_id,devolver);
         };
 
 

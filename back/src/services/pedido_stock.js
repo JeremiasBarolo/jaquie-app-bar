@@ -1,6 +1,6 @@
 
 
-        const { pedido_stockProvider } = require('../providers');
+        const { pedido_stockProvider, sumarPedidos } = require('../providers');
 
         const listAllpedido_stock = async () => {
             return await pedido_stockProvider.listAllpedido_stock();
@@ -11,7 +11,12 @@
         };
 
         const createpedido_stock = async (pedido_stockData) => {
-            return await pedido_stockProvider.createpedido_stock(pedido_stockData);
+            if(pedido_stockData.sumarCantidades){
+                return await sumarPedidos.sumarPedidoStock(pedido_stockData);
+            }else{
+                return await pedido_stockProvider.createpedido_stock(pedido_stockData);
+            }
+            
         };
 
 

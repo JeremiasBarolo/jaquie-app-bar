@@ -1,6 +1,6 @@
 
 
-        const { estadisticaProvider } = require('../providers');
+        const { estadisticaProvider, cerrarCaja } = require('../providers');
 
         const listAllestadistica = async () => {
             return await estadisticaProvider.listAllestadistica();
@@ -11,7 +11,12 @@
         };
 
         const createestadistica = async (estadisticaData) => {
-            return await estadisticaProvider.createestadistica(estadisticaData);
+            if(estadisticaData.cerrarCaja){
+                return await cerrarCaja.cerrarCaja(estadisticaData)
+            }else{
+                return await estadisticaProvider.createestadistica(estadisticaData);
+            }
+            
         };
 
 

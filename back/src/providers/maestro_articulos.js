@@ -1,6 +1,7 @@
 
 
-    var models = require('../models');
+var models = require('../models');
+
 
     const listAllmaestro_articulos= async () => {
     try {
@@ -9,7 +10,7 @@
                     { model: models.tipo_articulo },
                     { model: models.conversion_UM },
                     { model: models.pedido_stock },
-                    { model: models.pedido_produccion },
+                    { model: models.pedido_produccion,  attributes: ['id','cant_requerida', 'updatedAt', 'createdAt'] },
                     {
                         model: models.receta,
                         include: [
@@ -18,7 +19,7 @@
                                 include: [
                                     {
                                         model: models.maestro_articulos,
-                                        attributes: ['descripcion']
+                                        attributes: ['descripcion', 'costo_unitario' ]
                                     }
                                 ]
                             }
@@ -40,7 +41,8 @@
                 include: [
                     { model: models.tipo_articulo },
                     { model: models.conversion_UM },
-                    { model: models.pedido_stock, as: 'pedido_stock' },
+                    { model: models.pedido_stock },
+                    { model: models.pedido_produccion},
                     {
                         model: models.receta,
                         include: [
@@ -49,7 +51,7 @@
                                 include: [
                                     {
                                         model: models.maestro_articulos,
-                                        attributes: ['descripcion']
+                                        attributes: ['descripcion', 'costo_unitario']
                                     }
                                 ]
                             }
@@ -69,10 +71,16 @@
 
     const createmaestro_articulos= async (Datamaestro_articulos) => {
     
-
-    try {
         
-        const newmaestro_articulos= await models.maestro_articulos.create(Datamaestro_articulos);
+    try {
+        const maestroNuevo= {
+            costo_unitario: Datamaestro_articulos.costo_unitario,
+            descripcion: Datamaestro_articulos.descripcion,
+            tipoId: Datamaestro_articulos.tipoArticulo,
+            conversionId: Datamaestro_articulos.conversionUM
+        }
+        
+        const newmaestro_articulos= await models.maestro_articulos.create(maestroNuevo);
         
         return newmaestro_articulos;
 
@@ -84,13 +92,18 @@
     };
 
     const updatemaestro_articulos= async (maestro_articulos_id, dataUpdated) => {
-    
+        const maestroNuevo= {
+            costo_unitario: dataUpdated.costo_unitario,
+            descripcion: dataUpdated.descripcion,
+            tipoId: dataUpdated.tipoArticulo,
+            conversionId: dataUpdated.conversionUM
+        }
 
     try {
 
         const oldmaestro_articulos= await models.maestro_articulos.findByPk(maestro_articulos_id);
         
-        let newmaestro_articulos = await oldmaestro_articulos.update(dataUpdated);
+        let newmaestro_articulos = await oldmaestro_articulos.update(maestroNuevo);
 
         return newmaestro_articulos;
     } catch (err) {

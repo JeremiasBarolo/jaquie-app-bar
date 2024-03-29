@@ -51,12 +51,15 @@ module.exports = (sequelize, DataTypes) => {
         onUpdate: 'CASCADE'
       });
 
-      // Pedido de Produccion
+      
+     
       maestro_articulos.hasMany(models.pedido_produccion, {
         foreignKey: 'maestroId',
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE'
       });
+
+      
 
     }
   }

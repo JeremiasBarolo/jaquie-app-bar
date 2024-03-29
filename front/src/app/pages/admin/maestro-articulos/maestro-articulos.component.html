@@ -1,0 +1,185 @@
+<app-breadcrumbs [titulo]= 'breadcrumbItems'></app-breadcrumbs>
+
+<div class="text-right">
+    <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#modalMaestroCrear" aria-label="Editar Tipo">Agregar Articulo</button>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            
+            
+            <section style="margin: 16px">
+                <table class="table table-hover">
+                   
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Descripción</th>
+                            <th scope="col">Costo Unit</th>
+                            <th scope="col">Tipo Articulo</th>
+                            <th scope="col">Unidad de Medida</th>
+                            <th scope="col">Recetas</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr *ngFor="let tipo of listMaestro" (click)="showCardDetails(tipo)">
+                            <th scope="row">{{ tipo.id }}</th>
+                            <td data-target="#Modal" data-toggle="modal" >{{ tipo.descripcion }}</td>
+                            <td data-target="#Modal" data-toggle="modal" >{{ tipo.costo_unitario }}</td>
+                            <td data-target="#Modal" data-toggle="modal" >{{ tipo.tipo_articulo.description }}</td>
+                            <td data-target="#Modal" data-toggle="modal" >{{ tipo.conversion_UM.uni_medida}} / {{ tipo.conversion_UM.seg_umedida}}</td>
+                            <td>
+                                <!-- Verifica si el array de recetas tiene longitud mayor a cero -->
+                                <ng-container *ngIf="tipo.receta && tipo.receta.length > 0; else noContiene">
+                                    CONTIENE
+                                </ng-container>
+                               
+                                <ng-template #noContiene>
+                                    NO CONTIENE
+                                </ng-template>
+                            </td>
+                            <td>
+                                <!-- Botones para editar y borrar el tipo de artículo -->
+                                <div class="wrapper d-flex justify-content-end">
+                                    <button (click)="editarTipo(tipo)" type="button" data-toggle="modal" data-target="#modalMaestroCrear" class="btn btn-outline-primary" aria-label="Editar Tipo">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-danger ms-4" data-toggle="modal" data-target="#EliminarMaestro" (click)="DataEntidad(tipo)" aria-label="Borrar Tipo">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </div>
+</div>
+
+
+<!-- <======================================= MODALES ===================================> -->
+
+<!-- Modal para crear un nuevo tipo de artículo -->
+<div class="modal fade" id="modalMaestroCrear" tabindex="-1" role="dialog" aria-labelledby="modalCrearTipoLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCrearTipoLabel">Crear/Editar Tipo de Artículo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="maestroForm" (ngSubmit)="guardarNuevoMaetro()">
+                    <div class="form-group">
+
+                      <label for="nombreTipo">Descricion</label>
+                      <input type="text" class="form-control" id="nombreTipo" formControlName="description">
+                      <div *ngIf="maestroForm.get('description')?.invalid && maestroForm.get('description')?.touched" class="text-danger">
+                        Descripcion es requerido
+                      </div>
+
+                      <label for="nombreTipo">Costo Unitario</label>
+                      <input type="number" class="form-control" id="costo_unit" formControlName="costo_unit">
+                      <div *ngIf="maestroForm.get('costo_unit')?.invalid && maestroForm.get('costo_unit')?.touched" class="text-danger">
+                        Costo Unitario es requerido
+                      </div>
+
+                        <div class="form-group">
+                                <label for="tipoArticulo">Tipo de Artículo</label>
+                                <select class="form-control" id="tipoArticulo" formControlName="tipoArticulo">
+                                    <option *ngFor="let tipo of tiposArticulos" [value]="tipo.id">{{ tipo.description }}</option>
+                                </select>
+                                <div *ngIf="maestroForm.get('tipoArticulo')?.invalid && maestroForm.get('tipoArticulo')?.touched" class="text-danger">
+                                    Tipo de artículo es requerido
+                                </div>
+                        </div>
+
+
+                        
+                            <div class="form-group">
+                                <label for="conversionUM">Conversión de Unidad de Medida</label>
+                                <select class="form-control" id="conversionUM" formControlName="conversionUM">
+                                    <option *ngFor="let conversion of conversionesUM" [value]="conversion.id">{{ conversion.uni_medida }} / {{ conversion.seg_umedida }}</option>
+                                </select>
+                                <div *ngIf="maestroForm.get('conversionUM')?.invalid && maestroForm.get('conversionUM')?.touched" class="text-danger">
+                                    Conversión de unidad de medida es requerida
+                                </div>
+                            </div>
+
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" [disabled]="!maestroForm.valid">Guardar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para eliminar tipo de artículo -->
+<div class="modal fade" id="EliminarMaestro" tabindex="-1" role="dialog" aria-labelledby="modalCrearTipoLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCrearTipoLabel">Desea usted eliminar este Maestro de Articulos?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                
+                <p>Eliminar este Maestro de Articulos causara que todas las entidades que estes enlazadas a el queden sin un Maestro de Articulos definido.</p>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" (click)="EliminarArticulo()">Eliminar</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Volver</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCrearTipoLabel">{{dataModal?.descripcion}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-left">
+                <p><strong>Costo Unditario:</strong>  {{dataModal?.costo_unitario}}</p>
+                <p><strong>Tipo de Articulo:</strong>  {{dataModal?.tipo_articulo?.description}}</p>
+                <p><strong>Unidad de Medida:</strong>  {{ dataModal?.conversion_UM?.uni_medida}} / {{ dataModal.conversion_UM?.seg_umedida}}</p>
+                <ng-container *ngIf="dataModal.receta && dataModal.receta.length > 0;">
+                    <h6 class="text-center">Receta:</h6>
+
+                    <span class="card text-center" *ngFor="let item of dataModal.receta">
+                        <div class="card-header"> {{item.disponibilidad_articulo.maestro_articulo.descripcion}}</div>
+                        <div class="card-body">
+                          <p><strong>Cantidad Necesaria:</strong> {{item.cant_necesaria}} </p>
+                          <p><strong>Cantidad Fisica:</strong> {{item.cant_fisica}}</p>
+                        </div>
+                    </span>
+                </ng-container>
+                
+                
+                
+
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+
+
+
+
+

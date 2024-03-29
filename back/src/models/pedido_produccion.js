@@ -7,11 +7,14 @@ module.exports = (sequelize, DataTypes) => {
     
     static associate(models) {
       pedido_produccion.belongsTo(models.venta, { foreignKey: 'ventaId' });
-      // pedido_produccion.hasMany(models.maestro_articulos, { foreignKey: 'maestroId' });
+      pedido_produccion.belongsTo(models.maestro_articulos, { foreignKey: 'maestroId' });
+      
     }
   }
   pedido_produccion.init({
-    cant_requerida: DataTypes.INTEGER
+    cant_requerida: DataTypes.INTEGER,
+    estado: DataTypes.STRING,
+
   }, {
     sequelize,
     modelName: 'pedido_produccion',

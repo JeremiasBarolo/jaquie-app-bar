@@ -1,0 +1,101 @@
+<app-breadcrumbs [titulo]= 'breadcrumbItems' class="mb-3" ></app-breadcrumbs>
+<div class="text-right">
+    <button type="button" id="agregar" class="btn btn-success mr-2" data-toggle="modal" data-target="#modalCrearPedido"> Agregar
+        Pedido de Stock</button>
+  </div>
+
+  <h4 class="text-left mb-5 ml-2">Subtotal general: {{calcularSubtotalGeneral() | currency}}</h4>
+
+
+  <section class="text-center m-3">
+    <div class="row justify-content-start">
+      <div class="col-md-4 border-right" *ngFor="let pedido of listPedido">
+        <div class="card mb-3">
+          <div class="card-header presupuesto-card-header bg-primary" (click)="showCardDetails(pedido)" data-target="#InsumoModal" data-toggle="modal">
+            {{ pedido.createdAt | date }} 
+          </div>
+          <div class="card-body" (click)="showCardDetails(pedido)" data-target="#InsumoModal" data-toggle="modal">
+            <p><strong>Nombre:</strong> {{ pedido.maestro_articulo.descripcion }}</p> 
+            <p><strong>Cantidad Solicitada:</strong> {{ pedido.cant_requerida }}</p>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-outline-primary mr-1" (click)="SumarPedido(pedido)" [disabled]="botonDeshabilitado">Cerrar Pedido</button>
+            <a class="btn btn-outline-danger ml-1" (click)="eliminarPedido(pedido.id)" ><i class="fa-solid fa-trash"></i></a>
+            <button type="button" class="btn btn-outline-warning ml-2" data-toggle="modal" (click)="editarPedido(pedido)" data-target="#modalCrearPedido"><i class="fa-solid fa-pen-to-square"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  
+  
+    <div class="modal fade modal" id="InsumoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-center">{{ cardData?.maestro_articulo?.descripcion }}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p><strong>Cantidad Requerida:</strong> {{cardData?.cant_requerida}}</p>
+            <p><strong>Subtotal Esperado:</strong> {{calcularSubtotal(cardData) | currency}}</p>
+            <p><strong>Fecha de emision:</strong> {{cardData?.createdAt | date}}</p>
+            
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Volver</button>
+  
+            <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa-solid fa-pen-to-square"></i></button>
+            
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Modal para crear un nuevo tipo de artículo -->
+<div class="modal fade" id="modalCrearPedido" tabindex="-1" role="dialog" aria-labelledby="modalCrearTipoLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCrearTipoLabel">Crear/Editar Tipo de Artículo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="form" (ngSubmit)="addPedido()">
+                   
+                    <div class="form-group">
+                        <label for="articuloId">Conversión de Unidad de Medida</label>
+                        <select class="form-control" id="articuloId" formControlName="articuloId">
+                            <option *ngFor="let maestro of listMaestro" [value]="maestro.id">{{maestro.descripcion}}</option>
+                        </select>
+                        <div *ngIf="form.get('articuloId')?.invalid && form.get('articuloId')?.touched" class="text-danger">
+                            Campo requerido
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nombreTipo">Cantidad Requerida</label>
+                        <input type="number" class="form-control" id="nombreTipo" formControlName="cant_requerida">
+                        <div *ngIf="form.get('cant_requerida')?.invalid && form.get('cant_requerida')?.touched" class="text-danger">
+                          Campo requerido
+                        </div>
+                      </div>
+  
+                    
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+  
+    
+  

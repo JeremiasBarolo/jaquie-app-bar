@@ -35,14 +35,27 @@
     }
     };
 
-    const createreceta= async (Datareceta) => {
+    const createreceta= async (dataReceta) => {
     
 
     try {
+        const receta = {   
+            cant_fisica:dataReceta.cant_fisica,
+            maestroId:dataReceta.maestro,
+            n_linea:dataReceta.n_linea
+        }
+        dataReceta.insumos.forEach(async element => {
+
+            const newreceta= await models.receta.create({
+                ...receta, 
+                cant_necesaria: element.cantidad, 
+                articuloId: element.id
+            });
         
-        const newreceta= await models.receta.create(Datareceta);
+            return newreceta;
+        });
+
         
-        return newreceta;
         
     } catch (err) {
         console.error('🛑 Error when creating receta', err);
@@ -55,9 +68,24 @@
 
     try {
 
-        const oldreceta= await models.receta.findByPk(receta_id);
-        
-        let newreceta = await oldreceta.update(dataUpdated);
+        // trae las recetas de el maestro de articulos
+        const oldreceta=  await models.maestro_articulos.findByPk(receta_id, {include: { all: true }});
+        const recetas =  oldreceta.receta;
+
+       const newreceta = await recetas.map(async (recetaActual) => {
+            dataUpdated.insumos.forEach(async element => {
+                if(recetaActual.articuloId === element.id){
+                    const updatedReceta = await models.receta.findByPk(recetaActual.id)
+                    await updatedReceta.update({
+                        cant_fisica:dataUpdated.cant_fisica,
+                        maestroId:dataUpdated.maestro,
+                        n_linea:dataUpdated.n_linea,
+                        articuloId: element.id,
+                        cant_necesaria: element.cantidad,
+                    })
+                }
+            })
+        })
 
         return newreceta;
     } catch (err) {
@@ -70,14 +98,22 @@
 
     const deletereceta = async (receta_id) => {
     try {
-        const deletedreceta = await models.receta.findByPk(receta_id, 
+
+        const deletedreceta = await models.maestro_articulos.findByPk(receta_id, 
+            {include:{all:true}}
         );
 
         if (!deletedreceta) {
         return null;
         }
         
-        await models.receta.destroy({ where: { id: receta_id } });
+        deletedreceta.receta.map(async (receta) => {
+            await models.receta.findByPk(receta.id)
+            .then(async (receta) => {
+                await receta.destroy();
+            })
+            
+        })
 
 
         return deletedreceta;

@@ -4,6 +4,8 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { HeaderComponent } from './header/header.component';
 import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
 import { FooterComponent } from './footer/footer.component';
+import { SidebarEmpleadosComponent } from './sidebar-empleados/sidebar-empleados.component';
+import { TitleEmpleadosComponent } from './title-empleados/title-empleados.component';
 
 
 
@@ -13,7 +15,9 @@ import { FooterComponent } from './footer/footer.component';
     SidebarComponent,
     HeaderComponent,
     BreadcrumbsComponent,
-    FooterComponent
+    FooterComponent,
+    SidebarEmpleadosComponent,
+    TitleEmpleadosComponent
 
   ],
   imports: [
@@ -24,7 +28,9 @@ import { FooterComponent } from './footer/footer.component';
     SidebarComponent,
     HeaderComponent,
     BreadcrumbsComponent,
-    FooterComponent
+    FooterComponent,
+    SidebarEmpleadosComponent,
+    TitleEmpleadosComponent
   ]
 })
 export class SharedModule { }

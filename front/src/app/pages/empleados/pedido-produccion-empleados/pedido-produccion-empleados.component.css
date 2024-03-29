@@ -1,0 +1,13 @@
+.p-datatable-dark {
+    background-color: #343a40; /* Color de fondo oscuro */
+    color: white; /* Texto claro */
+}
+
+.p-datatable-dark .p-datatable-header,
+.p-datatable-dark .p-datatable-footer {
+    background-color: #212529; /* Color de fondo oscuro para el encabezado y el pie de página */
+}
+
+.p-datatable-dark .p-sortable-column:hover {
+    background-color: #454d55; /* Color de fondo oscuro al pasar el cursor sobre las columnas ordenables */
+}
