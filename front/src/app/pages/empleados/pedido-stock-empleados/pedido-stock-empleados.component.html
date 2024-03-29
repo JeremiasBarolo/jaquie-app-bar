@@ -1,11 +1,11 @@
 
-<app-breadcrumbs [titulo]= 'breadcrumbItems' class="mb-3" ></app-breadcrumbs>
+<app-title-empleados [titulo]= 'breadcrumbItems' class="mb-3" ></app-title-empleados>
 <div class="text-right">
     <button type="button" id="agregar" class="btn btn-success mr-2" data-toggle="modal" data-target="#modalCrearPedido"> Agregar
         Pedido de Stock</button>
   </div>
 
-  <h4 class="text-left mb-5 ml-2">Subtotal general: {{calcularSubtotalGeneral() | currency}}</h4>
+  
 
 
   <section class="text-center m-3">
@@ -33,7 +33,7 @@
   
     <div class="modal fade modal" id="InsumoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
-        <div class="modal-content">
+        <div class="modal-content bg-dark">
           <div class="modal-header">
             <h5 class="modal-title text-center">{{ cardData?.maestro_articulo?.descripcion }}</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">

@@ -148,15 +148,7 @@ export class PedidoStockEmpleadosComponent {
        
   };
   
-  calcularSubtotalGeneral(): number {
-    let subtotalGeneral = 0;
-    
-    this.listPedido.forEach(item => {
-        
-        subtotalGeneral += this.calcularSubtotal(item);
-    });
-    return subtotalGeneral;
-  }
+  
   
   
   
