@@ -131,6 +131,71 @@ await queryInterface.addColumn('usuarios', 'personaId', {
 
 // <=============================== Fin Usuarios ===============================> 
 
+// <=============================== Bebidas ===============================>
+await queryInterface.addColumn('Bebidas', 'nombre', {
+  type: Sequelize.INTEGER,
+  allowNull: false,
+  references: {
+    model: 'maestro_articulos',
+    key: 'id'
+  },
+  onUpdate: 'CASCADE',
+  onDelete: 'CASCADE'
+});
+
+await queryInterface.addColumn('Bebidas', 'primerComponente', {
+  type: Sequelize.INTEGER,
+  allowNull: false,
+  references: {
+    model: 'maestro_articulos',
+    key: 'id'
+  },
+  onUpdate: 'CASCADE',
+  onDelete: 'CASCADE'
+});
+await queryInterface.addColumn('Bebidas', 'segundoComponente', {
+  type: Sequelize.INTEGER,
+  allowNull: false,
+  references: {
+    model: 'maestro_articulos',
+    key: 'id'
+  },
+  onUpdate: 'CASCADE',
+  onDelete: 'CASCADE'
+});
+await queryInterface.addColumn('Bebidas', 'tercerComponente', {
+  type: Sequelize.INTEGER,
+  allowNull: true,
+  references: {
+    model: 'maestro_articulos',
+    key: 'id'
+  },
+  onUpdate: 'CASCADE',
+  onDelete: 'CASCADE'
+});
+await queryInterface.addColumn('Bebidas', 'cuartoComponente', {
+  type: Sequelize.INTEGER,
+  allowNull: true,
+  references: {
+    model: 'maestro_articulos',
+    key: 'id'
+  },
+  onUpdate: 'CASCADE',
+  onDelete: 'CASCADE'
+});
+await queryInterface.addColumn('Bebidas', 'quintoComponente', {
+  type: Sequelize.INTEGER,
+  allowNull: true,
+  references: {
+    model: 'maestro_articulos',
+    key: 'id'
+  },
+  onUpdate: 'CASCADE',
+  onDelete: 'CASCADE'
+});
+
+// <=============================== Fin Bebidas ===============================> 
+
     
   },
 
