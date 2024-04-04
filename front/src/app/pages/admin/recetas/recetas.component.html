@@ -100,7 +100,7 @@
                         <td>
                             <!-- Botones para editar y borrar el tipo de artículo -->
                             <div class="wrapper d-flex justify-content-end">
-                                <button type="button" [routerLink]="['crear-editar', tipo.id]" class="btn btn-outline-primary" >
+                                <button type="button" [routerLink]="['crear-editar', accionBebida, tipo.id]" class="btn btn-outline-primary" >
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </button>
                                 <button type="button" class="btn btn-outline-danger ms-4" data-toggle="modal" data-target="#EliminarMaestro" (click)="DataEntidad(tipo)" aria-label="Borrar Tipo">

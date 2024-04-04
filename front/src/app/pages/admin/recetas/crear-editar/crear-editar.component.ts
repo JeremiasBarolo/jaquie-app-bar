@@ -57,8 +57,12 @@ export class CrearEditarComponent {
 
   ngOnInit(): void {
     this.loadAllEntities();
-    this.loadSelectedProducts();
-    console.log(this.accion);
+    if(this.accion == 'bebida' && this.id !== null){
+      this.loadSelectedProducts(); // Cargar productos seleccionados primero
+      this.loadBebidaData(this.id); // Luego, si es una bebida, cargar los datos de la bebida
+    } else {
+      this.loadSelectedProducts(); // Si no es una bebida, solo cargar productos seleccionados
+    }
     
     
     
@@ -204,6 +208,35 @@ export class CrearEditarComponent {
       }
     );
   }
+
+  loadBebidaData(id: number) {
+    this.bebidasService.getById(id).subscribe((data) => {
+      this.form.patchValue({
+        maestro: data.NombreArticulo.id,
+      });
+  
+      let componentes: { componente: any; cantidad: any; }[] = [];
+      for (const key of ['primerComponente', 'segundoComponente', 'tercerComponente', 'cuartoComponente', 'quintoComponente']) {
+        if (data[key] !== null && data[`${key}Cantidad`] !== null) {
+          componentes.push({
+            componente: data[key],
+            cantidad: data[`${key}Cantidad`]
+          });
+        }
+      }
+  
+      console.log('Dta:', data);
+      console.log('componentes', componentes);
+  
+      if (this.accion === 'bebida' && this.id) {
+        // Filtrar la lista de selectedEntities utilizando los datos de componentes
+        this.selectedEntities = this.selectedEntities.filter(entity => {
+          // Verificar si el ID del componente está en alguno de los componentes rescatados
+          return componentes.some(comp => comp.componente.id === entity.id);
+        });
+      }
+    });
+  }
   
   loadSelectedProducts() {
     if (this.id) {
@@ -221,14 +254,14 @@ export class CrearEditarComponent {
               };
             });
   
-            // Asignar los elementos con la descripción al array selectedEntities
+            
             this.selectedEntities = [...selectedEntitiesWithDescription];
             console.log('SelectedEntites:',this.selectedEntities);
             console.log('listDisponibilidad:',this.listDisponibilidad);
             
             
   
-            // Filtrar los elementos de listDisponibilidad que no están en la receta
+            
             this.listDisponibilidad = this.listDisponibilidad.filter(insumo =>
               !this.selectedEntities.some(selected => selected.id === insumo.id)
             );
@@ -247,6 +280,36 @@ export class CrearEditarComponent {
       );
     }
   }
+
+  getBebida(id:number){
+    this.bebidasService.getById(id).subscribe((data)=>{
+        this.form.patchValue({
+            maestro: data.NombreArticulo.id,
+        });
+
+        let componentes: { componente: any; cantidad: any; }[] = [];
+        for (const key of ['primerComponente', 'segundoComponente', 'tercerComponente', 'cuartoComponente', 'quintoComponente']) {
+            if (data[key] !== null && data[`${key}Cantidad`] !== null) {
+                componentes.push({
+                    componente: data[key],
+                    cantidad: data[`${key}Cantidad`]
+                });
+            }
+        }
+
+        console.log('Dta:', data);
+        console.log('componentes', componentes);
+
+        if (this.accion === 'bebida' && this.id) {
+            // Filtrar la lista de selectedEntities utilizando los datos de componentes
+            this.selectedEntities = this.selectedEntities.filter(entity => {
+                // Verificar si el ID del componente está en alguno de los componentes rescatados
+                return componentes.some(comp => comp.componente.id === entity.id);
+            });
+        }
+    });
+}
+
   
   
   
