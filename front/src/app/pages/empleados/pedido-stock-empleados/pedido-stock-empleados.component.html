@@ -1,3 +1,4 @@
+
 <app-title-empleados [titulo]= 'breadcrumbItems' class="mb-3" ></app-title-empleados>
 <div class="text-right">
     <button type="button" id="agregar" class="btn btn-success mr-2" data-toggle="modal" data-target="#modalCrearPedido"> Agregar
@@ -8,7 +9,10 @@
     <div class="row justify-content-start">
       <div class="col-md-4 border-right" *ngFor="let pedido of listPedido">
         <div class="card mb-3 bg-dark">
+
           <div class="card-header presupuesto-card-header bg-dark" (click)="showCardDetails(pedido)" data-target="#InsumoModal" data-toggle="modal">
+
+
             {{ pedido.createdAt | date }} 
           </div>
           <div class="card-body bg-dark" (click)="showCardDetails(pedido)" data-target="#InsumoModal" data-toggle="modal">
@@ -38,7 +42,6 @@
           </div>
           <div class="modal-body">
             <p><strong>Cantidad Requerida:</strong> {{cardData?.cant_requerida}}</p>
-            
             <p><strong>Fecha de emision:</strong> {{cardData?.createdAt | date}}</p>
             
             

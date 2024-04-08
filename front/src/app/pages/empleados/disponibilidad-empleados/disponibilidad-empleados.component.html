@@ -1,4 +1,6 @@
-<app-title-empleados [titulo]= 'breadcrumbItems'></app-title-empleados>
+
+<app-title-empleados [titulo]= 'breadcrumbItems' class="mb-3" ></app-title-empleados>
+
 
 <div class="text-right">
     <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#modalMaestroCrear" aria-label="Editar Tipo">Agregar Articulo</button>
@@ -11,6 +13,7 @@
             
             
             <section style="margin: 16px">
+
                 <input pInputText type="text" (input)="applyFilter($event)" placeholder="Buscar por nombre.." class="mb-3 bg-dark">
                 <p-table #dt [value]="filteredDisp" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20]" class="custom-datatable">
                 <ng-template  pTemplate="header"  class="p-overlaypanel-header p-component-header">
@@ -70,6 +73,7 @@
                     </tr>
                 </ng-template>
                 </p-table>
+
             </section>
         </div>
     </div>
@@ -200,11 +204,12 @@
                 <form [formGroup]="sumarForm" (ngSubmit)="SumarCantidades()">
                     <div class="form-group">
 
-                      <label for="nombreTipo">Cuanta cantidad fisica deseas sumar a {{ DataArticulos?.maestro_articulo?.descripcion }}?</label>
-                      <input type="number" class="form-control" id="nombreTipo" formControlName="cant_fisica_sumada">
-                      <div *ngIf="disponibilidadForm.get('cant_fisica_sumada')?.invalid && disponibilidadForm.get('cant_fisica_sumada')?.touched" class="text-danger">
-                        Este campo es requerido es requerido
-                      </div>
+                        <label for="nombreTipo">Cuanta cantidad fisica deseas sumar a {{ DataArticulos?.maestro_articulo?.descripcion }}?</label>
+
+                        <input type="number" class="form-control" id="nombreTipo" formControlName="cant_fisica_sumada">
+                        <div *ngIf="disponibilidadForm.get('cant_fisica_sumada')?.invalid && disponibilidadForm.get('cant_fisica_sumada')?.touched" class="text-danger">
+                            Este campo es requerido es requerido
+                        </div>
 
 
                     </div>

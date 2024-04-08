@@ -95,7 +95,8 @@ export class PedidoStockEmpleadosComponent {
           }, 600)
 
           
-  
+
+   
           this.toastr.success('Pedido Creado', 'Exito');
   
         });
@@ -103,6 +104,7 @@ export class PedidoStockEmpleadosComponent {
       } catch (error) {
         console.log(error);
       }
+
      }
       
   }

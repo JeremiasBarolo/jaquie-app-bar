@@ -1,3 +1,4 @@
+
 import { Component, OnInit, ViewChild } from '@angular/core';
 
 import { ConversionUmService } from '../../../services/conversion-um.service';
@@ -9,6 +10,7 @@ import { TipoArticulosService } from '../../../services/tipo-articulos.service';
 import { DisponibilidadArticulosService } from '../../../services/disponibilidad-articulos.service';
 import { reduce } from 'rxjs';
 import { Table } from 'primeng/table';
+
 
 @Component({
   selector: 'app-disponibilidad-empleados',
@@ -58,7 +60,7 @@ export class DisponibilidadEmpleadosComponent {
           if(maestro.tipo_articulo.description != 'Productos Elaborados'){
             this.listMaestro.push(maestro)
           }
-          
+
         })
         
       })
@@ -98,6 +100,7 @@ export class DisponibilidadEmpleadosComponent {
 
   editarTipo(card: any) {  
       this.DataArticulos = {...card, editar:true};  
+
       console.log('dat',this.DataArticulos);
       
       this.disponibilidadForm.patchValue({
@@ -168,6 +171,7 @@ export class DisponibilidadEmpleadosComponent {
       cant_fisica_nueva: cant_fisica_nueva,
       cant_disponible_nueva: cant_disponible_nueva,
       id: this.DataArticulos.id,
+
       add: true
     }
     try {
@@ -206,4 +210,5 @@ export class DisponibilidadEmpleadosComponent {
       return insumo.maestro_articulo.descripcion.toLowerCase().includes(value.toLowerCase());
     });
   }
+
 }
