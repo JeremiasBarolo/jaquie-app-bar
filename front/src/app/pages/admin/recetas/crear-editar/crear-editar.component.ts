@@ -57,11 +57,12 @@ export class CrearEditarComponent {
 
   ngOnInit(): void {
     this.loadAllEntities();
+
     if(this.accion == 'bebida' && this.id !== null){
-      this.loadSelectedProducts(); // Cargar productos seleccionados primero
-      this.loadBebidaData(this.id); // Luego, si es una bebida, cargar los datos de la bebida
-    } else {
-      this.loadSelectedProducts(); // Si no es una bebida, solo cargar productos seleccionados
+      // this.loadSelectedProducts(); 
+      this.loadBebidaData(this.id); 
+    } else if (this.accion === 'receta' && this.id !== null ) {
+      this.loadSelectedProducts(); 
     }
     
     
@@ -173,7 +174,7 @@ export class CrearEditarComponent {
   }
 
   loadAllEntities() {
-    if(this.id !==0){
+    if(this.id !== 0 && this.accion === 'receta'){
       this.maestroArticulosService.getAll().subscribe(
         (maestros: any[]) => {
           this.listMaestro = maestros
@@ -224,22 +225,30 @@ export class CrearEditarComponent {
           });
         }
       }
-  
-      console.log('Dta:', data);
-      console.log('componentes', componentes);
-  
-      if (this.accion === 'bebida' && this.id) {
-        // Filtrar la lista de selectedEntities utilizando los datos de componentes
-        this.selectedEntities = this.selectedEntities.filter(entity => {
-          // Verificar si el ID del componente está en alguno de los componentes rescatados
-          return componentes.some(comp => comp.componente.id === entity.id);
-        });
+
+      for(const insumo of componentes){
+        this.listDisponibilidad = this.listDisponibilidad.filter(disp => disp.maestro_articulo.id !== insumo.componente);
+        this.maestroArticulosService.getById(insumo.componente).subscribe((maestro)=>{
+          this.selectedEntities.push({
+            id: maestro.articuloId,
+            cantidad: insumo.cantidad,
+            maestro_articulo: {
+              descripcion: maestro.descripcion
+            }
+          })
+        })
       }
+
+      
+      
+      
+  
+     
     });
   }
   
   loadSelectedProducts() {
-    if (this.id) {
+    if ( this.accion ==='receta' && this.id !== null) {
       this.maestroArticulosService.getById(this.id).subscribe(
         (res: any) => {
           if (res.receta && res.receta.length > 0) {
@@ -266,7 +275,7 @@ export class CrearEditarComponent {
               !this.selectedEntities.some(selected => selected.id === insumo.id)
             );
   
-            // Asignar los valores al formulario
+            
             this.form.patchValue({
               maestro: res.id,
               cant_fisica: res.receta[0].cant_fisica,
@@ -274,10 +283,12 @@ export class CrearEditarComponent {
             });
           } else {
             
-            this.listDisponibilidad = res; // O cualquier otra lógica para cargar los elementos disponibles
+            this.listDisponibilidad = res; 
           }
         }
       );
+    }else{
+
     }
   }
 
@@ -301,9 +312,7 @@ export class CrearEditarComponent {
         console.log('componentes', componentes);
 
         if (this.accion === 'bebida' && this.id) {
-            // Filtrar la lista de selectedEntities utilizando los datos de componentes
             this.selectedEntities = this.selectedEntities.filter(entity => {
-                // Verificar si el ID del componente está en alguno de los componentes rescatados
                 return componentes.some(comp => comp.componente.id === entity.id);
             });
         }

@@ -44,6 +44,7 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: 'CASCADE'
       });
 
+
       // Pedido de Stock  
       maestro_articulos.hasMany(models.pedido_stock, {
         foreignKey: 'articuloId',
@@ -57,6 +58,51 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'maestroId',
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE'
+      });
+
+
+      maestro_articulos.hasMany(models.Bebidas, {
+        foreignKey: 'nombre',
+        
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      });
+
+      maestro_articulos.hasMany(models.Bebidas, {
+        foreignKey: 'primerComponente',
+        
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      });
+
+      
+
+      maestro_articulos.hasMany(models.Bebidas, {
+        foreignKey: 'segundoComponente',
+        
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      });
+
+      maestro_articulos.hasMany(models.Bebidas, {
+        foreignKey: 'tercerComponente',
+        
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      });
+
+      maestro_articulos.hasMany(models.Bebidas, {
+        foreignKey: 'cuartoComponente',
+        
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      });
+
+      maestro_articulos.hasMany(models.Bebidas, {
+        foreignKey: 'quintoComponente',
+        
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       });
 
       

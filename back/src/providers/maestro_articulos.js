@@ -10,6 +10,7 @@ var models = require('../models');
                     { model: models.tipo_articulo },
                     { model: models.conversion_UM },
                     { model: models.pedido_stock },
+                    { model: models.Bebidas },
                     { model: models.pedido_produccion,  attributes: ['id','cant_requerida', 'updatedAt', 'createdAt'] },
                     {
                         model: models.receta,
@@ -42,6 +43,7 @@ var models = require('../models');
                     { model: models.tipo_articulo },
                     { model: models.conversion_UM },
                     { model: models.pedido_stock },
+                    { model: models.Bebidas },
                     { model: models.pedido_produccion},
                     {
                         model: models.receta,
