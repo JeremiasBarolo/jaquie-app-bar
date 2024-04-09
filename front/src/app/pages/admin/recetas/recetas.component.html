@@ -2,7 +2,7 @@
 <app-breadcrumbs [titulo]= 'breadcrumbItems'></app-breadcrumbs>
 <div class="text-right">
     <button type="button" class="btn btn-success mr-2" aria-label="Editar Tipo" [routerLink]="['crear-editar', accionReceta]">Agregar Receta Comida</button>
-    <button type="button" class="btn btn-success mr-2" aria-label="Editar Tipo" [routerLink]="['crear-editar', accionBebida]">Agregar Receta Bebida</button>
+    <button type="button" class="btn btn-primary mr-2" aria-label="Editar Tipo" [routerLink]="['crear-editar', accionBebida]">Agregar Receta Bebida</button>
 </div>
 
 <div class="container">
@@ -253,10 +253,10 @@
                     
                         <span class="card text-center">
                             <div class="card-header text-center bg-success"> 
-                                {{dataModal?.PrimerComponenteArticulo?.descripcion}}
+                                {{dataModal?.PrimerComponenteArticulo?.descripcion}} 
                             </div>
                             <div class="card-body">
-                            <p><strong>Cantidad Necesaria:</strong> {{dataModal?.primerComponenteCantidad}} </p>
+                            <p><strong>Cantidad Necesaria:</strong> {{dataModal?.primerComponenteCantidad}} %</p>
                             <!-- <p><strong>Cantidad Fisica:</strong> {{item.cant_fisica}}</p> -->
                             </div>
                         </span>
@@ -266,7 +266,7 @@
                                 {{dataModal?.SegundoComponenteArticulo?.descripcion}}
                             </div>
                             <div class="card-body">
-                            <p><strong>Cantidad Necesaria:</strong> {{dataModal?.segundoComponenteCantidad}} </p>
+                            <p><strong>Cantidad Necesaria:</strong> {{dataModal?.segundoComponenteCantidad}} %</p>
                             <!-- <p><strong>Cantidad Fisica:</strong> {{item.cant_fisica}}</p> -->
                             </div>
                         </span>
@@ -277,7 +277,7 @@
                                     {{dataModal?.TercerComponenteArticulo?.descripcion}}
                                 </div>
                                 <div class="card-body">
-                                <p><strong>Cantidad Necesaria:</strong> {{dataModal?.tercerComponenteCantidad}} </p>
+                                <p><strong>Cantidad Necesaria:</strong> {{dataModal?.tercerComponenteCantidad}} %</p>
                                 <!-- <p><strong>Cantidad Fisica:</strong> {{item.cant_fisica}}</p> -->
                                 </div>
                             </span>
@@ -291,7 +291,7 @@
                                     {{dataModal?.CuartoComponenteArticulo?.descripcion}}
                                 </div>
                                 <div class="card-body">
-                                <p><strong>Cantidad Necesaria:</strong> {{dataModal?.cuartoComponenteCantidad}} </p>
+                                <p><strong>Cantidad Necesaria:</strong> {{dataModal?.cuartoComponenteCantidad}} %</p>
                                 <!-- <p><strong>Cantidad Fisica:</strong> {{item.cant_fisica}}</p> -->
                                 </div>
                             </span>
@@ -305,7 +305,7 @@
                                     {{dataModal?.QuintoComponenteArticulo?.descripcion}}
                                 </div>
                                 <div class="card-body">
-                                <p><strong>Cantidad Necesaria:</strong> {{dataModal?.quintoComponenteCantidad}} </p>
+                                <p><strong>Cantidad Necesaria:</strong> {{dataModal?.quintoComponenteCantidad}} %</p>
                                 <!-- <p><strong>Cantidad Fisica:</strong> {{item.cant_fisica}}</p> -->
                                 </div>
                             </span>

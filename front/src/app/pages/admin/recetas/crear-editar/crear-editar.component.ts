@@ -42,7 +42,8 @@ export class CrearEditarComponent {
 
     if(this.accion === 'bebida'){
       this.form = this.fb.group({
-        maestro: ['', Validators.required]
+        maestro: ['', Validators.required],
+        recipiente: ['', Validators.required],
       });
     }else{
       this.form = this.fb.group({
@@ -59,7 +60,6 @@ export class CrearEditarComponent {
     this.loadAllEntities();
 
     if(this.accion == 'bebida' && this.id !== null){
-      // this.loadSelectedProducts(); 
       this.loadBebidaData(this.id); 
     } else if (this.accion === 'receta' && this.id !== null ) {
       this.loadSelectedProducts(); 
@@ -75,11 +75,18 @@ export class CrearEditarComponent {
 
     if (this.accion === 'bebida') {
 
-      this.recetaData = {
-        ...this.form.value,
-        insumos: this.selectedEntities.map(entity => ({ id: entity.id, cantidad: entity.cantidad }))
-  
-      };
+      const sumaCantidades = this.selectedEntities.reduce((total, entity) => total + entity.cantidad, 0);
+
+          
+          if (sumaCantidades !== 100) {
+            this.toastr.error('La suma de las cantidades debe ser igual a 100%');
+          } else {
+            // Si la suma es igual a 100, puedes proceder a enviar los datos
+            this.recetaData = {
+              ...this.form.value,
+              insumos: this.selectedEntities.map(entity => ({ id: entity.id, cantidad: entity.cantidad }))
+            };
+          }
       
   
       if (this.id !== 0) {
@@ -214,6 +221,7 @@ export class CrearEditarComponent {
     this.bebidasService.getById(id).subscribe((data) => {
       this.form.patchValue({
         maestro: data.NombreArticulo.id,
+        recipiente: data.cantidadTotalRecipiente
       });
   
       let componentes: { componente: any; cantidad: any; }[] = [];

@@ -93,7 +93,7 @@
             cuartoComponenteCantidad: cuartoComponenteCantidad,
             quintoComponente: quintoComponente,
             quintoComponenteCantidad: quintoComponenteCantidad,
-            cantidadTotalRecipiente: 1000
+            cantidadTotalRecipiente: DataBebidas.recipiente
             
         }
 
@@ -135,7 +135,7 @@
             cuartoComponenteCantidad: cuartoComponenteCantidad,
             quintoComponente: quintoComponente,
             quintoComponenteCantidad: quintoComponenteCantidad,
-            cantidadTotalRecipiente: 1000
+            cantidadTotalRecipiente: dataUpdated.recipiente
             
         }
 
