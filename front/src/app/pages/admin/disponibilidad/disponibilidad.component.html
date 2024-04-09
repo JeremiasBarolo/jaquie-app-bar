@@ -18,10 +18,10 @@
                             <th scope="col">#</th>
                             <th scope="col">Descripción</th>
                             <th scope="col">Costo Unit</th>
-                            <th scope="col">Unidad de Medida</th>
                             <th scope="col">Can. Fisica</th>
                             <th scope="col">Can. Disponible</th>
                             <th scope="col">Can. Comprometida</th>
+                            <th scope="col">Can. Secundaria Exacta</th>
                             <th scope="col">Acciones</th>
                         </tr>
                     </thead>
@@ -30,11 +30,12 @@
                         <tr *ngFor="let articulo of listDisponibilidad" (click)="showCardDetails(articulo)">
                             <th scope="row">{{ articulo.id }}</th>
                             <td data-target="#Modal" data-toggle="modal" >{{ articulo.maestro_articulo.descripcion }}</td>
-                            <td data-target="#Modal" data-toggle="modal" >{{ articulo.maestro_articulo.costo_unitario }}</td>
-                            <td data-target="#Modal" data-toggle="modal" >{{ articulo.conversion_UM.uni_medida}} / {{ articulo.conversion_UM.seg_umedida}}</td>
-                            <td data-target="#Modal" data-toggle="modal" >{{ articulo.cant_fisica}}</td>
-                            <td data-target="#Modal" data-toggle="modal" >{{ articulo.cant_disponible}}</td>
-                            <td data-target="#Modal" data-toggle="modal" >{{ articulo.cant_comprometida}}</td>
+                            <td data-target="#Modal" data-toggle="modal" >{{ articulo.maestro_articulo.costo_unitario | currency }}</td>
+                            <td data-target="#Modal" data-toggle="modal" >{{ articulo.cant_fisica}} {{articulo.conversion_UM.uni_medida}}</td>
+                            <td data-target="#Modal" data-toggle="modal" >{{ articulo.cant_disponible}} {{articulo.conversion_UM.uni_medida}}</td>
+                            <td data-target="#Modal" data-toggle="modal" >{{ articulo.cant_comprometida}} {{articulo.conversion_UM.uni_medida}}</td>
+                            <td data-target="#Modal" data-toggle="modal" >{{ calcularSecundariaTotal(articulo) }} {{articulo.conversion_UM.seg_umedida}}</td>
+
                             <td>
                                 <!-- Botones para editar y borrar el tipo de artículo -->
                                 <div class="wrapper d-flex justify-content-end">

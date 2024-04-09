@@ -23,13 +23,14 @@ const pedidoValidator = [
                     continue;
                 }
 
+
                 try {
                     const producto = await models.maestro_articulos.findByPk(insumo.id, {
                         include: { all: true },
                     });
 
                     if (producto) {
-                        if (producto.tipo_articulo.description === "Productos Elaborados" || producto.tipo_articulo.description === "Bebidas") {
+                        if (producto.tipo_articulo.description === "Productos Elaborados") {
                             
                             await Promise.all(producto.receta.map(async receta => {
                                 const disponibilidad = await listOnedisponibilidad_articulos(receta.articuloId);
@@ -45,7 +46,7 @@ const pedidoValidator = [
                                     });
                                 }
                             }));
-                        } else {
+                        } else if(producto.tipo_articulo.description !== 'Bebidas') {
                             
                             let disponibilidad = producto.disponibilidad_articulo
 
@@ -60,6 +61,29 @@ const pedidoValidator = [
                                     cant_fisica: disponibilidad.cant_fisica - insumo.cantidad,
                                 });
                             }
+                        }else{
+                            let bebida = await models.Bebidas.findOne({
+                                where:  { nombre: producto.id }
+                            })
+
+                            let componentes= []
+                            for (const key of ['primerComponente', 'segundoComponente', 'tercerComponente', 'cuartoComponente', 'quintoComponente']) {
+                              if (bebida[key] !== null && bebida[`${key}Cantidad`] !== null) {
+                                componentes.push({
+                                  componente: bebida[key],
+                                  cantidad: bebida[`${key}Cantidad`]
+                                });
+                              }
+                            }
+
+                            // await Promise.all(componentes.map(async receta => {
+                            //     let dispisponibilidad = await models.disponibilidad_articulo.findOne({
+                            //         where:  { nombre: producto.id }
+                            //     })
+
+
+
+                            // }));
                         }
                     } else {
                         errors.push(`El insumo con ID ${insumo.id} no existe.`);

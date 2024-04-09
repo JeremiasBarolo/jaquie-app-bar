@@ -191,5 +191,15 @@ export class DisponibilidadComponent implements OnInit{
       });
     })
    }
+
+   calcularSecundariaTotal(item:any){
+    let cant_principal = item.cant_disponible
+    let cant_secundaria = item.conversion_UM.cant_secundaria
+
+    console.log(cant_principal, cant_secundaria);
+    
+
+    return cant_principal*cant_secundaria
+   }
   
 }

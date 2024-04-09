@@ -10,13 +10,13 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       cant_fisica: {
-        type: Sequelize.INTEGER
+        type: Sequelize.FLOAT
       },
       cant_comprometida: {
-        type: Sequelize.INTEGER
+        type: Sequelize.FLOAT
       },
       cant_disponible: {
-        type: Sequelize.INTEGER
+        type: Sequelize.FLOAT
       },
       createdAt: {
         allowNull: false,
