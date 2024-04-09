@@ -112,10 +112,36 @@
     
 
     try {
+        const primerComponente = dataUpdated.insumos[0].id;
+        const primerComponenteCantidad = dataUpdated.insumos[0].cantidad;
+        const segundoComponente = dataUpdated.insumos[1].id;
+        const segundoComponenteCantidad = dataUpdated.insumos[1].cantidad;
+        const tercerComponente = dataUpdated.insumos[2] ? dataUpdated.insumos[2].id : null;
+        const tercerComponenteCantidad = dataUpdated.insumos[2] ? dataUpdated.insumos[2].cantidad : null;
+        const cuartoComponente = dataUpdated.insumos[3] ? dataUpdated.insumos[3].id : null;
+        const cuartoComponenteCantidad = dataUpdated.insumos[3] ? dataUpdated.insumos[3].cantidad : null;
+        const quintoComponente = dataUpdated.insumos[4] ? dataUpdated.insumos[4].id : null;
+        const quintoComponenteCantidad = dataUpdated.insumos[4] ? dataUpdated.insumos[4].cantidad : null;
+
+        const data = {
+            nombre: dataUpdated.maestro,
+            primerComponente: primerComponente,
+            primerComponenteCantidad:primerComponenteCantidad,
+            segundoComponente: segundoComponente,
+            segundoComponenteCantidad:segundoComponenteCantidad,
+            tercerComponente: tercerComponente,
+            tercerComponenteCantidad: tercerComponenteCantidad,
+            cuartoComponente: cuartoComponente,
+            cuartoComponenteCantidad: cuartoComponenteCantidad,
+            quintoComponente: quintoComponente,
+            quintoComponenteCantidad: quintoComponenteCantidad,
+            cantidadTotalRecipiente: 1000
+            
+        }
 
         const oldBebidas= await models.Bebidas.findByPk(Bebidas_id);
         
-        let newBebidas = await oldBebidas.update(dataUpdated);
+        let newBebidas = await oldBebidas.update(data);
 
         return newBebidas;
     } catch (err) {

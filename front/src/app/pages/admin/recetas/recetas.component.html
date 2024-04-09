@@ -75,7 +75,7 @@
                         <th scope="col">Costo Unit</th>
                         <th scope="col">Tipo Articulo</th>
                         
-                        <th scope="col">Recetas</th>
+                        
                         <th scope="col">Acciones</th>
                     </tr>
                 </thead>
@@ -87,23 +87,14 @@
                         <td data-target="#BebidaModal" data-toggle="modal" >{{ tipo.NombreArticulo?.costo_unitario | currency}}</td>
                         <td data-target="#BebidaModal" data-toggle="modal" >{{ tipo.NombreArticulo?.tipo_articulo?.description }}</td>
                         
-                        <td>
-                            <!-- Verifica si el array de recetas tiene longitud mayor a cero -->
-                            <ng-container *ngIf="tipo.receta && tipo.receta.length > 0; else noContiene">
-                                CONTIENE
-                            </ng-container>
-                           
-                            <ng-template #noContiene>
-                                NO CONTIENE
-                            </ng-template>
-                        </td>
+                       
                         <td>
                             <!-- Botones para editar y borrar el tipo de artículo -->
                             <div class="wrapper d-flex justify-content-end">
                                 <button type="button" [routerLink]="['crear-editar', accionBebida, tipo.id]" class="btn btn-outline-primary" >
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </button>
-                                <button type="button" class="btn btn-outline-danger ms-4" data-toggle="modal" data-target="#EliminarMaestro" (click)="DataEntidad(tipo)" aria-label="Borrar Tipo">
+                                <button type="button" class="btn btn-outline-danger ms-4" data-toggle="modal" data-target="#EliminarBebida" (click)="DataEntidad(tipo)" aria-label="Borrar Tipo">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
                             </div>
@@ -138,6 +129,29 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" (click)="RecetaArticulo()">Eliminar</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Volver</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="EliminarBebida" tabindex="-1" role="dialog" aria-labelledby="modalCrearTipoLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCrearTipoLabel">Desea usted eliminar esta Bebida?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                
+                <p>Esta seguro de que quiere eliminar esta Bebida?</p>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" (click)="eliminarBebida()">Eliminar</button>
                 <button type="button" class="btn btn-primary" data-dismiss="modal">Volver</button>
             </div>
         </div>

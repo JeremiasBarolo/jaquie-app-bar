@@ -93,14 +93,12 @@ module.exports = (sequelize, DataTypes) => {
 
       maestro_articulos.hasMany(models.Bebidas, {
         foreignKey: 'cuartoComponente',
-        
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       });
 
       maestro_articulos.hasMany(models.Bebidas, {
         foreignKey: 'quintoComponente',
-        
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       });

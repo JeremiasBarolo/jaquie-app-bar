@@ -128,5 +128,16 @@ export class RecetasComponent {
     })
   }
 
+  // <============ Eliminar Tipo ==========>
+    eliminarBebida(){
+      this.bebidasService.delete(this.EntidadEliminar.id).subscribe(() => {
+        setTimeout(() => {
+          window.location.reload();
+        }, 600)
+  
+        this.toastr.success('Receta Eliminado', 'Exito');
+      })
+    }
+
   
 }
