@@ -16,6 +16,8 @@ const pedidoValidator = [
         .custom(async (insumos, { req, res }) => {
             const errors = [];
             let pedidos_revisados_reales = [];
+            let componentes= []
+
 
             for (const insumo of insumos) {
                 if (insumo.cantidad <= 0) {
@@ -66,7 +68,13 @@ const pedidoValidator = [
                                 where:  { nombre: producto.id }
                             })
 
-                            let componentes= []
+                            if(bebida === null){
+                                errors.push('Una bebida no tiene consigo su receta');
+                                break
+                            }
+
+                            
+                            
                             for (const key of ['primerComponente', 'segundoComponente', 'tercerComponente', 'cuartoComponente', 'quintoComponente']) {
                               if (bebida[key] !== null && bebida[`${key}Cantidad`] !== null) {
                                 componentes.push({
@@ -76,14 +84,33 @@ const pedidoValidator = [
                               }
                             }
 
-                            // await Promise.all(componentes.map(async receta => {
-                            //     let dispisponibilidad = await models.disponibilidad_articulo.findOne({
-                            //         where:  { nombre: producto.id }
-                            //     })
+                            await Promise.all(componentes.map(async receta => {
+
+                                let disponibilidad = await models.disponibilidad_articulos.findOne({
+                                    where:  { articuloId: receta.componente }
+                                })
+
+                                //  <=================== calculamos cantidad exacta ======================>
+                                let alto = bebida.cantidadTotalRecipiente * receta.cantidad
+                                let total = alto / 100
+
+                                let cant_principal_exacta = total / 1000
+
+                                await copia_seguridad(pedidos_revisados_reales, disponibilidad)
+
+                                if (disponibilidad.cant_disponible < insumo.cantidad) {
+                                    errors.push(`No hay suficiente stock de ${producto.descripcion}.`);
+                                } else {
+                                    await disponibilidad.update({
+                                        cant_comprometida: disponibilidad.cant_comprometida + cant_principal_exacta,
+                                        cant_disponible: disponibilidad.cant_disponible - cant_principal_exacta,
+                                        cant_fisica: disponibilidad.cant_fisica - cant_principal_exacta,
+                                    });
+                                }
 
 
 
-                            // }));
+                            }));
                         }
                     } else {
                         errors.push(`El insumo con ID ${insumo.id} no existe.`);

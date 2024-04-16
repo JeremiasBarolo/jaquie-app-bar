@@ -2,6 +2,7 @@
     var models = require('../models');
     const {listOnemaestro_articulos} = require('./maestro_articulos');
     const {listOnedisponibilidad_articulos} = require('./disponibilidad_articulos');
+const { where } = require('sequelize');
 
     
 
@@ -42,6 +43,7 @@
     const createpedido_produccion= async (Datapedido_produccion) => {
     
         let insumos_recorridos = [];
+        let componentes = []
         try {
             await Promise.all(Datapedido_produccion.insumos.map(async insumo => {
                 await models.pedido_produccion.create({
@@ -53,7 +55,7 @@
     
                 const maestro = await listOnemaestro_articulos(insumo.id);
     
-                if (maestro.tipo_articulo.description === "Bebidas" || maestro.tipo_articulo.description === "Productos Elaborados") {
+                if (maestro.tipo_articulo.description === "Productos Elaborados") {
                     await Promise.all(maestro.receta.map(async receta => {
                         const disponibilidad = await listOnedisponibilidad_articulos(receta.disponibilidad_articulo.id);
                         const existente = insumos_recorridos.find(item => item.id === disponibilidad.id);
@@ -66,6 +68,49 @@
                             existente.cant_necesaria += insumo.cantidad;
                         }
                     }));
+                }else if(maestro.tipo_articulo.description === "Bebidas"){
+                   
+                        const maestroReal = await models.Bebidas.findOne({
+                            where: {nombre: insumo.id}
+                        });
+                        
+                        for (const key of ['primerComponente', 'segundoComponente', 'tercerComponente', 'cuartoComponente', 'quintoComponente']) {
+                          if (maestroReal[key] !== null && maestroReal[`${key}Cantidad`] !== null) {
+                            componentes.push({
+                              componente: maestroReal[key],
+                              cantidad: maestroReal[`${key}Cantidad`]
+                            });
+                          }
+                        }
+
+                        await Promise.all(componentes.map(async receta => {
+
+                            let disponibilidad = await models.disponibilidad_articulos.findOne({
+                                where:  { articuloId: receta.componente }
+                            })
+
+                            //  <=================== calculamos cantidad exacta ======================>
+                            let alto = maestroReal.cantidadTotalRecipiente * receta.cantidad
+                            let total = alto / 100
+
+                            let cant_principal_exacta = total / 1000
+
+
+                            //  <=================== Actualizamos ======================>
+                            await disponibilidad.update({
+                                cant_comprometida: disponibilidad.cant_comprometida + cant_principal_exacta,
+                                cant_disponible: disponibilidad.cant_disponible - cant_principal_exacta,
+                                cant_fisica: disponibilidad.cant_fisica - cant_principal_exacta,
+                            });
+                            
+
+
+
+                        }));
+
+                        return componentes;
+
+                    
                 } else {
                     const disponibilidad = await models.disponibilidad_articulos.findOne({ where: { articuloId: maestro.id } });
                     const existente = insumos_recorridos.find(item => item.id === disponibilidad.id);
@@ -88,12 +133,7 @@
                     cant_disponible: disponibilidad.cant_disponible - receta.cant_necesaria,
                     cant_comprometida: disponibilidad.cant_comprometida + receta.cant_necesaria,
                 });
-                console.log(`sume a el id ${receta.id} la cantidad de: 
-                cant_fisica:${receta.cant_necesaria}, 
-                cant_disponible:${  receta.cant_necesaria},
-                cant_comprometida:${ receta.cant_necesaria},
                 
-                `);
             }));
     
             return insumos_recorridos;
@@ -200,30 +240,82 @@
 
 
     const deletepedido_produccion = async (pedido_produccion_id) => {
+
+        let componentes = []
+
         try {
             const deletedpedido_produccion = await models.venta.findByPk(pedido_produccion_id, { include: ['maestro_articulos'] });
     
             
             if (deletedpedido_produccion) {
+
+
                 for (const maestro of deletedpedido_produccion.maestro_articulos) {
                     
-                    const disponibilidad = await listOnemaestro_articulos(maestro.id);
-                    if (disponibilidad.receta.length > 0) {
-                        disponibilidad.receta.forEach(async receta => {
-                            const disponibilidad = await listOnedisponibilidad_articulos(receta.disponibilidad_articulo.id);
-                            await disponibilidad.update({
-                                cant_fisica: disponibilidad.cant_fisica + receta.cant_necesaria,
-                                cant_disponible: disponibilidad.cant_disponible + receta.cant_necesaria,
-                                cant_comprometida: disponibilidad.cant_comprometida - receta.cant_necesaria,
+                    let maestroReal = await listOnemaestro_articulos(maestro.id)
+
+                    if(maestroReal.tipo_articulo.description === 'Bebidas'){
+                        
+                        const bebida = await models.Bebidas.findOne({
+                            where: {nombre: maestroReal.id}
+                        });
+                        
+                        for (const key of ['primerComponente', 'segundoComponente', 'tercerComponente', 'cuartoComponente', 'quintoComponente']) {
+                          if (bebida[key] !== null && bebida[`${key}Cantidad`] !== null) {
+                            componentes.push({
+                              componente: bebida[key],
+                              cantidad: bebida[`${key}Cantidad`]
                             });
-                        });
+                          }
+                        }
+
+                        await Promise.all(componentes.map(async receta => {
+
+                            let disponibilidad = await models.disponibilidad_articulos.findOne({
+                                where:  { articuloId: receta.componente }
+                            })
+
+                            //  <=================== calculamos cantidad exacta ======================>
+                            let alto = bebida.cantidadTotalRecipiente * receta.cantidad
+                            let total = alto / 100
+
+                            let cant_principal_exacta = total / 1000
+
+
+                            //  <=================== Actualizamos ======================>
+                            await disponibilidad.update({
+                                cant_comprometida: disponibilidad.cant_comprometida - cant_principal_exacta,
+                                cant_disponible: disponibilidad.cant_disponible + cant_principal_exacta,
+                                cant_fisica: disponibilidad.cant_fisica + cant_principal_exacta,
+                            });
+                            
+
+
+
+                        }));
+
+
                     }else{
-                        await disponibilidad.update({
-                            cant_fisica: disponibilidad.cant_fisica + maestro.pedido_produccion.cant_requerida,
-                            cant_disponible: disponibilidad.cant_disponible + maestro.pedido_produccion.cant_requerida,
-                            cant_comprometida: disponibilidad.cant_comprometida - maestro.pedido_produccion.cant_requerida,
-                        });
+                        const disponibilidad = await listOnemaestro_articulos(maestro.id);
+                        if (disponibilidad.receta.length > 0) {
+                            disponibilidad.receta.forEach(async receta => {
+                                const disponibilidad = await listOnedisponibilidad_articulos(receta.disponibilidad_articulo.id);
+                                await disponibilidad.update({
+                                    cant_fisica: disponibilidad.cant_fisica + receta.cant_necesaria,
+                                    cant_disponible: disponibilidad.cant_disponible + receta.cant_necesaria,
+                                    cant_comprometida: disponibilidad.cant_comprometida - receta.cant_necesaria,
+                                });
+                            });
+                        }else{
+                            await disponibilidad.update({
+                                cant_fisica: disponibilidad.cant_fisica + maestro.pedido_produccion.cant_requerida,
+                                cant_disponible: disponibilidad.cant_disponible + maestro.pedido_produccion.cant_requerida,
+                                cant_comprometida: disponibilidad.cant_comprometida - maestro.pedido_produccion.cant_requerida,
+                            });
+                        }
                     }
+                    
+                   
                      
                     await maestro.pedido_produccion.destroy();
                 }
