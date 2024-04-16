@@ -52,7 +52,7 @@ export class DisponibilidadComponent implements OnInit{
 
       this.maestroArticulosService.getAll().subscribe(maestros => {
         maestros.forEach(maestro => {
-          if(maestro.tipo_articulo.description != 'Productos Elaborados'){
+          if(maestro.tipo_articulo.description !== 'Productos Elaborados' && maestro.tipo_articulo.description !== 'Bebidas'){
             this.listMaestro.push(maestro)
           }
         })

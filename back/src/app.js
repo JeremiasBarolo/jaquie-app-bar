@@ -13,7 +13,8 @@ const {
     ventaRouter,
     pedido_stockRouter,
     pedido_produccionRouter,
-    bebidasRouter
+    bebidasRouter,
+    loginRouter
     
  } = require('./routes')
 const { initializeDB } = require('./db/initializeDB');
@@ -44,6 +45,7 @@ app.use("/venta", ventaRouter)
 app.use("/pedido_stock", pedido_stockRouter)
 app.use("/pedido_produccion", pedido_produccionRouter)
 app.use("/bebidas", bebidasRouter)
+app.use("/login", loginRouter)
 
 
 
