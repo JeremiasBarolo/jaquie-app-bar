@@ -181,15 +181,21 @@ calcularSubtotal(ventas: any) {
 }
 
 cerrarCaja(){
-  this.estadisticaService.create({cerrarCaja: true}).subscribe((res) => {
-    this.toastr.success('Caja cerrada exitosamente');
-    setTimeout(() => {
-      window.location.reload();
-    }, 600)
-    
-
-
-  })
+  this.estadisticaService.create({cerrarCaja: true}).subscribe(
+    (response) => {
+     
+      if (response && response.recaudacion !== undefined) {
+          this.toastr.success('Caja cerrada exitosamente');
+          setTimeout(() => {
+              window.location.reload();
+          }, 600);
+      }
+  },
+  (error) => {
+    console.log(error.error);
+      this.toastr.error(error.error.error);
+      console.error(error.error);
+  });
 }
 
 
