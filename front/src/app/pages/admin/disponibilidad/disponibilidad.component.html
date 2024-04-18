@@ -5,58 +5,70 @@
     <button type="button" class="btn btn-danger mr-2"  aria-label="Editar Tipo" (click)="set_Numbers()">SET NUMBERS</button>
 </div>
 
-<div class="container">
-    <div class="row">
-        <div class="col">
-            
-            
-            <section style="margin: 16px">
-                <table class="table table-hover">
-                   
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Descripción</th>
-                            <th scope="col">Costo Unit</th>
-                            <th scope="col">Can. Fisica</th>
-                            <th scope="col">Can. Disponible</th>
-                            <th scope="col">Can. Comprometida</th>
-                            <th scope="col">Can. Secundaria Exacta</th>
-                            <th scope="col">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        
-                        <tr *ngFor="let articulo of listDisponibilidad" (click)="showCardDetails(articulo)">
-                            <th scope="row">{{ articulo.id }}</th>
-                            <td data-target="#Modal" data-toggle="modal" >{{ articulo.maestro_articulo.descripcion }}</td>
-                            <td data-target="#Modal" data-toggle="modal" >{{ articulo.maestro_articulo.costo_unitario | currency }}</td>
-                            <td data-target="#Modal" data-toggle="modal" >{{ articulo.cant_fisica}} {{articulo.conversion_UM.uni_medida}}</td>
-                            <td data-target="#Modal" data-toggle="modal" >{{ articulo.cant_disponible}} {{articulo.conversion_UM.uni_medida}}</td>
-                            <td data-target="#Modal" data-toggle="modal" >{{ articulo.cant_comprometida}} {{articulo.conversion_UM.uni_medida}}</td>
-                            <td data-target="#Modal" data-toggle="modal" >{{ calcularSecundariaTotal(articulo) }} {{articulo.conversion_UM.seg_umedida}}</td>
+<section style="margin: 16px">
 
-                            <td>
-                                <!-- Botones para editar y borrar el tipo de artículo -->
-                                <div class="wrapper d-flex justify-content-end">
-                                    <button (click)="editarTipo(articulo)" type="button" data-toggle="modal" data-target="#SumarCantidad" class="btn btn-outline-success" aria-label="Editar Tipo">
-                                        <i class="fa-solid fa-plus"></i>
-                                    </button>
-                                    <button (click)="editarTipo(articulo)" type="button" data-toggle="modal" data-target="#modalMaestroCrear" class="btn btn-outline-primary ms-1" aria-label="Editar Tipo">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-outline-danger ms-1" data-toggle="modal" data-target="#EliminarMaestro" (click)="DataEntidad(articulo)" aria-label="Borrar Tipo">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
-        </div>
-    </div>
-</div>
+    <input pInputText type="text" (input)="applyFilter($event)" placeholder="Buscar por nombre.." class="mb-3">
+    <p-table #dt [value]="filteredDisp" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20]" class="custom-datatable">
+    <ng-template  pTemplate="header"  class="p-overlaypanel-header p-component-header">
+        <tr >
+        
+            <th pSortableColumn="descripcion">
+                Descripcion
+                
+            </th>
+            <th pSortableColumn="costo_unitario">
+                Costo Unit
+                
+            </th>
+            <th pSortableColumn="conversion_UM">
+                Unidad de Medida
+                
+            </th>
+            <th pSortableColumn="cant_fisica">
+                Can. Fisica
+                <p-sortIcon field="cant_fisica" style="margin: 16px"></p-sortIcon>
+            </th>
+            <th pSortableColumn="cant_disponible">
+                Can. Disponible
+                <p-sortIcon field="cant_disponible" style="margin: 16px"></p-sortIcon>
+            </th>
+            <th pSortableColumn="cant_comprometida">
+                Can. Comprometida
+                <p-sortIcon field="cant_comprometida" style="margin: 16px"></p-sortIcon>
+            </th>
+            <th>
+                Acciones
+            </th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData>
+        <tr>
+            
+            <td data-target="#Modal" data-toggle="modal" >{{ rowData?.maestro_articulo?.descripcion }}</td>
+            <td data-target="#Modal" data-toggle="modal" >{{ rowData.maestro_articulo.costo_unitario }}</td>
+            <td data-target="#Modal" data-toggle="modal" >{{ rowData.conversion_UM.uni_medida}} / {{ rowData.conversion_UM.seg_umedida}}</td>
+            <td data-target="#Modal" data-toggle="modal" >{{ rowData.cant_fisica}}</td>
+            <td data-target="#Modal" data-toggle="modal" >{{ rowData.cant_disponible}}</td>
+            <td data-target="#Modal" data-toggle="modal" >{{ rowData.cant_comprometida}}</td>
+        
+        <td> 
+            <button (click)="editarTipo(rowData)" type="button" data-toggle="modal" data-target="#SumarCantidad" class="btn btn-outline-success" aria-label="Editar Tipo">
+                <i class="fa-solid fa-plus"></i>
+            </button>
+            <button (click)="editarTipo(rowData)" type="button" data-toggle="modal" data-target="#modalMaestroCrear" class="btn btn-outline-primary " aria-label="Editar Tipo">
+                <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+            <button type="button" class="btn btn-outline-danger " data-toggle="modal" data-target="#EliminarMaestro" (click)="DataEntidad(rowData)" aria-label="Borrar Tipo">
+                <i class="fa-solid fa-trash"></i>
+            </button>
+        </td>
+        
+        </tr>
+    </ng-template>
+    </p-table>
+
+</section>
+       
 
 
 <!-- <======================================= MODALES ===================================> -->

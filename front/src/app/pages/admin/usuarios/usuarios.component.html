@@ -1,0 +1,255 @@
+<app-breadcrumbs [titulo]= 'breadcrumbItems'></app-breadcrumbs>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col col-md-12">
+            <h3>Personas</h3>
+            <div class="text-right">
+                <button type="button" class="btn btn-success " data-toggle="modal" data-target="#crearPersona" aria-label="Editar Tipo">Agregar Persona</button>
+            </div>
+            <input pInputText type="text" (input)="applyFilterPersonas($event)" placeholder="Buscar por Nombre.." class="mb-3">
+            <p-table #dt [value]="filteredPersonas" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20]" [tableStyle]="{'max-width': '100vw'}">
+              <ng-template pTemplate="header"  class="p-overlaypanel-header p-component-header">
+                  <tr class="table-header-color">
+                      <th pSortableColumn="name">
+                          Nombre
+                          <p-sortIcon field="name" style="margin: 16px"></p-sortIcon>
+                      </th>
+                      <th pSortableColumn="lastname">
+                         Apellido
+                        <p-sortIcon field="lastname" style="margin: 16px"></p-sortIcon>
+                    </th>
+                      <th>
+                        Acciones
+                      </th>
+                  </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-rowData>
+                <tr>
+                  
+                  <td>{{ rowData.name }}</td>
+                  <td>{{ rowData.lastname }}</td>
+                  <td>
+                    <button data-target="#crearPersona" data-toggle="modal" (click)="editarUsuario(rowData)"routerLinkActive="router-link-active"
+                      type="button" class="btn btn-outline-primary" aria-label="Editar Producto">
+                      <i class="fa-solid fa-pen-to-square"></i>
+                  </button>
+          
+                        <button type="button" (click)="DataEntidad(rowData)" type="button" data-toggle="modal" data-target="#eliminarPersona"
+                            class="btn btn-outline-danger ms-4" aria-label="Borrar Producto"><i
+                                class="fa-solid fa-trash"></i></button>
+                  </td>
+                  
+                </tr>
+              </ng-template>
+            </p-table>
+
+
+
+
+
+
+          
+        </div>
+
+        <br><br>
+        <div class="col col-md-12">
+
+
+            <h3>Usuarios</h3>
+            <div class="text-right">
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#crearUsuario">Agregar Usuario</button>
+            </div>
+            <input pInputText type="text" (input)="applyFilterUsuarios($event)" placeholder="Buscar por Usuario.." class="mb-3">
+            <p-table #dt [value]="filteredUsuarios" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20]" [tableStyle]="{'max-width': '100vw'}">
+              <ng-template pTemplate="header"  class="p-overlaypanel-header p-component-header">
+                  <tr class="table-header-color">
+                      <th pSortableColumn="persona.name">
+                          Persona
+                          <p-sortIcon field="persona.name" style="margin: 16px"></p-sortIcon>
+                      </th>
+                      <th pSortableColumn="username">
+                         Nombre de Usuario
+                        <p-sortIcon field="username" style="margin: 16px"></p-sortIcon>
+                    </th>
+
+                    <th pSortableColumn="rol">
+                        Privilegios
+                       <p-sortIcon field="rol" style="margin: 16px"></p-sortIcon>
+                   </th>
+                      <th>
+                        Acciones
+                      </th>
+                  </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-rowData>
+                <tr>
+                  <td>{{ rowData.persona.name }} {{ rowData.persona.lastname }}</td>
+                  <td>{{ rowData.username }}</td>
+                  <td>{{ rowData.rol }}</td>
+                  <td>
+                        <button type="button" (click)="DataEntidad(rowData)" type="button" data-toggle="modal" data-target="#eliminarUsuario"
+                            class="btn btn-outline-danger ms-4" aria-label="Borrar Producto"><i
+                                class="fa-solid fa-trash"></i></button>
+                  </td>
+                  
+                </tr>
+              </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+
+
+<!-- <======================================= MODALES ===================================> -->
+
+<!-- Modal para crear un nuevo persona -->
+<div class="modal fade" id="crearPersona" tabindex="-1" role="dialog" aria-labelledby="modalCrearTipoLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCrearTipoLabel">Crear/Editar Persona</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="personaForm" (ngSubmit)="guardarNuevaPersona()">
+                    <div class="form-group">
+                      <label for="nombreTipo">Nombre</label>
+                      <input type="text" class="form-control" id="nombreTipo" formControlName="name">
+                      <div *ngIf="personaForm.get('name')?.invalid && personaForm.get('name')?.touched" class="text-danger">
+                        Este campo es requerido
+                      </div>
+
+                      <label for="nombreTipo">Apellido</label>
+                      <input type="text" class="form-control" id="nombreTipo" formControlName="lastname">
+                      <div *ngIf="personaForm.get('lastname')?.invalid && personaForm.get('lastname')?.touched" class="text-danger">
+                        Este campo es requerido
+                      </div>
+
+                      <label for="nombreTipo">DNI</label>
+                      <input type="number" class="form-control" id="nombreTipo" formControlName="dni">
+                      <div *ngIf="personaForm.get('dni')?.invalid && personaForm.get('dni')?.touched" class="text-danger">
+                        Este campo es requerido
+                      </div>
+
+                      <label for="nombreTipo">Numero de Telefono</label>
+                      <input type="number" class="form-control" id="nombreTipo" formControlName="phone">
+                      <div *ngIf="personaForm.get('phone')?.invalid && personaForm.get('phone')?.touched" class="text-danger">
+                        Este campo es requerido
+                      </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para eliminar tipo de artículo -->
+<div class="modal fade" id="eliminarPersona" tabindex="-1" role="dialog" aria-labelledby="modalCrearTipoLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCrearTipoLabel">Desea usted eliminar esta Persona?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                
+                <p>Eliminar esta tipo persona causara que todas los usuarios que esten enlazadas se borren tambien.</p>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" (click)="EliminarPersona()">Eliminar</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Volver</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal para crear un nuevo tipo de artículo -->
+<div class="modal fade" id="crearUsuario" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="">Crear/Editar Usuario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="usuarioForm" (ngSubmit)="guardarNuevaConversion()" >
+                    <div class="form-group">
+
+                      <label for="nombreTipo">Usuario</label>
+                      <input type="text" class="form-control" id="nombreTipo" formControlName="username">
+                      <div *ngIf="usuarioForm.get('username')?.invalid && usuarioForm.get('username')?.touched" class="text-danger">
+                        Este campo es requerido.
+                      </div>
+
+                      <label for="nombreTipo">Contraseña</label>
+                      <input type="text" class="form-control" id="nombreTipo" formControlName="password">
+                      <div *ngIf="usuarioForm.get('password')?.invalid && usuarioForm.get('password')?.touched" class="text-danger">
+                        
+                        Este campo es requerido.
+                      </div>
+
+                      <label for="rol">Rol</label>
+                      <select id="rol" class="form-control" formControlName="rol">
+                        <option value="ADMIN">Admin</option>
+                        <option value="EMPLEADO">Empleados</option>
+                      </select>
+                      <div *ngIf="personaForm.get('rol')?.invalid && personaForm.get('rol')?.touched" class="text-danger">
+                        Este campo es requerido
+                      </div>
+
+                      <label for="rol">Persona</label>
+                        <select id="rol" class="form-control" formControlName="personaId">
+                        <option *ngFor="let persona of personas" [value]="persona.id">{{persona.name}} {{persona.lastname}}</option>
+                        
+                        </select>
+                        <div *ngIf="personaForm.get('personaId')?.invalid && personaForm.get('personaId')?.touched" class="text-danger">
+                        Este campo es requerido
+                        </div>
+
+        
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para eliminar Conversion-->
+<div class="modal fade" id="eliminarUsuario" tabindex="-1" role="dialog" aria-labelledby="modalCrearTipoLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCrearTipoLabel">Desea usted eliminar esta Conversion?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                
+                <p>Eliminar esta conversion causara que todas las entidades que estes enlazadas a ella queden sin una conversion definida.</p>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" (click)="EliminarUsuario()">Eliminar</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Volver</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+

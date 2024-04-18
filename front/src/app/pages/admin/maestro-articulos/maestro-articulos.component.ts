@@ -34,6 +34,8 @@ export class MaestroArticulosComponent implements OnInit {
     descripcion: '',
 
   }
+
+  filteredMaestro: any[] =[]
   
 
 
@@ -52,6 +54,8 @@ export class MaestroArticulosComponent implements OnInit {
 
       this.maestroArticulosService.getAll().subscribe(data => {
         this.listMaestro = data;
+        this.filteredMaestro = [...this.listMaestro];
+
       })
       this.tipoArticulosService.getAll().subscribe(data => {
         this.tiposArticulos = data;
@@ -139,6 +143,14 @@ export class MaestroArticulosComponent implements OnInit {
 
       this.toastr.success('Tipo de Articulo Eliminado', 'Exito');
     })
+  }
+
+  applyFilter(event: any): void {
+    const value = event.target.value;
+    
+    this.filteredMaestro = this.listMaestro.filter(insumo => {
+      return insumo.descripcion.toLowerCase().includes(value.toLowerCase());
+    });
   }
 
 

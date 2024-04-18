@@ -200,7 +200,47 @@ const generarPdf = async (maestro, subtotal,costo_total, ganancia) => {
                     cantidadTotal += pedido.cant_requerida;
                     costoTotal += pedido.cant_requerida * maestro.costo_unitario;
                 }
-            } else {
+            } else if(maestro.tipo_articulo.description === 'Bebidas'){
+
+                const Bebida = await models.Bebidas.findOne({
+                        where: {nombre: maestro.id}
+                    });
+
+                let componentes =  await traerComponentesDeBebida(Bebida)
+
+                for (const receta of componentes) {
+
+                    let disponibilidadArticulo = await models.disponibilidad_articulos.findOne({
+                        where:  { articuloId: receta.componente },
+                        include: [
+                            models.maestro_articulos,
+                        ]
+
+                    })
+
+                    const costoUnitarioArticulo = disponibilidadArticulo.maestro_articulo.costo_unitario;
+
+                    let alto = Bebida.cantidadTotalRecipiente * receta.cantidad
+                    let total = alto / 100
+
+                    let cant_principal = total / 1000
+                     
+                    
+    
+                    // Calcular el costo total del artículo en la receta
+                    costoTotal += costoUnitarioArticulo * cant_principal;
+
+                    
+                }
+            
+            
+                for (const pedido of maestro.pedido_produccions) {
+                    cantidadTotal += pedido.cant_requerida;
+                }
+
+                costoTotal = costoTotal*cantidadTotal
+            
+            }else {
                 // Calcular el costo total para Productos Elaborados y Bebidas
                 for (const receta of maestro.receta) {
                     const disponibilidadArticulo = receta.disponibilidad_articulo;
@@ -291,3 +331,21 @@ const generarPdf = async (maestro, subtotal,costo_total, ganancia) => {
 module.exports = {
 cerrarCaja, calcularCosto, generarPdf
 };
+
+
+const traerComponentesDeBebida = async (bebida ) => {
+
+    let componentes = []
+    
+
+    for (const key of ['primerComponente', 'segundoComponente', 'tercerComponente', 'cuartoComponente', 'quintoComponente']) {
+      if (bebida[key] !== null && bebida[`${key}Cantidad`] !== null) {
+        componentes.push({
+          componente: bebida[key],
+          cantidad: bebida[`${key}Cantidad`]
+        });
+      }
+    }
+
+    return componentes
+}

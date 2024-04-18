@@ -14,6 +14,8 @@ export class TipoArticulosComponent implements OnInit{
   breadcrumbItems: string[] = ['Padrones','Inicio', 'Padrones'];
   tipoArticulos: any[] = [];
   conversionUm: any[] = [];
+  filteredTipo: any[] = [];
+  filteredUnidades: any[] = [];
   tipoForm!: FormGroup;
   conversionForm!: FormGroup;
   tipoArtiuculoNuevo: any;
@@ -41,10 +43,13 @@ export class TipoArticulosComponent implements OnInit{
 
       this.conversionUmService.getAll().subscribe(data => {
         this.conversionUm = data;
+        this.filteredUnidades = [...this.conversionUm];
+
       })
 
       this.tipoArticulosService.getAll().subscribe(data => {
         this.tipoArticulos = data;
+        this.filteredTipo = [...this.tipoArticulos];
       })
 
       this.tipoForm = this.fb.group({
@@ -169,6 +174,22 @@ export class TipoArticulosComponent implements OnInit{
 
       this.toastr.success('Conversion Eliminada', 'Exito');
     })
+  }
+
+  applyFilterUnidades(event: any): void {
+    const value = event.target.value;
+    
+    this.filteredUnidades = this.conversionUm.filter(insumo => {
+      return insumo.uni_medida.toLowerCase().includes(value.toLowerCase());
+    });
+  }
+
+  applyFilterTipo(event: any): void {
+    const value = event.target.value;
+    
+    this.filteredTipo = this.tipoArticulos.filter(insumo => {
+      return insumo.description.toLowerCase().includes(value.toLowerCase());
+    });
   }
 }
 

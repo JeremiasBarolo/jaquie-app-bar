@@ -6,6 +6,26 @@
             <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [xaxis]="chartOptions.xaxis"></apx-chart>
         </div>
         <div class="col-md-4">
+            <h3>Últimos 7 días</h3>
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Profit</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let dia of ultimos7Dias">
+                  <td>{{ dia.fecha }}</td>
+                  <td>{{ dia.profit | currency }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+            
             <h3>Recaudacion Mes a Mes</h3>
             <table class="table table-hover">
                 <thead>
@@ -21,7 +41,6 @@
                     </tr>
                 </tbody>
             </table>
-        </div>
         
     </div>
     

@@ -48,8 +48,6 @@ export class CrearEditarComponent {
     }else{
       this.form = this.fb.group({
         maestro: ['', Validators.required],
-        cant_fisica: ['', Validators.required],
-        n_linea: ['', Validators.required]
       });
     }
     
@@ -59,10 +57,12 @@ export class CrearEditarComponent {
   ngOnInit(): void {
     this.loadAllEntities();
 
-    if(this.accion == 'bebida' && this.id !== null){
+    if(this.accion == 'bebida' && this.id !== 0){
       this.loadBebidaData(this.id); 
-    } else if (this.accion === 'receta' && this.id !== null ) {
-      this.loadSelectedProducts(); 
+    } else if (this.accion === 'receta' && this.id !== 0 ) {
+      
+      
+      this.loadSelectedProducts();
     }
     
     
@@ -185,7 +185,7 @@ export class CrearEditarComponent {
       this.maestroArticulosService.getAll().subscribe(
         (maestros: any[]) => {
           this.listMaestro = maestros
-          console.log(this.listMaestro);
+          
           
         },
         error => {
@@ -197,7 +197,12 @@ export class CrearEditarComponent {
 
         
         (maestros: any[]) => {
-          this.listMaestro = maestros.filter(maestro => maestro.tipo_articulo.description === 'Bebidas');
+          if(this.accion === 'receta'){
+            this.listMaestro = maestros.filter(maestro => maestro.tipo_articulo.description !== 'Bebidas' && maestro.tipo_articulo.description !== 'Insumos' );
+          }else{
+            this.listMaestro = maestros.filter(maestro => maestro.tipo_articulo.description !== 'Productos Elaborados' && maestro.tipo_articulo.description !== 'Insumos' );
+          }
+          
         },
         error => {
           console.error('Error al cargar los maestros de artículos:', error);
@@ -226,7 +231,7 @@ export class CrearEditarComponent {
   
       let componentes: { componente: any; cantidad: any; }[] = [];
       for (const key of ['primerComponente', 'segundoComponente', 'tercerComponente', 'cuartoComponente', 'quintoComponente']) {
-        if (data[key] !== null && data[`${key}Cantidad`] !== null) {
+        if (data[key] !== 0 && data[`${key}Cantidad`] !== 0) {
           componentes.push({
             componente: data[key],
             cantidad: data[`${key}Cantidad`]
@@ -256,7 +261,7 @@ export class CrearEditarComponent {
   }
   
   loadSelectedProducts() {
-    if ( this.accion ==='receta' && this.id !== null) {
+    if (this.id) {
       this.maestroArticulosService.getById(this.id).subscribe(
         (res: any) => {
           if (res.receta && res.receta.length > 0) {
@@ -272,18 +277,18 @@ export class CrearEditarComponent {
             });
   
             
+            
             this.selectedEntities = [...selectedEntitiesWithDescription];
-            console.log('SelectedEntites:',this.selectedEntities);
-            console.log('listDisponibilidad:',this.listDisponibilidad);
             
             
-  
             
+            
+            // Filtrar los elementos de listDisponibilidad que no están en la receta
             this.listDisponibilidad = this.listDisponibilidad.filter(insumo =>
               !this.selectedEntities.some(selected => selected.id === insumo.id)
             );
   
-            
+            // Asignar los valores al formulario
             this.form.patchValue({
               maestro: res.id,
               cant_fisica: res.receta[0].cant_fisica,
@@ -295,8 +300,6 @@ export class CrearEditarComponent {
           }
         }
       );
-    }else{
-
     }
   }
 
@@ -308,7 +311,7 @@ export class CrearEditarComponent {
 
         let componentes: { componente: any; cantidad: any; }[] = [];
         for (const key of ['primerComponente', 'segundoComponente', 'tercerComponente', 'cuartoComponente', 'quintoComponente']) {
-            if (data[key] !== null && data[`${key}Cantidad`] !== null) {
+            if (data[key] !== 0 && data[`${key}Cantidad`] !== 0) {
                 componentes.push({
                     componente: data[key],
                     cantidad: data[`${key}Cantidad`]
@@ -316,9 +319,7 @@ export class CrearEditarComponent {
             }
         }
 
-        console.log('Dta:', data);
-        console.log('componentes', componentes);
-
+        
         if (this.accion === 'bebida' && this.id) {
             this.selectedEntities = this.selectedEntities.filter(entity => {
                 return componentes.some(comp => comp.componente.id === entity.id);

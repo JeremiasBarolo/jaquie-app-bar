@@ -3,83 +3,100 @@
 
 <div class="container">
     <div class="row">
-        <div class="col">
+        <div class="col col col-md-6">
+
             <h3>Tipos de Artículos</h3>
             <div class="text-right">
-                <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#modalCrearTipo" aria-label="Editar Tipo">Agregar Tipo</button>
+                <button type="button" class="btn btn-success " data-toggle="modal" data-target="#modalCrearTipo" aria-label="Editar Tipo">Agregar Tipo de Articulo</button>
             </div>
-            <section style="margin: 16px">
-                <table class="table table-hover">
-                   
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Descripción</th>
-                            <th scope="col">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        
-                        <tr *ngFor="let tipo of tipoArticulos" data-target="#Modal" data-toggle="modal">
-                            <th scope="row">{{ tipo.id }}</th>
-                            <td>{{ tipo.description }}</td>
-                            <td>
-                                <!-- Botones para editar y borrar el tipo de artículo -->
-                                <div class="wrapper d-flex justify-content-end">
-                                    <button (click)="editarTipo(tipo)" type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#modalCrearTipo" aria-label="Editar Tipo" >
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-outline-danger ms-4" data-toggle="modal" data-target="#EliminarTipo" (click)="DataEntidad(tipo)" aria-label="Borrar Tipo">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
+            <input pInputText type="text" (input)="applyFilterTipo($event)" placeholder="Buscar por Nombre.." class="mb-3">
+            <p-table #dt [value]="filteredTipo" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20]" [tableStyle]="{'max-width': '100vw'}">
+              <ng-template pTemplate="header"  class="p-overlaypanel-header p-component-header">
+                  <tr class="table-header-color">
+                      <th pSortableColumn="description">
+                        Descripción
+                          <p-sortIcon field="description" style="margin: 16px"></p-sortIcon>
+                      </th>
+                      <th>
+                        Acciones
+                      </th>
+                  </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-rowData>
+                <tr>
+                  
+                  <td>{{ rowData.description }}</td>
+                  <td>
+                    <button data-target="#modalCrearTipo" data-toggle="modal" (click)="editarTipo(rowData)"routerLinkActive="router-link-active"
+                      type="button" class="btn btn-outline-primary" aria-label="Editar Producto">
+                      <i class="fa-solid fa-pen-to-square"></i>
+                  </button>
+          
+                        <button type="button" (click)="DataEntidad(rowData)" type="button" data-toggle="modal" data-target="#EliminarTipo"
+                            class="btn btn-outline-danger ms-4" aria-label="Borrar Producto"><i
+                                class="fa-solid fa-trash"></i></button>
+                  </td>
+                  
+                </tr>
+              </ng-template>
+            </p-table>
+
+
+
+
+
+
+          
         </div>
-        <div class="col">
+
+        <br><br>
+        <div class="col col-md-6">
+
+
             <h3>Unidades de Medida</h3>
             <div class="text-right">
-                <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#modalCrearConversion">Agregar Unidad de Medida</button>
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalCrearConversion">Agregar Unidades de Medida</button>
             </div>
-            <section style="margin: 16px">
-                <table class="table table-hover">
-                   
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Unidad Principal</th>
-                            <th scope="col"></th>
-                            <th scope="col">Unidad Secundaria</th>
-                            <th scope="col">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        
-                        <tr *ngFor="let conversion of conversionUm" data-target="#Modal" data-toggle="modal">
-                            <th scope="row">{{ conversion.id }}</th>
-                            <td>{{ conversion.cant_principal}} {{ conversion.uni_medida }}</td>
-                            <td>====></td>
-                            <td>{{ conversion.cant_secundaria }} {{ conversion.seg_umedida }}</td>
-                            <td>
-                                <!-- Botones para editar y borrar el tipo de artículo -->
-                                <div class="wrapper d-flex justify-content-end">
-                                    <button  routerLinkActive="router-link-active" type="button" class="btn btn-outline-primary" 
-                                    data-toggle="modal" data-target="#modalCrearConversion" (click)="editarConversion(conversion)" aria-label="Editar Tipo">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-outline-danger ms-4" 
-                                    data-toggle="modal" data-target="#EliminarConversion" (click)="DataEntidad(conversion)">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
+            <input pInputText type="text" (input)="applyFilterUnidades($event)" placeholder="Buscar por Usuario.." class="mb-3">
+            <p-table #dt [value]="filteredUnidades" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20]" [tableStyle]="{'max-width': '100vw'}">
+              <ng-template pTemplate="header"  class="p-overlaypanel-header p-component-header">
+                  <tr class="table-header-color">
+                      <th pSortableColumn="uni_medida">
+                        Unidad Principal
+                          <p-sortIcon field="uni_medida" style="margin: 16px"></p-sortIcon>
+                      </th>
+                    <th pSortableColumn="">
+                         
+                        <p-sortIcon field="" style="margin: 16px"></p-sortIcon>
+                    </th>
+
+                    <th pSortableColumn="seg_umedida">
+                        Unidad Secundaria
+                       <p-sortIcon field="seg_umedida" style="margin: 16px"></p-sortIcon>
+                   </th>
+                      <th>
+                        Acciones
+                      </th>
+                  </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-rowData>
+                <tr>
+                  <td>{{ rowData.cant_principal}} {{ rowData.uni_medida }}</td>
+                  <td> ====> </td>
+                  <td>{{ rowData.cant_secundaria }} {{ rowData.seg_umedida }}</td>
+                  <td>
+                    <button data-target="#modalCrearConversion" data-toggle="modal" (click)="editarConversion(rowData)"routerLinkActive="router-link-active"
+                      type="button" class="btn btn-outline-primary" aria-label="Editar Producto">
+                      <i class="fa-solid fa-pen-to-square"></i>
+                  </button>
+                        <button type="button" (click)="DataEntidad(rowData)" type="button" data-toggle="modal" data-target="#EliminarConversion"
+                            class="btn btn-outline-danger ms-4" aria-label="Borrar Producto"><i
+                                class="fa-solid fa-trash"></i></button>
+                  </td>
+                  
+                </tr>
+              </ng-template>
+            </p-table>
         </div>
     </div>
 </div>

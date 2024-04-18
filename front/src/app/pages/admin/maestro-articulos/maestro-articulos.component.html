@@ -4,61 +4,89 @@
     <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#modalMaestroCrear" aria-label="Editar Tipo">Agregar Articulo</button>
 </div>
 
+
+
 <div class="container">
     <div class="row">
         <div class="col">
-            
-            
+
+
             <section style="margin: 16px">
-                <table class="table table-hover">
-                   
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Descripción</th>
-                            <th scope="col">Costo Unit</th>
-                            <th scope="col">Tipo Articulo</th>
-                            <th scope="col">Unidad de Medida</th>
-                            <th scope="col">Recetas</th>
-                            <th scope="col">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+
+                <input pInputText type="text" (input)="applyFilter($event)" placeholder="Buscar por nombre.." class="mb-3">
+                <p-table #dt [value]="filteredMaestro" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20]" class="custom-datatable">
+                <ng-template  pTemplate="header"  class="p-overlaypanel-header p-component-header">
+                    <tr >
+                    
+                        <th pSortableColumn="descripcion">
+                            Descripcion
+                            
+                        </th>
+                        <th pSortableColumn="costo_unitario">
+                            Costo Unit
+                            
+                        </th>
+                        <th pSortableColumn="conversion_UM">
+                            Tipo Articulo
+                            
+                        </th>
+                        <th pSortableColumn="cant_fisica">
+                            Unidad de Medida
+                            <p-sortIcon field="cant_fisica" style="margin: 16px"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="cant_disponible">
+                            Receta
+                            <p-sortIcon field="cant_disponible" style="margin: 16px"></p-sortIcon>
+                        </th>
                         
-                        <tr *ngFor="let tipo of listMaestro" (click)="showCardDetails(tipo)">
-                            <th scope="row">{{ tipo.id }}</th>
-                            <td data-target="#Modal" data-toggle="modal" >{{ tipo.descripcion }}</td>
-                            <td data-target="#Modal" data-toggle="modal" >{{ tipo.costo_unitario }}</td>
-                            <td data-target="#Modal" data-toggle="modal" >{{ tipo.tipo_articulo.description }}</td>
-                            <td data-target="#Modal" data-toggle="modal" >{{ tipo.conversion_UM.uni_medida}} / {{ tipo.conversion_UM.seg_umedida}}</td>
-                            <td>
-                                <!-- Verifica si el array de recetas tiene longitud mayor a cero -->
-                                <ng-container *ngIf="tipo.receta && tipo.receta.length > 0; else noContiene">
-                                    CONTIENE
-                                </ng-container>
-                               
-                                <ng-template #noContiene>
-                                    NO CONTIENE
-                                </ng-template>
-                            </td>
-                            <td>
-                                <!-- Botones para editar y borrar el tipo de artículo -->
-                                <div class="wrapper d-flex justify-content-end">
-                                    <button (click)="editarTipo(tipo)" type="button" data-toggle="modal" data-target="#modalMaestroCrear" class="btn btn-outline-primary" aria-label="Editar Tipo">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-outline-danger ms-4" data-toggle="modal" data-target="#EliminarMaestro" (click)="DataEntidad(tipo)" aria-label="Borrar Tipo">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                        <th>
+                            Acciones
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowData>
+                    <tr>
+                        
+                        <td data-target="#Modal" data-toggle="modal" (click)="showCardDetails(rowData)" >{{ rowData.descripcion }}</td>
+                        <td data-target="#Modal" data-toggle="modal" (click)="showCardDetails(rowData)"  >{{ rowData.costo_unitario }}</td>
+                        <td data-target="#Modal" data-toggle="modal" (click)="showCardDetails(rowData)"  >{{ rowData.tipo_articulo.description }}</td>
+                        <td data-target="#Modal" data-toggle="modal" (click)="showCardDetails(rowData)"  >{{ rowData.conversion_UM.uni_medida}} / {{ rowData.conversion_UM.seg_umedida}}</td>
+                        <td>
+                            <!-- Verifica si el array de recetas tiene longitud mayor a cero -->
+                            <ng-container *ngIf="rowData.receta && rowData.receta.length > 0; else noContiene">
+                                CONTIENE
+                            </ng-container>
+                           
+                            <ng-template #noContiene>
+                                NO CONTIENE
+                            </ng-template>
+                        </td>
+                    
+                    <td> 
+                        <button (click)="editarTipo(rowData)" type="button" data-toggle="modal" data-target="#SumarCantidad" class="btn btn-outline-success" aria-label="Editar Tipo">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                        <button (click)="editarTipo(rowData)" type="button" data-toggle="modal" data-target="#modalMaestroCrear" class="btn btn-outline-primary " aria-label="Editar Tipo">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <button type="button" class="btn btn-outline-danger " data-toggle="modal" data-target="#EliminarMaestro" (click)="DataEntidad(rowData)" aria-label="Borrar Tipo">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                    
+                    </tr>
+                </ng-template>
+                </p-table>
+            
             </section>
+            
+        
         </div>
     </div>
 </div>
+
+
+
 
 
 <!-- <======================================= MODALES ===================================> -->

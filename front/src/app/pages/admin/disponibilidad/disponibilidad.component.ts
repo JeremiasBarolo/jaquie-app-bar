@@ -34,6 +34,7 @@ export class DisponibilidadComponent implements OnInit{
   conversionesUM:any[] = []
   dataModal:any={}
   cantidadNueva: any
+  filteredDisp: any[] =[]
   
 
 
@@ -60,6 +61,7 @@ export class DisponibilidadComponent implements OnInit{
       })
       this.disponibilidadService.getAll().subscribe(data => {
         this.listDisponibilidad = data;
+        this.filteredDisp = this.listDisponibilidad
       })
       this.conversionUmService.getAll().subscribe(data => {
         this.conversionesUM = data;
@@ -201,5 +203,14 @@ export class DisponibilidadComponent implements OnInit{
 
     return cant_principal*cant_secundaria
    }
+
+   applyFilter(event: any): void {
+    const value = event.target.value;
+    
+    this.filteredDisp = this.listDisponibilidad.filter(insumo => {
+      return insumo.maestro_articulo.descripcion.toLowerCase().includes(value.toLowerCase());
+    });
+  }
+   
   
 }

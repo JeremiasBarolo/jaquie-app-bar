@@ -9,54 +9,59 @@
 
 
   <div class="container">
-    <div class="row">
-        <div class="col">
-           
-            <section style="margin: 16px">
-                <table class="table table-hover">
-                   
-                    <thead>
-                        <tr>
-                            <th scope="col" data-toggle="modal">#</th>
-                            <th scope="col">Mesa</th>
-                            <th scope="col">Pedido?</th>
-                            <th scope="col text-left">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        
-                        <tr *ngFor="let mesa of listMesas" data-target="#Modal" data-toggle="modal" (click)="showCardDetails(mesa)">
-                            <th scope="row" data-toggle="modal" data-target="#InsumoModal" (click)="showCardDetails(mesa)">{{ mesa.id }}</th>
-                            <td data-toggle="modal" data-target="#InsumoModal" (click)="showCardDetails(mesa)">{{ mesa.mesa }}</td>
-                            <td data-toggle="modal" data-target="#InsumoModal" (click)="showCardDetails(mesa)">
-                              <!-- Verifica si el array de recetas tiene longitud mayor a cero -->
-                              <ng-container *ngIf="mesa.maestro_articulos && mesa.maestro_articulos.length > 0; else noContiene">
-                                  CONTIENE PEDIDO
-                              </ng-container>
-                             
-                              <ng-template #noContiene>
-                                  NO CONTIENE PEDIDO
-                              </ng-template>
-                          </td>
+    <input pInputText type="text" (input)="applyFilter($event)" placeholder="Buscar por nombre.." class="mb-3">
+    <p-table #dt [value]="filteredPedidos" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20]" class="custom-datatable">
+      <ng-template  pTemplate="header"  class="p-overlaypanel-header p-component-header">
+          <tr >
+            <th pSortableColumn="id">
+                ID
+                <p-sortIcon field="id" style="margin: 16px"></p-sortIcon>
+            </th>
 
-                            
-                            <td>
-                                <!-- Botones para editar y borrar el tipo de artículo -->
-                                <div class="wrapper d-flex justify-content-end">
-                                    <button type="button" class="btn btn-outline-primary"  aria-label="Editar Tipo" (click)="editarPedido(mesa)" >
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-outline-danger ms-4" data-toggle="modal" data-target="#eliminarPedido" (click)="showCardDetails(mesa)" aria-label="Borrar Tipo">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
-        </div>
-    </div>
+              <th pSortableColumn="mesa">
+                Mesa
+                <p-sortIcon field="mesa" style="margin: 16px"></p-sortIcon>
+            </th>
+              <th pSortableColumn="pedidos">
+                  Pedido?
+                  <p-sortIcon field="pedidos" style="margin: 16px"></p-sortIcon>
+              </th>
+              <th>
+                Acciones
+              </th>
+          </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData>
+        <tr>
+            <td data-toggle="modal" data-target="#InsumoModal" (click)="showCardDetails(rowData)" >{{ rowData.id }}</td>
+            <td data-toggle="modal" data-target="#InsumoModal" (click)="showCardDetails(rowData)">{{ rowData.mesa }}</td>
+            <td data-toggle="modal" data-target="#InsumoModal" (click)="showCardDetails(rowData)">
+                <!-- Verifica si el array de recetas tiene longitud mayor a cero -->
+                <ng-container *ngIf="rowData.maestro_articulos && rowData.maestro_articulos.length > 0; else noContiene">
+                    CONTIENE PEDIDO
+                </ng-container>
+               
+                <ng-template #noContiene>
+                    NO CONTIENE PEDIDO
+                </ng-template>
+            </td>
+         
+          <th>
+            <button routerLinkActive="router-link-active"
+              type="button" class="btn btn-outline-primary" aria-label="Editar Producto" [routerLink]="['crear-editar', rowData.id]"   >
+              <i class="fa-solid fa-pen-to-square"></i>
+          </button>
+  
+                <button type="button" (click)="eliminarPedido(rowData.id)"
+                    class="btn btn-outline-danger ms-4" aria-label="Borrar Producto"><i
+                        class="fa-solid fa-trash"></i>
+                </button>
+          </th>
+          
+        </tr>
+      </ng-template>
+    </p-table>
+
 </div>
 
   

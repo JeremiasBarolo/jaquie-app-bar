@@ -10,6 +10,7 @@ export class EstadisticaComponent implements OnInit {
   breadcrumbItems: string[] = ['Estadisticas','Inicio', 'Estadisticas'];
   estadisticas: any[] = [];
   profitPorMes: any[] = [];
+  ultimos7Dias: any[] = [];
 
   // Configuración del gráfico
   chartOptions: any = {
@@ -31,6 +32,7 @@ export class EstadisticaComponent implements OnInit {
 
   ngOnInit(): void {
     this.obtenerEstadisticas();
+    this.procesarUltimos7Dias()
   }
 
   obtenerEstadisticas(): void {
@@ -83,6 +85,27 @@ export class EstadisticaComponent implements OnInit {
   mesAsString(index: number): string {
     const meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
     return meses[index];
+  }
+
+  procesarUltimos7Dias(): void {
+    const fechaActual = new Date();
+    const ultimos7Dias = [];
+    for (let i = 6; i >= 0; i--) {
+      const fecha = new Date(fechaActual);
+      fecha.setDate(fecha.getDate() - i);
+      const fechaString = `${fecha.getDate()}/${fecha.getMonth() + 1}/${fecha.getFullYear()}`;
+      const estadistica = this.estadisticas.find(stat => {
+        const estadisticaFecha = new Date(stat.createdAt);
+        return (
+          estadisticaFecha.getDate() === fecha.getDate() &&
+          estadisticaFecha.getMonth() === fecha.getMonth() &&
+          estadisticaFecha.getFullYear() === fecha.getFullYear()
+        );
+      });
+      const profit = estadistica ? estadistica.profit : 0;
+      ultimos7Dias.push({ fecha: fechaString, profit: profit });
+    }
+    this.ultimos7Dias = ultimos7Dias;
   }
 }
   
