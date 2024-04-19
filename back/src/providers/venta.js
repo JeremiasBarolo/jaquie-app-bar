@@ -4,6 +4,7 @@
     const {calcularCosto} = require('./cerrarCaja');
     const { listAlldisponibilidad_articulos, listOnedisponibilidad_articulos } = require('./disponibilidad_articulos');
     const {listOnemaestro_articulos} = require('./maestro_articulos');
+    const {traerComponentesDeBebida} = require('./pedido_produccion')
 
     const listAllventa= async () => {
         try {
@@ -88,7 +89,7 @@
             
             if (dataUpdated.estado === 'FINALIZADO') {
                 let costo = await calcularCosto(oldventa.maestro_articulos);
-                let newventa = await oldventa.update({...dataUpdated, total: dataUpdated.subtotal, precio: costo, forma_pago: dataUpdated.forma_pago});
+                await oldventa.update({...dataUpdated, total: dataUpdated.subtotal, precio: costo, forma_pago: dataUpdated.forma_pago});
                 let pedidos = await models.pedido_produccion.findAll({ where: { ventaId: venta_id } });
 
                 //<================ CAMBIO DE ESTADO ==================>
@@ -102,7 +103,7 @@
                 for(const maestro_principal of oldventa.maestro_articulos){
                     const maestro = await listOnemaestro_articulos(maestro_principal.id);
     
-                        if (maestro.tipo_articulo.description === "Bebidas" || maestro.tipo_articulo.description === "Productos Elaborados") {
+                        if (maestro.tipo_articulo.description === "Productos Elaborados") {
                             await Promise.all(maestro.receta.map(async receta => {
                                 const disponibilidad = await listOnedisponibilidad_articulos(receta.disponibilidad_articulo.id);
                                 const existente = insumos_recorridos.find(item => item.id === disponibilidad.id);
@@ -116,7 +117,44 @@
                                     existente.cant_restar += receta.cant_necesaria * pedido.cant_requerida;
                                 }
                             }));
-                        } else {
+
+
+
+                        } else if(maestro.tipo_articulo.description === "Bebidas"){
+                            const maestroReal = await models.Bebidas.findOne({
+                                where: {nombre: maestro.id}
+                            });
+                            
+                            let componentes = await traerComponentesDeBebida(maestroReal)
+        
+                            await Promise.all(componentes.map(async receta => {
+                                let disponibilidad = await models.disponibilidad_articulos.findOne({
+                                    where:  { articuloId: receta.componente }
+                                })
+        
+                                
+                                let alto = maestroReal.cantidadTotalRecipiente * receta.cantidad
+                                let total = alto / 100
+        
+                                let cant_principal = total / 1000
+                                let cant_principal_exacta = cant_principal
+
+                                const existente = insumos_recorridos.find(item => item.id === disponibilidad.id);
+                                let pedido = await models.pedido_produccion.findOne({ where: { maestroId: maestro.id, ventaId: venta_id } });   
+                                if (!existente) {
+                                    insumos_recorridos.push({
+                                        id: disponibilidad.id,
+                                        cant_restar: cant_principal_exacta * pedido.cant_requerida,
+                                    });
+                                } else {
+                                    existente.cant_restar += cant_principal_exacta * pedido.cant_requerida;
+                                }
+                            }));
+                        }
+                        
+                        
+                        
+                        else {
                             const disponibilidad = await models.disponibilidad_articulos.findOne({ where: { articuloId: maestro.id } });
                             const existente = insumos_recorridos.find(item => item.id === disponibilidad.id);
                             let pedido = await models.pedido_produccion.findOne({ where: { maestroId: maestro.id, ventaId: venta_id } });

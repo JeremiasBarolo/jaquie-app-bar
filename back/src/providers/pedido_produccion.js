@@ -62,7 +62,7 @@ const { where } = require('sequelize');
                         if (!existente) {
                             insumos_recorridos.push({
                                 id: disponibilidad.id,
-                                cant_necesaria: insumo.cantidad,
+                                cant_necesaria: receta.cant_necesaria,
                             });
                         } else {
                             existente.cant_necesaria += insumo.cantidad;
@@ -351,9 +351,7 @@ const { where } = require('sequelize');
 
     
 
-    module.exports = {
-    listAllpedido_produccion, listOnepedido_produccion, createpedido_produccion, updatepedido_produccion, deletepedido_produccion,
-    };
+   
 
     
     const insumoRecorridos = async (disponibilidad_id, mesa_id, maestro_id, insumo_cantidad, pedido_existente, insumos_recorridos, tipo_articulo, cantidad_necesaria) => {
@@ -445,6 +443,8 @@ const { where } = require('sequelize');
 
 
         
-            
+    module.exports = {
+        listAllpedido_produccion, listOnepedido_produccion, createpedido_produccion, updatepedido_produccion, deletepedido_produccion, traerComponentesDeBebida
+        };
                 
     
