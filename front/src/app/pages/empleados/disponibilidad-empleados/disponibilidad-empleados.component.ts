@@ -1,11 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+
+import { Component, OnInit, ViewChild } from '@angular/core';
+
 import { ConversionUmService } from '../../../services/conversion-um.service';
+import {NgIf} from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MaestroArticulosService } from '../../../services/maestro-articulos.service';
-
+import { TipoArticulosService } from '../../../services/tipo-articulos.service';
 import { DisponibilidadArticulosService } from '../../../services/disponibilidad-articulos.service';
 import { reduce } from 'rxjs';
+import { Table } from 'primeng/table';
+
 
 @Component({
   selector: 'app-disponibilidad-empleados',
@@ -32,8 +37,10 @@ export class DisponibilidadEmpleadosComponent {
   conversionesUM:any[] = []
   dataModal:any={}
   cantidadNueva: any
-  
+  filteredDisp:any[] = []  
 
+  @ViewChild('dt')
+  table!: Table; 
 
   constructor(
     private maestroArticulosService:MaestroArticulosService,
@@ -53,11 +60,13 @@ export class DisponibilidadEmpleadosComponent {
           if(maestro.tipo_articulo.description != 'Productos Elaborados'){
             this.listMaestro.push(maestro)
           }
+
         })
         
       })
       this.disponibilidadService.getAll().subscribe(data => {
         this.listDisponibilidad = data;
+        this.filteredDisp = this.listDisponibilidad
       })
       this.conversionUmService.getAll().subscribe(data => {
         this.conversionesUM = data;
@@ -91,7 +100,8 @@ export class DisponibilidadEmpleadosComponent {
 
   editarTipo(card: any) {  
       this.DataArticulos = {...card, editar:true};  
-      console.log(this.DataArticulos);
+
+      console.log('dat',this.DataArticulos);
       
       this.disponibilidadForm.patchValue({
         cant_fisica: this.DataArticulos.cant_fisica,
@@ -155,10 +165,13 @@ export class DisponibilidadEmpleadosComponent {
   }
 
   SumarCantidades(){
-    const cant_fisica_nueva = this.sumarForm.value.cant_fisica_sumada + this.dataModal.cant_fisica;
+    const cant_fisica_nueva = this.sumarForm.value.cant_fisica_sumada + this.DataArticulos.cant_fisica;
+    const cant_disponible_nueva = this.sumarForm.value.cant_fisica_sumada + this.DataArticulos.cant_disponible;
     this.cantidadNueva = {
       cant_fisica_nueva: cant_fisica_nueva,
-      id: this.dataModal.id,
+      cant_disponible_nueva: cant_disponible_nueva,
+      id: this.DataArticulos.id,
+
       add: true
     }
     try {
@@ -189,4 +202,13 @@ export class DisponibilidadEmpleadosComponent {
       });
     })
    }
+
+   applyFilter(event: any): void {
+    const value = event.target.value;
+    
+    this.filteredDisp = this.listDisponibilidad.filter(insumo => {
+      return insumo.maestro_articulo.descripcion.toLowerCase().includes(value.toLowerCase());
+    });
+  }
+
 }

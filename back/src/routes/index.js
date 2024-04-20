@@ -10,6 +10,8 @@ const recetaRouter = require('./receta');
 const ventaRouter = require('./venta');
 const pedido_stockRouter = require('./pedido_stock');
 const pedido_produccionRouter = require('./pedido_produccion');
+const bebidasRouter = require('./Bebidas');
+const loginRouter = require('./login');
 
 
 module.exports = {
@@ -23,5 +25,7 @@ module.exports = {
     recetaRouter,
     ventaRouter,
     pedido_stockRouter,
-    pedido_produccionRouter
+    pedido_produccionRouter,
+    bebidasRouter,
+    loginRouter
 };

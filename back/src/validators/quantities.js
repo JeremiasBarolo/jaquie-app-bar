@@ -16,6 +16,8 @@ const pedidoValidator = [
         .custom(async (insumos, { req, res }) => {
             const errors = [];
             let pedidos_revisados_reales = [];
+            let componentes= []
+
 
             for (const insumo of insumos) {
                 if (insumo.cantidad <= 0) {
@@ -23,13 +25,14 @@ const pedidoValidator = [
                     continue;
                 }
 
+
                 try {
                     const producto = await models.maestro_articulos.findByPk(insumo.id, {
                         include: { all: true },
                     });
 
                     if (producto) {
-                        if (producto.tipo_articulo.description === "Productos Elaborados" || producto.tipo_articulo.description === "Bebidas") {
+                        if (producto.tipo_articulo.description === "Productos Elaborados") {
                             
                             await Promise.all(producto.receta.map(async receta => {
                                 const disponibilidad = await listOnedisponibilidad_articulos(receta.articuloId);
@@ -45,7 +48,7 @@ const pedidoValidator = [
                                     });
                                 }
                             }));
-                        } else {
+                        } else if(producto.tipo_articulo.description !== 'Bebidas') {
                             
                             let disponibilidad = producto.disponibilidad_articulo
 
@@ -60,6 +63,54 @@ const pedidoValidator = [
                                     cant_fisica: disponibilidad.cant_fisica - insumo.cantidad,
                                 });
                             }
+                        }else{
+                            let bebida = await models.Bebidas.findOne({
+                                where:  { nombre: producto.id }
+                            })
+
+                            if(bebida === null){
+                                errors.push('Una bebida no tiene consigo su receta');
+                                break
+                            }
+
+                            
+                            
+                            for (const key of ['primerComponente', 'segundoComponente', 'tercerComponente', 'cuartoComponente', 'quintoComponente']) {
+                              if (bebida[key] !== null && bebida[`${key}Cantidad`] !== null) {
+                                componentes.push({
+                                  componente: bebida[key],
+                                  cantidad: bebida[`${key}Cantidad`]
+                                });
+                              }
+                            }
+
+                            await Promise.all(componentes.map(async receta => {
+
+                                let disponibilidad = await models.disponibilidad_articulos.findOne({
+                                    where:  { articuloId: receta.componente }
+                                })
+
+                                //  <=================== calculamos cantidad exacta ======================>
+                                let alto = bebida.cantidadTotalRecipiente * receta.cantidad
+                                let total = alto / 100
+
+                                let cant_principal_exacta = total / 1000
+
+                                await copia_seguridad(pedidos_revisados_reales, disponibilidad)
+
+                                if (disponibilidad.cant_disponible < insumo.cantidad) {
+                                    errors.push(`No hay suficiente stock de ${producto.descripcion}.`);
+                                } else {
+                                    await disponibilidad.update({
+                                        cant_comprometida: disponibilidad.cant_comprometida + cant_principal_exacta,
+                                        cant_disponible: disponibilidad.cant_disponible - cant_principal_exacta,
+                                        cant_fisica: disponibilidad.cant_fisica - cant_principal_exacta,
+                                    });
+                                }
+
+
+
+                            }));
                         }
                     } else {
                         errors.push(`El insumo con ID ${insumo.id} no existe.`);

@@ -8,6 +8,7 @@ import { TipoArticulosService } from '../../../services/tipo-articulos.service';
 import { DisponibilidadArticulosService } from '../../../services/disponibilidad-articulos.service';
 import { reduce } from 'rxjs';
 import { RecetasService } from '../../../services/recetas.service';
+import { BebidasService } from '../../../services/bebidas.service';
 
 @Component({
   selector: 'app-recetas',
@@ -22,6 +23,8 @@ export class RecetasComponent {
   sumarForm!: FormGroup;
   recetaNueva: any;
   conversionNuevo:any;
+  accionBebida:string = 'bebida'
+  accionReceta:string = 'receta'
   
   DataArticulos: any={
     editar:false
@@ -32,6 +35,7 @@ export class RecetasComponent {
   EntidadEliminar:any
   listRecetas:any[] = []
   listDisponibilidad:any[] = []
+  listBebidas:any[] = []
   dataModal:any={}
   cantidadNueva: any
   
@@ -40,6 +44,7 @@ export class RecetasComponent {
   constructor(
     private maestroArticulosService:MaestroArticulosService,
     private disponibilidadService:DisponibilidadArticulosService,
+    private bebidasService:BebidasService, 
     private recetasService:RecetasService,
     private fb: FormBuilder,
     private toastr: ToastrService
@@ -61,11 +66,17 @@ export class RecetasComponent {
       this.recetasService.getAll().subscribe(data => {
         this.listRecetas = data;
       })
+
+      this.bebidasService.getAll().subscribe(data => {
+        this.listBebidas = data
+      })
+
       this.disponibilidadService.getAll().subscribe(data => {
         this.listDisponibilidad = data;
       })
 
-
+      console.log(this.listBebidas);
+      
 
       this.RecetaForm = this.fb.group({
         cant_fisica: ['',Validators.required],
@@ -116,6 +127,17 @@ export class RecetasComponent {
       this.toastr.success('Receta Eliminado', 'Exito');
     })
   }
+
+  // <============ Eliminar Tipo ==========>
+    eliminarBebida(){
+      this.bebidasService.delete(this.EntidadEliminar.id).subscribe(() => {
+        setTimeout(() => {
+          window.location.reload();
+        }, 600)
+  
+        this.toastr.success('Receta Eliminado', 'Exito');
+      })
+    }
 
   
 }

@@ -5,14 +5,14 @@
         Pedido de Stock</button>
   </div>
 
-  
-
-
   <section class="text-center m-3">
     <div class="row justify-content-start">
       <div class="col-md-4 border-right" *ngFor="let pedido of listPedido">
         <div class="card mb-3 bg-dark">
-          <div class="card-header presupuesto-card-header bg-primary" (click)="showCardDetails(pedido)" data-target="#InsumoModal" data-toggle="modal">
+
+          <div class="card-header presupuesto-card-header bg-dark" (click)="showCardDetails(pedido)" data-target="#InsumoModal" data-toggle="modal">
+
+
             {{ pedido.createdAt | date }} 
           </div>
           <div class="card-body bg-dark" (click)="showCardDetails(pedido)" data-target="#InsumoModal" data-toggle="modal">
@@ -42,7 +42,6 @@
           </div>
           <div class="modal-body">
             <p><strong>Cantidad Requerida:</strong> {{cardData?.cant_requerida}}</p>
-            <p><strong>Subtotal Esperado:</strong> {{calcularSubtotal(cardData) | currency}}</p>
             <p><strong>Fecha de emision:</strong> {{cardData?.createdAt | date}}</p>
             
             

@@ -34,6 +34,7 @@ export class DisponibilidadComponent implements OnInit{
   conversionesUM:any[] = []
   dataModal:any={}
   cantidadNueva: any
+  filteredDisp: any[] =[]
   
 
 
@@ -52,7 +53,7 @@ export class DisponibilidadComponent implements OnInit{
 
       this.maestroArticulosService.getAll().subscribe(maestros => {
         maestros.forEach(maestro => {
-          if(maestro.tipo_articulo.description != 'Productos Elaborados'){
+          if(maestro.tipo_articulo.description !== 'Productos Elaborados' && maestro.tipo_articulo.description !== 'Bebidas'){
             this.listMaestro.push(maestro)
           }
         })
@@ -60,6 +61,7 @@ export class DisponibilidadComponent implements OnInit{
       })
       this.disponibilidadService.getAll().subscribe(data => {
         this.listDisponibilidad = data;
+        this.filteredDisp = this.listDisponibilidad
       })
       this.conversionUmService.getAll().subscribe(data => {
         this.conversionesUM = data;
@@ -191,5 +193,24 @@ export class DisponibilidadComponent implements OnInit{
       });
     })
    }
+
+   calcularSecundariaTotal(item:any){
+    let cant_principal = item.cant_disponible
+    let cant_secundaria = item.conversion_UM.cant_secundaria
+
+    console.log(cant_principal, cant_secundaria);
+    
+
+    return cant_principal*cant_secundaria
+   }
+
+   applyFilter(event: any): void {
+    const value = event.target.value;
+    
+    this.filteredDisp = this.listDisponibilidad.filter(insumo => {
+      return insumo.maestro_articulo.descripcion.toLowerCase().includes(value.toLowerCase());
+    });
+  }
+   
   
 }

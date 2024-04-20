@@ -68,7 +68,8 @@
         if(dataUpdated.add){
             // <================================== SUMAR CANTIDAD =================================>
             const nuevaCantidad = {
-                cant_fisica: dataUpdated.cant_fisica_nueva
+                cant_fisica: dataUpdated.cant_fisica_nueva,
+                cant_disponible: dataUpdated.cant_disponible_nueva
             }
 
             const olddisponibilidad_articulos= await models.disponibilidad_articulos.findByPk(disponibilidad_articulos_id);

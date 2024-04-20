@@ -6,6 +6,10 @@ import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
 import { FooterComponent } from './footer/footer.component';
 import { SidebarEmpleadosComponent } from './sidebar-empleados/sidebar-empleados.component';
 import { TitleEmpleadosComponent } from './title-empleados/title-empleados.component';
+import { ConsultaDisponibilidadComponent } from './consulta-disponibilidad/consulta-disponibilidad.component';
+import { TableModule } from 'primeng/table';
+import { ConsultaDisponibilidadEmpleadosComponent } from './consulta-disponibilidad-empleados/consulta-disponibilidad-empleados.component';
+
 
 
 
@@ -17,11 +21,16 @@ import { TitleEmpleadosComponent } from './title-empleados/title-empleados.compo
     BreadcrumbsComponent,
     FooterComponent,
     SidebarEmpleadosComponent,
-    TitleEmpleadosComponent
+    TitleEmpleadosComponent,
+    ConsultaDisponibilidadComponent,
+    ConsultaDisponibilidadEmpleadosComponent,
+
 
   ],
   imports: [
     CommonModule,
+    TableModule
+    
 
   ],
   exports: [
@@ -30,7 +39,9 @@ import { TitleEmpleadosComponent } from './title-empleados/title-empleados.compo
     BreadcrumbsComponent,
     FooterComponent,
     SidebarEmpleadosComponent,
-    TitleEmpleadosComponent
+    TitleEmpleadosComponent,
+    ConsultaDisponibilidadComponent,
+    ConsultaDisponibilidadEmpleadosComponent
   ]
 })
 export class SharedModule { }

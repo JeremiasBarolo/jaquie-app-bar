@@ -10,6 +10,8 @@ const recetaService = require('./receta');
 const ventaService = require('./venta');
 const pedido_stockService = require('./pedido_stock');
 const pedido_produccionService = require('./pedido_produccion');
+const BebidasService = require('./Bebidas');
+
 
 
 
@@ -24,5 +26,6 @@ module.exports = {
     recetaService,
     ventaService,
     pedido_stockService,
-    pedido_produccionService
+    pedido_produccionService,
+    BebidasService
 };

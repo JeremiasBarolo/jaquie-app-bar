@@ -97,17 +97,17 @@ cambiarEstado(id?: number, pedido?: any, estado?: string, devolverInsumos?: any,
 
   
   }
-    else if(estado === 'FINALIZADO'){
+  else if(estado === 'FINALIZADO'){
       
-     
-      pedido.subtotal = this.calcularSubtotal(pedido);
+    pedido.forma_pago = this.form.value.pago
+    pedido.subtotal = this.calcularSubtotal(pedido);
 
-      this.mesasService.update(id, {...pedido, estado:"FINALIZADO"}).subscribe(() => {
-      this.toastr.success(`Mesa ${pedido.name} ${estado} exitosamente`)
-      setTimeout(() => {
-        window.location.reload();
-      }, 600)
-    })
+    this.mesasService.update(id, {...pedido, estado:"FINALIZADO"}).subscribe(() => {
+    this.toastr.success(`Mesa ${pedido.name} ${estado} exitosamente`)
+    setTimeout(() => {
+      window.location.reload();
+    }, 600)
+  })
     
 
 
@@ -181,15 +181,21 @@ calcularSubtotal(ventas: any) {
 }
 
 cerrarCaja(){
-  this.estadisticaService.create({cerrarCaja: true}).subscribe((res) => {
-    this.toastr.success('Caja cerrada exitosamente');
-    setTimeout(() => {
-      window.location.reload();
-    }, 600)
-    
-
-
-  })
+  this.estadisticaService.create({cerrarCaja: true}).subscribe(
+    (response) => {
+     
+      if (response && response.recaudacion !== undefined) {
+          this.toastr.success('Caja cerrada exitosamente');
+          setTimeout(() => {
+              window.location.reload();
+          }, 600);
+      }
+  },
+  (error) => {
+    console.log(error.error);
+      this.toastr.error(error.error.error);
+      console.error(error.error);
+  });
 }
 
 

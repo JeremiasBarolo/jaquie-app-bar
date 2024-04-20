@@ -13,6 +13,10 @@
         const createestadistica = async (estadisticaData) => {
             if(estadisticaData.cerrarCaja){
                 return await cerrarCaja.cerrarCaja(estadisticaData)
+
+            }else if(estadisticaData.generarEstadisticas){
+                return await estadisticaProvider.generarEstadisticasAleatorias(estadisticaData)
+                
             }else{
                 return await estadisticaProvider.createestadistica(estadisticaData);
             }

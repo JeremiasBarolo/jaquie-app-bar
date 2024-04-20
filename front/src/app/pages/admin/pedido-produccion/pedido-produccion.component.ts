@@ -30,6 +30,7 @@ export class PedidoProduccionComponent {
   selectedDepositoId: number | undefined;
   pedidoNuevo: any
   listMesas: any[] = []
+  filteredPedidos: any[] =[]
 
   constructor(
     private pedidoProduccion: PedidoProduccionService,
@@ -61,8 +62,9 @@ export class PedidoProduccionComponent {
       this.listMesas = data.filter(mesa => 
         mesa.maestro_articulos.some((item: { pedido_produccion: { estado: string; }; }) =>
           item.pedido_produccion.estado !== "FINALIZADO"
-        )
+        ),
       );
+      this.filteredPedidos = this.listMesas;
     });
 
   }
@@ -131,6 +133,16 @@ eliminarPedido(id?: number, pedido?:any){
     })
   }
 }
+
+
+applyFilter(event: any): void {
+  const value = event.target.value;
+  
+  this.filteredPedidos = this.listMesas.filter(insumo => {
+    return insumo.mesa.toLowerCase().includes(value.toLowerCase());
+  });
+}
+
  
  
 }

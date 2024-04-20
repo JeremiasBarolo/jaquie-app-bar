@@ -1,6 +1,5 @@
-
-
-    var models = require('../models');
+const bcrypt = require('bcrypt');
+var models = require('../models');
 const { all } = require('../routes/TipoArticulo');
 
     const listAllusuarios= async () => {
@@ -37,19 +36,26 @@ const { all } = require('../routes/TipoArticulo');
     }
     };
 
-    const createusuarios= async (Datausuarios) => {
+    const createusuarios = async (Datausuarios) => {
+        try {
+            
+            const hashedPassword = await bcrypt.hash(Datausuarios.password, 10); 
     
-
-    try {
-        
-        const newusuarios= await models.usuarios.create(Datausuarios);
-        
-        return newusuarios;
-        
-    } catch (err) {
-        console.error('🛑 Error when creating usuarios', err);
-        throw err;
-    }
+            let user = {
+                username: Datausuarios.username,
+                password: hashedPassword, 
+                rol: Datausuarios.rol,
+                personaId: Datausuarios.personaId
+            };
+            
+            const newusuarios = await models.usuarios.create(user);
+            
+            return newusuarios;
+            
+        } catch (err) {
+            console.error('🛑 Error when creating usuarios', err);
+            throw err;
+        }
     };
 
     const updateusuarios= async (usuarios_id, dataUpdated) => {

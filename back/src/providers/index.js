@@ -12,6 +12,7 @@ const pedido_stockProvider = require('./pedido_stock');
 const pedido_produccionProvider = require('./pedido_produccion');
 const sumarPedidos = require('./sumarPedidos');
 const cerrarCaja = require('./cerrarCaja'); 
+const BebidasProvider = require('./Bebidas'); 
 
 
 
@@ -29,5 +30,6 @@ module.exports = {
     pedido_stockProvider,
     pedido_produccionProvider,
     sumarPedidos,
-    cerrarCaja
+    cerrarCaja,
+    BebidasProvider
 };

@@ -24,9 +24,9 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   disponibilidad_articulos.init({
-    cant_fisica: DataTypes.INTEGER,
-    cant_comprometida: DataTypes.INTEGER,
-    cant_disponible: DataTypes.INTEGER
+    cant_fisica: DataTypes.FLOAT,
+    cant_comprometida: DataTypes.FLOAT,
+    cant_disponible: DataTypes.FLOAT
   }, {
     sequelize,
     modelName: 'disponibilidad_articulos',

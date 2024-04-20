@@ -82,7 +82,41 @@
     };
 
 
+    const generarEstadisticasAleatorias = async (Dataestadistica) => {
+        try {
+            
+
+            await models.estadistica.destroy({ where: {} });
+    
+            if(!Dataestadistica.tirarDatos){
+                for (let i = 0; i < 365; i++) {
+                    // Genera valores aleatorios para costo, recaudación y profit
+                    const costo = Math.floor(Math.random() * 100000);
+                    const recaudacion = Math.floor(Math.random() * 200000) + costo; 
+                    const profit = recaudacion - costo;
+        
+                    // Inserta un nuevo registro en la tabla estadistica
+                    await models.estadistica.create({
+                        costo_total: costo,
+                        recaudacion: recaudacion,
+                        profit: profit,
+                        
+                        createdAt: new Date(new Date().getTime() - i * 24 * 60 * 60 * 1000),
+                        updatedAt: new Date() 
+                    });
+                }
+            }
+            
+        } catch (err) {
+            
+            console.error('🛑 Error al crear estadisticas:', err);
+            throw err;
+        }
+    };
+    
+
+
     module.exports = {
-    listAllestadistica, listOneestadistica, createestadistica, updateestadistica, deleteestadistica,
+    listAllestadistica, listOneestadistica, createestadistica, updateestadistica, deleteestadistica, generarEstadisticasAleatorias
     };
 

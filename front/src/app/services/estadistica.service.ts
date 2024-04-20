@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, catchError, tap } from 'rxjs';
+import { Observable, catchError, tap, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,9 +13,7 @@ export class EstadisticaService {
 
   private apiUrl = 'http://localhost:8081/estadistica';
   
-  cerrarCaja(entity: any): Observable<any[]> {
-    return this.http.post<any>(`${this.apiUrl}`, entity)
-  }
+  
   //get all
   getAll(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}`); 

@@ -19,6 +19,7 @@ import { MesasComponent } from './mesas/mesas.component';
 import { EstadisticaComponent } from './estadistica/estadistica.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { TableModule } from 'primeng/table';
+import { UsuariosComponent } from './usuarios/usuarios.component';
 
 
 
@@ -39,7 +40,8 @@ import { TableModule } from 'primeng/table';
     PedidoProduccionComponent,
     CrearEditarPedidoProduccionComponent,
     MesasComponent,
-    EstadisticaComponent
+    EstadisticaComponent,
+    UsuariosComponent
   ],
   imports: [
     CommonModule,

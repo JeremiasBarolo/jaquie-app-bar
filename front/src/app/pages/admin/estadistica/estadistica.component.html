@@ -1,4 +1,9 @@
 <app-breadcrumbs [titulo]= 'breadcrumbItems'></app-breadcrumbs>
+<div class="text-right">
+  <button type="button" id="agregar" class="btn btn-outline-warning mr-2" (click)="generarEstadisticasAleatorias()"> Generar Estadisticas Aleatorias</button>
+  <button type="button" id="agregar" class="btn btn-outline-danger mr-2" (click)="borrarTodasLasEstadisticas()"> Eliminar Todos Los Datos</button>
+  
+</div>
 <div class="container">
     <div class="row ">
         <div class="col-md-8">
@@ -6,23 +11,46 @@
             <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [xaxis]="chartOptions.xaxis"></apx-chart>
         </div>
         <div class="col-md-4">
-            <h3>Recaudacion Mes a Mes</h3>
+            <h3>Últimos 7 días</h3>
             <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Mes</th>
-                        <th>Profit</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let mes of profitPorMes">
-                        <td>{{ mes.mes }}</td>
-                        <td>{{ mes.profit | currency }}</td>
-                    </tr>
-                </tbody>
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Recaudacion</th>
+                  <th>Costo</th>
+                  <th>Profit</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let dia of ultimos7Dias">
+                  <td>{{ dia.fecha }}</td>
+                  <td>{{ dia.recaudacion | currency }}</td>
+                  <td>{{ dia.costo_total | currency }}</td>
+                  <td>{{ dia.profit | currency }}</td>
+                </tr>
+              </tbody>
             </table>
+          </div>
         </div>
-        
-    </div>
+
+        <div class="col-md-4">
+          <h3>Recaudacion Mes a Mes</h3>
+          <table class="table table-hover">
+              <thead>
+                  <tr>
+                      <th>Mes</th>
+                      <th>Recaudacion</th>
+                      
+                  </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let mes of recaudacionPorMes">
+                  <td>{{ mes.mes }}</td>
+                  <td>{{ mes.recaudacion | currency }}</td>
+                  
+              </tr>
+              </tbody>
+          </table>
+      </div>
     
 </div>

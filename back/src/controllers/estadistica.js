@@ -34,7 +34,7 @@ const createestadistica = async (req, res) => {
 
     res.json(newestadistica);
   } catch (error) {
-    res.status(500).json({ error: 'Unable to create estadistica.' });
+    res.status(500).json({ action: 'Unable to create estadistica.', error: error.message });
   }
 };
 

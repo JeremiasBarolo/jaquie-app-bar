@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { DisponibilidadArticulosService } from '../../../../services/disponibilidad-articulos.service';
 import { MaestroArticulosService } from '../../../../services/maestro-articulos.service';
 import { RecetasService } from '../../../../services/recetas.service';
+import { BebidasService } from '../../../../services/bebidas.service';
 
 
 @Component({
@@ -22,6 +23,8 @@ export class CrearEditarComponent {
   listMaestro: any;
   listDisponibilidad: any[] = []
   recetaData: any = {}
+  accion: string;
+ 
 
   constructor(
     private disponibilidadService: DisponibilidadArticulosService,
@@ -30,63 +33,146 @@ export class CrearEditarComponent {
     private aRoute: ActivatedRoute,
     private maestroArticulosService: MaestroArticulosService,
     private recetasService: RecetasService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private bebidasService: BebidasService
   ) {
-    this.form = this.fb.group({
-      maestro: ['', Validators.required],
-      cant_fisica: ['', Validators.required],
-      n_linea: ['', Validators.required]
-    });
     this.id = Number(aRoute.snapshot.paramMap.get('id'));
+    this.accion = String(aRoute.snapshot.paramMap.get('accion'));
+    
+
+    if(this.accion === 'bebida'){
+      this.form = this.fb.group({
+        maestro: ['', Validators.required],
+        recipiente: ['', Validators.required],
+      });
+    }else{
+      this.form = this.fb.group({
+        maestro: ['', Validators.required],
+      });
+    }
+    
+    
   }
 
   ngOnInit(): void {
     this.loadAllEntities();
-    this.loadSelectedProducts();
+
+    if(this.accion == 'bebida' && this.id !== 0){
+      this.loadBebidaData(this.id); 
+    } else if (this.accion === 'receta' && this.id !== 0 ) {
+      
+      
+      this.loadSelectedProducts();
+    }
+    
     
     
   }
 
   addReceta() {
-    this.recetaData = {
-      ...this.form.value,
-      insumos: this.selectedEntities.map(entity => ({ id: entity.id, cantidad: entity.cantidad }))
 
-    };
     
 
-    if (this.id !== 0) {
-      try {
-        this.recetasService.update(this.id, this.recetaData).subscribe(() => {
-          this.router.navigate(['admin/recetas']);
-          this.toastr.success('Receta Actualizada');
-        });
-      } catch (error) {
-        console.log(error);
+    if (this.accion === 'bebida') {
+
+      const sumaCantidades = this.selectedEntities.reduce((total, entity) => total + entity.cantidad, 0);
+
+          
+          if (sumaCantidades !== 100) {
+            this.toastr.error('La suma de las cantidades debe ser igual a 100%');
+          } else {
+            // Si la suma es igual a 100, puedes proceder a enviar los datos
+            this.recetaData = {
+              ...this.form.value,
+              insumos: this.selectedEntities.map(entity => ({ id: entity.id, cantidad: entity.cantidad }))
+            };
+          }
+      
+  
+      if (this.id !== 0) {
+        
+
+        try {
+          this.bebidasService.update(this.id, this.recetaData).subscribe(() => {
+            this.router.navigate(['admin/recetas']);
+            this.toastr.success('Receta Actualizada');
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        try {
+          console.log(this.recetaData.insumos);
+          this.bebidasService.create(this.recetaData).subscribe(() => {
+            this.router.navigate(['admin/recetas']);
+            this.toastr.success('Receta Creada Exitosamente');
+          });
+        } catch (error) {
+          console.log(error);
+        }
       }
-    } else {
-      try {
-        console.log(this.recetaData.insumos);
-        this.recetasService.create(this.recetaData).subscribe(() => {
-          this.router.navigate(['admin/recetas']);
-          this.toastr.success('Receta Creada Exitosamente');
-        });
-      } catch (error) {
-        console.log(error);
+    }else{
+      this.recetaData = {
+        ...this.form.value,
+        insumos: this.selectedEntities.map(entity => ({ id: entity.id, cantidad: entity.cantidad }))
+  
+      };
+
+      if (this.id !== 0) {
+        try {
+          this.recetasService.update(this.id, this.recetaData).subscribe(() => {
+            this.router.navigate(['admin/recetas']);
+            this.toastr.success('Receta Actualizada');
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        try {
+          console.log(this.recetaData.insumos);
+          this.recetasService.create(this.recetaData).subscribe(() => {
+            this.router.navigate(['admin/recetas']);
+            this.toastr.success('Receta Creada Exitosamente');
+          });
+        } catch (error) {
+          console.log(error);
+        }
       }
     }
+
+   
+    
+
+   
   }
  
 
   selectedEntity(entity: any) {
     this.selectedEntities.push({ 
-      ...entity, 
+      ...entity,
+      id: entity.maestro_articulo.id,  
       cantidad: 1,
       maestro_articulo: {
         descripcion: entity.maestro_articulo.descripcion 
       }
       });
     this.listDisponibilidad = this.listDisponibilidad.filter(item => item.id !== entity.id);
+    
+    
+  }
+
+  selectedEntityBebida(entity: any) {
+    this.selectedEntities.push({ 
+      ...entity,
+      id: entity.maestro_articulo.id,  
+      cantidad: 1,
+      maestro_articulo: {
+        descripcion: entity.maestro_articulo.descripcion 
+      }
+      });
+    this.listDisponibilidad = this.listDisponibilidad.filter(item => item.id !== entity.id);
+    
+    
   }
 
   returnEntities(entity: any) {
@@ -95,11 +181,11 @@ export class CrearEditarComponent {
   }
 
   loadAllEntities() {
-    if(this.id !==0){
+    if(this.id !== 0 && this.accion === 'receta'){
       this.maestroArticulosService.getAll().subscribe(
         (maestros: any[]) => {
           this.listMaestro = maestros
-          console.log(this.listMaestro);
+          
           
         },
         error => {
@@ -111,7 +197,12 @@ export class CrearEditarComponent {
 
         
         (maestros: any[]) => {
-          this.listMaestro = maestros.filter(maestro => maestro.tipo_articulo.description === 'Productos Elaborados' && (!maestro.receta || maestro.receta.length === 0));
+          if(this.accion === 'receta'){
+            this.listMaestro = maestros.filter(maestro => maestro.tipo_articulo.description !== 'Bebidas' && maestro.tipo_articulo.description !== 'Insumos' );
+          }else{
+            this.listMaestro = maestros.filter(maestro => maestro.tipo_articulo.description !== 'Productos Elaborados' && maestro.tipo_articulo.description !== 'Insumos' );
+          }
+          
         },
         error => {
           console.error('Error al cargar los maestros de artículos:', error);
@@ -120,7 +211,7 @@ export class CrearEditarComponent {
     }
     
 
-    // Cargar lista de disponibilidad de artículos
+    
     this.disponibilidadService.getAll().subscribe(
       (data: any[]) => {
          this.listDisponibilidad = data
@@ -129,6 +220,44 @@ export class CrearEditarComponent {
         console.error('Error al cargar la disponibilidad de artículos:', error);
       }
     );
+  }
+
+  loadBebidaData(id: number) {
+    this.bebidasService.getById(id).subscribe((data) => {
+      this.form.patchValue({
+        maestro: data.NombreArticulo.id,
+        recipiente: data.cantidadTotalRecipiente
+      });
+  
+      let componentes: { componente: any; cantidad: any; }[] = [];
+      for (const key of ['primerComponente', 'segundoComponente', 'tercerComponente', 'cuartoComponente', 'quintoComponente']) {
+        if (data[key] !== 0 && data[`${key}Cantidad`] !== 0) {
+          componentes.push({
+            componente: data[key],
+            cantidad: data[`${key}Cantidad`]
+          });
+        }
+      }
+
+      for(const insumo of componentes){
+        this.listDisponibilidad = this.listDisponibilidad.filter(disp => disp.maestro_articulo.id !== insumo.componente);
+        this.maestroArticulosService.getById(insumo.componente).subscribe((maestro)=>{
+          this.selectedEntities.push({
+            id: maestro.articuloId,
+            cantidad: insumo.cantidad,
+            maestro_articulo: {
+              descripcion: maestro.descripcion
+            }
+          })
+        })
+      }
+
+      
+      
+      
+  
+     
+    });
   }
   
   loadSelectedProducts() {
@@ -147,13 +276,13 @@ export class CrearEditarComponent {
               };
             });
   
-            // Asignar los elementos con la descripción al array selectedEntities
+            
+            
             this.selectedEntities = [...selectedEntitiesWithDescription];
-            console.log('SelectedEntites:',this.selectedEntities);
-            console.log('listDisponibilidad:',this.listDisponibilidad);
             
             
-  
+            
+            
             // Filtrar los elementos de listDisponibilidad que no están en la receta
             this.listDisponibilidad = this.listDisponibilidad.filter(insumo =>
               !this.selectedEntities.some(selected => selected.id === insumo.id)
@@ -167,12 +296,38 @@ export class CrearEditarComponent {
             });
           } else {
             
-            this.listDisponibilidad = res; // O cualquier otra lógica para cargar los elementos disponibles
+            this.listDisponibilidad = res; 
           }
         }
       );
     }
   }
+
+  getBebida(id:number){
+    this.bebidasService.getById(id).subscribe((data)=>{
+        this.form.patchValue({
+            maestro: data.NombreArticulo.id,
+        });
+
+        let componentes: { componente: any; cantidad: any; }[] = [];
+        for (const key of ['primerComponente', 'segundoComponente', 'tercerComponente', 'cuartoComponente', 'quintoComponente']) {
+            if (data[key] !== 0 && data[`${key}Cantidad`] !== 0) {
+                componentes.push({
+                    componente: data[key],
+                    cantidad: data[`${key}Cantidad`]
+                });
+            }
+        }
+
+        
+        if (this.accion === 'bebida' && this.id) {
+            this.selectedEntities = this.selectedEntities.filter(entity => {
+                return componentes.some(comp => comp.componente.id === entity.id);
+            });
+        }
+    });
+}
+
   
   
   

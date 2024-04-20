@@ -42,7 +42,7 @@
             </div>
     
             <div class="card-footer">
-              <button class="btn btn-success"  (click)="showCardDetails(comiendo)" (click)="cambiarEstado(comiendo.id, comiendo, 'FINALIZADO')">Finalizar</button>
+              <button class="btn btn-success"  (click)="showCardDetails(comiendo)" data-target="#finalizarMesa" data-toggle="modal"(click)="showCardDetails(comiendo)" >Finalizar</button>
               <a class="btn btn-warning ml-1" href="admin/pedido-produccion" >Agregar a Pedido...</a>
             </div>
           </div>
@@ -210,7 +210,7 @@
                     </div>
                   </div>
                   
-                  <button type="submit" class="btn btn-primary" >enviar</button>
+                  <button type="submit" class="btn btn-primary" >Enviar</button>
               </form>
           </div>
       </div>

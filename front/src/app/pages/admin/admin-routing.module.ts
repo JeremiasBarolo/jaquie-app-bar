@@ -14,6 +14,8 @@ import { PedidoProduccionComponent } from './pedido-produccion/pedido-produccion
 import { CrearEditarPedidoProduccionComponent } from './pedido-produccion/crear-editar-pedido-produccion/crear-editar-pedido-produccion.component';
 import { MesasComponent } from './mesas/mesas.component';
 import { EstadisticaComponent } from './estadistica/estadistica.component';
+import { UsuariosComponent } from './usuarios/usuarios.component';
+import { ConsultaDisponibilidadComponent } from '../../shared/consulta-disponibilidad/consulta-disponibilidad.component';
 
 
 
@@ -29,13 +31,17 @@ const routes: Routes = [
       { path: 'disponibilidad', component: DisponibilidadComponent},
       { path: 'recetas', component: RecetasComponent},
       { path: 'recetas/crear-editar', component: CrearEditarComponent},
-      { path: 'recetas/crear-editar/:id', component: CrearEditarComponent},
+      { path: 'recetas/crear-editar/:accion', component: CrearEditarComponent},
+      { path: 'recetas/crear-editar/:accion/:id', component: CrearEditarComponent},
       { path: 'pedido-stock', component: PedidoStockComponent},
       { path: 'pedido-produccion', component: PedidoProduccionComponent},
       { path: 'pedido-produccion/crear-editar', component: CrearEditarPedidoProduccionComponent},
       { path: 'pedido-produccion/crear-editar/:id', component: CrearEditarPedidoProduccionComponent},
       { path: 'estadisticas', component: EstadisticaComponent},
       { path: 'mesas', component: MesasComponent},
+      { path: 'usuarios', component: UsuariosComponent},
+      { path: 'stock-disponible', component: ConsultaDisponibilidadComponent},
+
       { path: '**', redirectTo: 'inicio' },
     
     ]

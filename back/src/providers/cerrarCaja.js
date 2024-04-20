@@ -22,109 +22,75 @@ const seconds = String(now.getSeconds()).padStart(2, '0');
 const cerrarCaja = async () => {
     try {
         const maestros = await listAllmaestro_articulos();
-        // const mesas = await listAllventa();
+        
         const mesas = await models.venta.findAll({
-                include: [
-                    {
-                        model: models.maestro_articulos,
-                        include: [
-                            {
-                                model: models.pedido_produccion,
-                                include: [
-                                    {
-                                        model: models.maestro_articulos,
-                                        attributes: ['descripcion', 'costo_unitario' ]
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            });
-        let costoTotal = 0
-        let recaudacionTotal = 0
+            include: [
+                {
+                    model: models.maestro_articulos,
+                    include: [
+                        {
+                            model: models.pedido_produccion,
+                            include: [
+                                {
+                                    model: models.maestro_articulos,
+                                    attributes: ['descripcion', 'costo_unitario']
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        });
 
+        if(mesas.length === 0){
+            throw new Error('No se puede cerrar la caja, no hay mesas creadas');
+        }
+        for(const mesa of mesas){
+            if(mesa.estado !== 'FINALIZADO' || mesas.length === 0){
+                throw new Error('No se puede cerrar la caja, hay pedidos pendientes.');
+            }
+        }
 
+        let costoTotal = 0;
+        let recaudacionTotal = 0;
 
-    // <=================================== Costo Total =====================================>
-        // for (const maestroArticulo of maestros) {
-        //     let costoTotalMesa = 0;
-
-    
-        //     for (const pedidoProduccion of maestroArticulo.pedido_produccions) {
-                
-        //         if (maestroArticulo.tipo_articulo.description === 'Comidas') {
-        //             costoTotalMesa += pedidoProduccion.cant_requerida * maestroArticulo.costo_unitario;
-        //         } else {
-                    
-        //             for (const receta of maestroArticulo.receta) {
-        //                 const disponibilidadArticulo = receta.disponibilidad_articulo;
-        //                 const costoUnitarioArticulo = disponibilidadArticulo.maestro_articulo.costo_unitario;
-        //                 const cantidadNecesaria = receta.cant_necesaria;
-        //                 const totalArticulo = costoUnitarioArticulo*cantidadNecesaria
-        //                 const totalPedido = pedidoProduccion.cant_requerida * totalArticulo;
-        //                 costoTotalMesa += totalPedido;
-        //             }
-        //         }
-        //     }
-
-            
-        //     costoPorMesa.push({ id: maestroArticulo.id, costo: costoTotalMesa });
-        // }
-
-        await mesas.forEach(element => {
+        // Calcula el costo total
+        mesas.forEach(element => {
             costoTotal += element.precio;
-            return costoTotal;
-        })
-    // <=================================== Final de  Costo Total =====================================>
+        });
 
+        // Calcula la recaudación total
+        mesas.forEach(element => {
+            recaudacionTotal += element.total;
+        });
 
-    // <========================= Recaudacion =============================>
-            await mesas.forEach(element => {
-                recaudacionTotal += element.total;
-                console.log(recaudacionTotal);
-                return recaudacionTotal;
-            })
-    // <========================= Final Recaudacion =============================>
-
-    // <========================= Ganancia =============================>
-
+        // Calcula la ganancia
         let ganacia = recaudacionTotal - costoTotal;
 
-    // // <========================= Final Ganancia =============================>
+        // Crea la estadística
+        await models.estadistica.create({
+            recaudacion: recaudacionTotal,
+            costo_total: costoTotal,
+            profit: ganacia,
+        });
 
+        // Genera el PDF
+        generarPdf(maestros, recaudacionTotal, costoTotal, ganacia);
 
+        // Elimina los pedidos y ventas finalizados
+        await models.pedido_produccion.destroy({
+            where: { estado: 'FINALIZADO' }
+        });
 
+        await models.venta.destroy({
+            where: { estado: 'FINALIZADO' }
+        });
 
-
-    // <================ Creacion de Estadistica ===========================>
-    await models.estadistica.create({
-        recaudacion: recaudacionTotal,
-        costo_total: costoTotal,
-        profit: ganacia,
-    })
-
-
-
-
-    // ACA VA LA INTEGRACION DEL PDF
-    generarPdf(maestros, recaudacionTotal, costoTotal, ganacia)
-
-    // <=================== Eliminar Pedidos ===========================>
-    await models.pedido_produccion.destroy({
-        where: { estado: 'FINALIZADO' }
-    });
-
-    await models.venta.destroy({
-        where: { estado: 'FINALIZADO' }
-    });
-
-
-
-
-    return {recaudacion: recaudacionTotal, costo: costoTotal, ganancia: ganacia}
+        // Devuelve los resultados
+        return { recaudacion: recaudacionTotal, costo: costoTotal, ganancia: ganacia };
         
     } catch (error) {
+        // Captura y envía el error al frontend
         console.error('Error al cerrar la caja:', error);
         throw error;
     }
@@ -200,7 +166,47 @@ const generarPdf = async (maestro, subtotal,costo_total, ganancia) => {
                     cantidadTotal += pedido.cant_requerida;
                     costoTotal += pedido.cant_requerida * maestro.costo_unitario;
                 }
-            } else {
+            } else if(maestro.tipo_articulo.description === 'Bebidas'){
+
+                const Bebida = await models.Bebidas.findOne({
+                        where: {nombre: maestro.id}
+                    });
+
+                let componentes =  await traerComponentesDeBebida(Bebida)
+
+                for (const receta of componentes) {
+
+                    let disponibilidadArticulo = await models.disponibilidad_articulos.findOne({
+                        where:  { articuloId: receta.componente },
+                        include: [
+                            models.maestro_articulos,
+                        ]
+
+                    })
+
+                    const costoUnitarioArticulo = disponibilidadArticulo.maestro_articulo.costo_unitario;
+
+                    let alto = Bebida.cantidadTotalRecipiente * receta.cantidad
+                    let total = alto / 100
+
+                    let cant_principal = total / 1000
+                     
+                    
+    
+                    // Calcular el costo total del artículo en la receta
+                    costoTotal += costoUnitarioArticulo * cant_principal;
+
+                    
+                }
+            
+            
+                for (const pedido of maestro.pedido_produccions) {
+                    cantidadTotal += pedido.cant_requerida;
+                }
+
+                costoTotal = costoTotal*cantidadTotal
+            
+            }else {
                 // Calcular el costo total para Productos Elaborados y Bebidas
                 for (const receta of maestro.receta) {
                     const disponibilidadArticulo = receta.disponibilidad_articulo;
@@ -291,3 +297,21 @@ const generarPdf = async (maestro, subtotal,costo_total, ganancia) => {
 module.exports = {
 cerrarCaja, calcularCosto, generarPdf
 };
+
+
+const traerComponentesDeBebida = async (bebida ) => {
+
+    let componentes = []
+    
+
+    for (const key of ['primerComponente', 'segundoComponente', 'tercerComponente', 'cuartoComponente', 'quintoComponente']) {
+      if (bebida[key] !== null && bebida[`${key}Cantidad`] !== null) {
+        componentes.push({
+          componente: bebida[key],
+          cantidad: bebida[`${key}Cantidad`]
+        });
+      }
+    }
+
+    return componentes
+}
