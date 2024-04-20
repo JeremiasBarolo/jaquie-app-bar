@@ -42,9 +42,12 @@ const cerrarCaja = async () => {
             ]
         });
 
+        if(mesas.length === 0){
+            throw new Error('No se puede cerrar la caja, no hay mesas creadas');
+        }
         for(const mesa of mesas){
             if(mesa.estado !== 'FINALIZADO' || mesas.length === 0){
-                throw new Error('No se puede cerrar la caja, hay pedidos pendientes o no hay mesas creadas.');
+                throw new Error('No se puede cerrar la caja, hay pedidos pendientes.');
             }
         }
 

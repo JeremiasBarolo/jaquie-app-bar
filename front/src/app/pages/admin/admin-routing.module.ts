@@ -15,6 +15,7 @@ import { CrearEditarPedidoProduccionComponent } from './pedido-produccion/crear-
 import { MesasComponent } from './mesas/mesas.component';
 import { EstadisticaComponent } from './estadistica/estadistica.component';
 import { UsuariosComponent } from './usuarios/usuarios.component';
+import { ConsultaDisponibilidadComponent } from '../../shared/consulta-disponibilidad/consulta-disponibilidad.component';
 
 
 
@@ -39,6 +40,8 @@ const routes: Routes = [
       { path: 'estadisticas', component: EstadisticaComponent},
       { path: 'mesas', component: MesasComponent},
       { path: 'usuarios', component: UsuariosComponent},
+      { path: 'stock-disponible', component: ConsultaDisponibilidadComponent},
+
       { path: '**', redirectTo: 'inicio' },
     
     ]

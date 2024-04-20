@@ -11,7 +11,12 @@
         };
 
         const createBebidas = async (BebidasData) => {
-            return await BebidasProvider.createBebidas(BebidasData);
+            if(BebidasData.traerStock){
+                return await BebidasProvider.traerStockBebidas(BebidasData);
+            }else{
+                return await BebidasProvider.createBebidas(BebidasData);
+            }
+            
         };
 
 

@@ -1,6 +1,7 @@
 
 
-    var models = require('../models');
+    const { where } = require('sequelize');
+var models = require('../models');
 
     const listAllBebidas= async () => {
     try {
@@ -171,8 +172,87 @@
     }
     };
 
+    const traerStockBebidas = async () => {
+        try {
+            const allBebidas = await listAllBebidas();
+            const resultados = [];
+            for (const bebida of allBebidas) {
+                const componentes = await traerComponentesDeBebida(bebida);
+                const cantidadExacta = await calcularCantidadExactaBebida(componentes);
+                const nombre = await models.maestro_articulos.findByPk(bebida.nombre)
+                let cantidadMaxima = Infinity;
+                
+                for (const item of cantidadExacta) {
+                    const disponibilidad = await models.disponibilidad_articulos.findOne({
+                        where: { articuloId: item.id },
+                        include: [models.maestro_articulos]
+                    });
+
+                    if (disponibilidad) {
+                        const cantidadPosible = Math.floor(disponibilidad.cant_disponible / item.cantidad);
+                        cantidadMaxima = Math.min(cantidadMaxima, cantidadPosible);
+                        
+                    } else {
+                        cantidadMaxima = 0;
+                        break;
+                    }
+                }
+                resultados.push({
+                    name: nombre.descripcion,
+                    cantidadMaxima: cantidadMaxima
+                });
+            }
+            console.log('Disponibilidad de bebidas:', resultados);
+            return resultados;
+        } catch (err) {
+            console.error('🛑 Error al traer el stock de bebidas:', err);
+            throw err;
+        }
+    };
+
+
+
+
+    const calcularCantidadExactaBebida = async (bebida) => {
+        try {
+            const cantidadExacta = bebida.map((receta) => {
+                const alto = receta.cantidadMaxima * receta.cantidad;
+                const total = alto / 100;
+                const cant_principal = total / 1000;
+                return {
+                    id: receta.id,
+                    cantidad: cant_principal,
+                    cantidadMaxima: receta.cantidadMaxima,
+                };
+            });
+            return cantidadExacta;
+        } catch (err) {
+            console.error('🛑 Error al calcular la cantidad exacta de bebida', err);
+            throw err;
+        }
+    };
+    
+    const traerComponentesDeBebida = async (bebida) => {
+        try {
+            const componentes = [];
+            for (const key of ['primerComponente', 'segundoComponente', 'tercerComponente', 'cuartoComponente', 'quintoComponente']) {
+                if (bebida[key] !== null && bebida[`${key}Cantidad`] !== null) {
+                    componentes.push({
+                        id: bebida[key],
+                        cantidad: bebida[`${key}Cantidad`],
+                        cantidadMaxima: bebida.cantidadTotalRecipiente
+                    });
+                }
+            }
+            return componentes;
+        } catch (err) {
+            console.error('🛑 Error al traer los componentes de la bebida', err);
+            throw err;
+        }
+    };
+
 
     module.exports = {
-    listAllBebidas, listOneBebidas, createBebidas, updateBebidas, deleteBebidas,
+    listAllBebidas, listOneBebidas, createBebidas, updateBebidas, deleteBebidas, calcularCantidadExactaBebida, traerComponentesDeBebida,traerStockBebidas
     };
 

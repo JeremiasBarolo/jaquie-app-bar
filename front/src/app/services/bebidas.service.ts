@@ -13,9 +13,7 @@ export class BebidasService {
 
   private apiUrl = 'http://localhost:8081/bebidas';
   
-  cerrarCaja(entity: any): Observable<any[]> {
-    return this.http.post<any>(`${this.apiUrl}`, entity)
-  }
+ 
   //get all
   getAll(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}`); 
@@ -43,4 +41,5 @@ export class BebidasService {
   delete(id: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${id}`)
   }
+
 }
