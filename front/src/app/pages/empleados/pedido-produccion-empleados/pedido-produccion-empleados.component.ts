@@ -73,7 +73,7 @@ export class PedidoProduccionEmpleadosComponent {
     }else if(card.maestro_articulos.length === 0){
       this.toastr.error(`No se puede editar ya que no contiene un pedido asignado.`)
     }else{
-      this.router.navigate(['admin/pedido-produccion/crear-editar', card.id]);
+      this.router.navigate(['empleados/pedido-produccion/crear-editar', card.id]);
     }
     
    

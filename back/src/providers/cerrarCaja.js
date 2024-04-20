@@ -281,12 +281,12 @@ const generarPdf = async (maestro, subtotal,costo_total, ganancia) => {
     
         await browser.close();
     
-        return console.log('PDF generado');
+        return console.log('PDF generado dentro de Documentos');
     };
     
     
     generarPdf(maestro).then((pdfPath) => {
-        console.log(`PDF generado en: ${pdfPath}`);
+        console.log(`PDF generado en: ${documentosPath}`);
     }).catch((error) => {
         console.error(`Error al generar el PDF: ${error}`);
     });
