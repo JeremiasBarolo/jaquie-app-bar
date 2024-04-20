@@ -55,13 +55,12 @@ export class DisponibilidadEmpleadosComponent {
 
   ngOnInit(): void {
 
-      this.maestroArticulosService.getAll().subscribe(maestros => {
-        maestros.forEach(maestro => {
-          if(maestro.tipo_articulo.description != 'Productos Elaborados'){
-            this.listMaestro.push(maestro)
-          }
-
-        })
+    this.maestroArticulosService.getAll().subscribe(maestros => {
+      maestros.forEach(maestro => {
+        if(maestro.tipo_articulo.description !== 'Productos Elaborados' && maestro.tipo_articulo.description !== 'Bebidas'){
+          this.listMaestro.push(maestro)
+        }
+      })
         
       })
       this.disponibilidadService.getAll().subscribe(data => {

@@ -44,12 +44,12 @@
     <ng-template pTemplate="body" let-rowData>
         <tr>
             
-            <td data-target="#Modal" data-toggle="modal" >{{ rowData?.maestro_articulo?.descripcion }}</td>
-            <td data-target="#Modal" data-toggle="modal" >{{ rowData.maestro_articulo.costo_unitario | currency}}</td>
-            <td data-target="#Modal" data-toggle="modal" >{{ rowData.conversion_UM.uni_medida}} / {{ rowData.conversion_UM.seg_umedida}}</td>
-            <td data-target="#Modal" data-toggle="modal" >{{ rowData.cant_fisica}}</td>
-            <td data-target="#Modal" data-toggle="modal" >{{ rowData.cant_disponible}}</td>
-            <td data-target="#Modal" data-toggle="modal" >{{ rowData.cant_comprometida}}</td>
+            <td data-target="#Modal" data-toggle="modal" (click)="showCardDetails(rowData)">{{ rowData?.maestro_articulo?.descripcion }}</td>
+            <td data-target="#Modal" data-toggle="modal" (click)="showCardDetails(rowData)">{{ rowData.maestro_articulo.costo_unitario }}</td>
+            <td data-target="#Modal" data-toggle="modal" (click)="showCardDetails(rowData)">{{ rowData.conversion_UM.uni_medida}} / {{ rowData.conversion_UM.seg_umedida}}</td>
+            <td data-target="#Modal" data-toggle="modal" (click)="showCardDetails(rowData)">{{ rowData.cant_fisica}}</td>
+            <td data-target="#Modal" data-toggle="modal" (click)="showCardDetails(rowData)">{{ rowData.cant_disponible}}</td>
+            <td data-target="#Modal" data-toggle="modal" (click)="showCardDetails(rowData)">{{ rowData.cant_comprometida}}</td>
         
         <td> 
             <button (click)="editarTipo(rowData)" type="button" data-toggle="modal" data-target="#SumarCantidad" class="btn btn-outline-success" aria-label="Editar Tipo">

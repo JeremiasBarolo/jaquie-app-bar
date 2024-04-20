@@ -49,10 +49,11 @@ const pedidoValidator = [
                                 }
                             }));
                         } else if(producto.tipo_articulo.description !== 'Bebidas') {
+                            await copia_seguridad(pedidos_revisados_reales, producto.disponibilidad_articulo);
                             
                             let disponibilidad = producto.disponibilidad_articulo
 
-                            await copia_seguridad(pedidos_revisados_reales, producto.disponibilidad_articulo);
+                            
 
                             if (disponibilidad.cant_disponible < insumo.cantidad) {
                                 errors.push(`No hay suficiente stock de ${producto.descripcion}.`);

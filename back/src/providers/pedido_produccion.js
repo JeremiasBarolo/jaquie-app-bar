@@ -88,13 +88,22 @@ const { where } = require('sequelize');
 
                             let cant_principal_exacta = total / 1000
 
+                            const existente = insumos_recorridos.find(item => item.id === disponibilidad.id);
+                            if (!existente) {
+                                insumos_recorridos.push({
+                                    id: disponibilidad.id,
+                                    cant_necesaria: cant_principal_exacta,
+                                });
+                            } else {
+                                existente.cant_necesaria += cant_principal_exacta;
+                            }
 
                             //  <=================== Actualizamos ======================>
-                            await disponibilidad.update({
-                                cant_comprometida: disponibilidad.cant_comprometida + cant_principal_exacta,
-                                cant_disponible: disponibilidad.cant_disponible - cant_principal_exacta,
-                                cant_fisica: disponibilidad.cant_fisica - cant_principal_exacta,
-                            });
+                            // await disponibilidad.update({
+                            //     cant_comprometida: disponibilidad.cant_comprometida + cant_principal_exacta,
+                            //     cant_disponible: disponibilidad.cant_disponible - cant_principal_exacta,
+                            //     cant_fisica: disponibilidad.cant_fisica - cant_principal_exacta,
+                            // });
                             
 
 
@@ -383,7 +392,7 @@ const { where } = require('sequelize');
                 }
             } else {
                 if (!pedido_existente || !cantidad_anterior_real) {
-                    // por si lo creamos o no tenemos cantidad anterior
+                    
                     existente.cant_necesaria += cantidad_pedido;
                     existente.cantidad_anterior += 0;
                 } else {

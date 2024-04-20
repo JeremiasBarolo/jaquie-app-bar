@@ -116,7 +116,7 @@ export class PedidoStockEmpleadosComponent {
         
         
         setTimeout(() => {
-          this.router.navigate(['admin/disponibilidad']);
+          this.router.navigate(['empleados/disponibilidad']);
         }, 600)
 
       
