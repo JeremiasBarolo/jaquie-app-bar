@@ -10,7 +10,7 @@ var models = require('../models');
                 await existingPedidoStock.update({ cant_fisica: suma });
             } else {
                 
-                const newPedidoStock = await models.disponibilidad_articulos.create({
+                await models.disponibilidad_articulos.create({
                     articuloId: dataPedido.articuloId,
                     cant_fisica: dataPedido.cant_requerida,
                     cant_comprometida: 0,
@@ -19,7 +19,7 @@ var models = require('../models');
                 });
 
                 
-                return newPedidoStock;
+                
             }
             
             const antiguoPedido = await models.pedido_stock.destroy({ where: { id: dataPedido.id } });

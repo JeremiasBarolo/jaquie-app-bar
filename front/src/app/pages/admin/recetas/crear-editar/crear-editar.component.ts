@@ -58,10 +58,10 @@ export class CrearEditarComponent {
     this.loadAllEntities();
 
     if(this.accion == 'bebida' && this.id !== 0){
+
       this.loadBebidaData(this.id); 
     } else if (this.accion === 'receta' && this.id !== 0 ) {
-      
-      
+     
       this.loadSelectedProducts();
     }
     
@@ -150,7 +150,7 @@ export class CrearEditarComponent {
   selectedEntity(entity: any) {
     this.selectedEntities.push({ 
       ...entity,
-      id: entity.maestro_articulo.id,  
+      id: entity.id,  
       cantidad: 1,
       maestro_articulo: {
         descripcion: entity.maestro_articulo.descripcion 
@@ -181,10 +181,16 @@ export class CrearEditarComponent {
   }
 
   loadAllEntities() {
-    if(this.id !== 0 && this.accion === 'receta'){
+    if(this.accion === 'receta'){
       this.maestroArticulosService.getAll().subscribe(
         (maestros: any[]) => {
-          this.listMaestro = maestros
+          
+          this.listMaestro = maestros.filter(maestro => 
+          maestro.tipo_articulo.description !== 'Bebidas' && 
+          maestro.tipo_articulo.description !== 'Insumos' && 
+          maestro.tipo_articulo.description !== 'Comidas' &&
+          maestro.receta.length === 0 );
+          
           
           
         },
@@ -192,42 +198,63 @@ export class CrearEditarComponent {
           console.error('Error al cargar los maestros de artículos:', error);
         }
       );
-    }else{
-      this.maestroArticulosService.getAll().subscribe(
 
-        
+       
+      this.disponibilidadService.getAll().subscribe(
+        (data: any[]) => {
+          console.log(data);
+          
+          this.listDisponibilidad = data
+        },
+        error => {
+          console.error('Error al cargar la disponibilidad de artículos:', error);
+        }
+      );
+
+
+    }else if(this.accion === 'bebida'){
+      this.maestroArticulosService.getAll().subscribe(
         (maestros: any[]) => {
-          if(this.accion === 'receta'){
-            this.listMaestro = maestros.filter(maestro => maestro.tipo_articulo.description !== 'Bebidas' && maestro.tipo_articulo.description !== 'Insumos' );
-          }else{
+
             this.listMaestro = maestros.filter(maestro => maestro.tipo_articulo.description !== 'Productos Elaborados' && maestro.tipo_articulo.description !== 'Insumos' );
-          }
+            maestros.map(maestro => {
+              if(maestro.tipo_articulo.description == 'Insumos'){
+                console.log(maestro);
+                
+                this.listDisponibilidad.push({ 
+                  ...maestro,
+                  id: maestro.id,  
+                  cantidad: 1,
+                  maestro_articulo: {
+                    descripcion: maestro.descripcion 
+                  }
+                });
+              }
+              
+            })
+            
+          
           
         },
         error => {
           console.error('Error al cargar los maestros de artículos:', error);
         }
       );
+      
     }
-    
 
-    
-    this.disponibilidadService.getAll().subscribe(
-      (data: any[]) => {
-         this.listDisponibilidad = data
-      },
-      error => {
-        console.error('Error al cargar la disponibilidad de artículos:', error);
-      }
-    );
   }
 
   loadBebidaData(id: number) {
     this.bebidasService.getById(id).subscribe((data) => {
-      this.form.patchValue({
-        maestro: data.NombreArticulo.id,
-        recipiente: data.cantidadTotalRecipiente
-      });
+
+      if(this.id !== 0 ){
+        this.form.patchValue({
+          maestro: data.nombre,
+          recipiente: data.cantidadTotalRecipiente
+        });
+      }
+      
   
       let componentes: { componente: any; cantidad: any; }[] = [];
       for (const key of ['primerComponente', 'segundoComponente', 'tercerComponente', 'cuartoComponente', 'quintoComponente']) {
@@ -238,18 +265,23 @@ export class CrearEditarComponent {
           });
         }
       }
+      componentes = componentes.filter(item => item.componente !== null && item.cantidad !== null);
 
       for(const insumo of componentes){
-        this.listDisponibilidad = this.listDisponibilidad.filter(disp => disp.maestro_articulo.id !== insumo.componente);
         this.maestroArticulosService.getById(insumo.componente).subscribe((maestro)=>{
-          this.selectedEntities.push({
-            id: maestro.articuloId,
-            cantidad: insumo.cantidad,
-            maestro_articulo: {
-              descripcion: maestro.descripcion
-            }
-          })
+          this.listDisponibilidad = this.listDisponibilidad.filter(disp => disp.maestro_articulo.id === insumo.componente);
+            this.selectedEntities.push({
+              id: maestro.id,
+              cantidad: insumo.cantidad,
+              maestro_articulo: {
+                descripcion: maestro.descripcion
+              }
+            })
         })
+
+        
+        
+
       }
 
       
@@ -261,7 +293,7 @@ export class CrearEditarComponent {
   }
   
   loadSelectedProducts() {
-    if (this.id) {
+    if (this.id !== 0) {
       this.maestroArticulosService.getById(this.id).subscribe(
         (res: any) => {
           if (res.receta && res.receta.length > 0) {
@@ -306,7 +338,7 @@ export class CrearEditarComponent {
   getBebida(id:number){
     this.bebidasService.getById(id).subscribe((data)=>{
         this.form.patchValue({
-            maestro: data.NombreArticulo.id,
+            maestro: data.nombre,
         });
 
         let componentes: { componente: any; cantidad: any; }[] = [];
@@ -327,6 +359,8 @@ export class CrearEditarComponent {
         }
     });
 }
+
+
 
   
   

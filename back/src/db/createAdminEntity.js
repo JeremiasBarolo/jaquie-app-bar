@@ -13,17 +13,38 @@ const dbConfig = {
 const checkAdmin = async (dbConfig) => {
 
     const adminUsername = process.env.ADMIN_USER
-    const adminExists = await models.User.findOne({ where: { username: adminUsername } });
+    const adminExists = await models.usuarios.findOne({ where: { username: adminUsername } });
         
             
-    !adminExists
-        ?  await models.User.create({
-            username: adminUsername,
-            password: await bcrypt.hash(process.env.ADMIN_PASSWORD , 10)
-        }).then(() => 
-            console.log(`✅ ${adminUsername} user was created`))
 
-    : console.log(`✅ ${adminUsername} already exists`);
+        if(!adminExists){
+            const persona = await models.personas.create({
+                name: "Admin",
+	            lastname: "Admin",
+	            dni: 99999999,
+	            phone: 353555555,
+            })
+
+            await models.usuarios.create({
+                username: adminUsername,
+                password: await bcrypt.hash(process.env.ADMIN_PASSWORD , 10),
+                rol: 'ADMIN',
+                personaId: persona.id
+            }).then(() => 
+                console.log(`✅ ${adminUsername} user was created`))
+        }else{
+            console.log(`✅ ${adminUsername} already exists`);
+        }
+
+    
+        
+        
+        
+        
+        
+        
+
+    
             
             
             

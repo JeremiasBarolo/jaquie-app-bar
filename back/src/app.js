@@ -20,7 +20,7 @@ const {
 const { initializeDB } = require('./db/initializeDB');
 require('dotenv').config();
 const cors = require("cors");
-// const {checkAdmin} = require('./db/createAdminEntity');
+const {checkAdmin} = require('./db/createAdminEntity');
 // const { generarPdf } = require("./services/documentos");
 
 
@@ -55,7 +55,7 @@ app.use("/login", loginRouter)
 app.listen(PORT, 
     async () => {
         await initializeDB();
-        // await checkAdmin();
+        await checkAdmin();
         console.log(` >>>>> 🚀 Server started at http://localhost:${PORT}`);
 })
 
