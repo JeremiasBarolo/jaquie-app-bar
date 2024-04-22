@@ -63,11 +63,21 @@ export class ConsultaDisponibilidadComponent implements OnInit {
     
     this.productos.forEach((productoElaborado: any) => {
       const cantidadMaxima = this.calcularCantidadMaximaProductoElaborado(productoElaborado);
-      this.ProductosElaborados.push({
-        id: productoElaborado.id,
-        name: productoElaborado.descripcion,
-        cantidadMaxima: cantidadMaxima,
-      })
+
+      if(cantidadMaxima === Infinity){
+        this.ProductosElaborados.push({
+          id: productoElaborado.id,
+          name: productoElaborado.descripcion,
+          cantidadMaxima: 0,
+        })
+      }else{
+        this.ProductosElaborados.push({
+          id: productoElaborado.id,
+          name: productoElaborado.descripcion,
+          cantidadMaxima: cantidadMaxima,
+        })
+      }
+      
     })
 
     this.filteredProductos = [...this.ProductosElaborados]
