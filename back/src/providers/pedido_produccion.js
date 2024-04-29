@@ -62,10 +62,10 @@ const { where } = require('sequelize');
                         if (!existente) {
                             insumos_recorridos.push({
                                 id: disponibilidad.id,
-                                cant_necesaria: receta.cant_necesaria,
+                                cant_necesaria: receta.cant_necesaria * insumo.cantidad
                             });
                         } else {
-                            existente.cant_necesaria += insumo.cantidad;
+                            existente.cant_necesaria += insumo.cantidad * insumo.cantidad
                         }
                     }));
                 }else if(maestro.tipo_articulo.description === "Bebidas"){
@@ -86,16 +86,16 @@ const { where } = require('sequelize');
                             let alto = maestroReal.cantidadTotalRecipiente * receta.cantidad
                             let total = alto / 100
 
-                            let cant_principal_exacta = total / 1000
+                            let cant_principal_exacta = total / 1000 
 
                             const existente = insumos_recorridos.find(item => item.id === disponibilidad.id);
                             if (!existente) {
                                 insumos_recorridos.push({
                                     id: disponibilidad.id,
-                                    cant_necesaria: cant_principal_exacta,
+                                    cant_necesaria: cant_principal_exacta * insumo.cantidad,
                                 });
                             } else {
-                                existente.cant_necesaria += cant_principal_exacta;
+                                existente.cant_necesaria += cant_principal_exacta * insumo.cantidad;
                             }
 
                             //  <=================== Actualizamos ======================>
@@ -131,7 +131,7 @@ const { where } = require('sequelize');
             await Promise.all(insumos_recorridos.map(async (receta) => {
                 let disponibilidad = await listOnedisponibilidad_articulos(receta.id);
                 await disponibilidad.update({
-                    cant_fisica: disponibilidad.cant_fisica - receta.cant_necesaria,
+                    cant_fisica: disponibilidad.cant_fisica,
                     cant_disponible: disponibilidad.cant_disponible - receta.cant_necesaria,
                     cant_comprometida: disponibilidad.cant_comprometida + receta.cant_necesaria,
                 });
@@ -206,24 +206,50 @@ const { where } = require('sequelize');
                     await insumoRecorridos(disponibilidad.id, dataUpdated.mesa, maestro.id, insumo.cantidad, pedidoExistente, insumos_recorridos, maestro.tipo_articulo.description,insumo.cantidad);
                 }
             }
-    
-            // Actualizamos las cantidades en la disponibilidad de artículos
-            for (const disponibilidad_art of insumos_recorridos) {
-                let disponibilidad = await listOnedisponibilidad_articulos(disponibilidad_art.id);
-                const stock_real = disponibilidad.cant_fisica + disponibilidad_art.cantidad_anterior;
-                
-                const cant_fisica_nueva = stock_real - disponibilidad_art.cant_necesaria;
-                const cant_disponible_nueva = stock_real - disponibilidad_art.cant_necesaria;
+            
 
-                const cant_comprometida_real = disponibilidad.cant_comprometida- disponibilidad_art.cantidad_anterior;
-                const cant_comprometida_nueva = cant_comprometida_real + disponibilidad_art.cant_necesaria;
+            const oldpedido_produccion = await models.venta.findByPk(pedido_produccion_id, { include: [{ all: true }] });
+
+
+            if(oldpedido_produccion.estado === 'PREPARACION'){
+
+                for (const disponibilidad_art of insumos_recorridos) {
+                    let disponibilidad = await listOnedisponibilidad_articulos(disponibilidad_art.id);
+                    const stock_real = disponibilidad.cant_disponible + disponibilidad_art.cantidad_anterior;
+                    
+                    const cant_fisica_nueva = disponibilidad.cant_fisica
+                    const cant_disponible_nueva = stock_real - disponibilidad_art.cant_necesaria;
+    
+                    const cant_comprometida_real = disponibilidad.cant_comprometida- disponibilidad_art.cantidad_anterior;
+                    const cant_comprometida_nueva = cant_comprometida_real + disponibilidad_art.cant_necesaria;
+                    
+                    await disponibilidad.update({
+                        cant_fisica: cant_fisica_nueva,
+                        cant_disponible: cant_disponible_nueva,
+                        cant_comprometida: cant_comprometida_nueva
+                    });
+                }
                 
-                await disponibilidad.update({
-                    cant_fisica: cant_fisica_nueva,
-                    cant_disponible: cant_disponible_nueva,
-                    cant_comprometida: cant_comprometida_nueva
-                });
+            }else if(oldpedido_produccion.estado === 'COMIENDO'){
+                for (const disponibilidad_art of insumos_recorridos) {
+                    let disponibilidad = await listOnedisponibilidad_articulos(disponibilidad_art.id);
+                    const stock_real = disponibilidad.cant_disponible + disponibilidad_art.cantidad_anterior;
+                    
+                    const cant_fisica_nueva = stock_real - disponibilidad_art.cant_necesaria;
+                    const cant_disponible_nueva = stock_real - disponibilidad_art.cant_necesaria;
+    
+                    const cant_comprometida_real = disponibilidad.cant_comprometida- disponibilidad_art.cantidad_anterior;
+                    const cant_comprometida_nueva = cant_comprometida_real + disponibilidad_art.cant_necesaria;
+                    
+                    await disponibilidad.update({
+                        cant_fisica: cant_fisica_nueva,
+                        cant_disponible: cant_disponible_nueva,
+                        cant_comprometida: cant_comprometida_nueva
+                    });
+                }
             }
+            
+            
 
 
 
@@ -247,17 +273,21 @@ const { where } = require('sequelize');
 
             
         // <========================================= Actualizamos los pedidos existentes ===============================>
-            const oldpedido_produccion = await models.venta.findByPk(pedido_produccion_id, { include: [{ all: true }] });
-        
-            for (const maestro of oldpedido_produccion.maestro_articulos) {
-                for (const insumo of dataUpdated.insumos) {
-                    if (maestro.id === insumo.id) {
-                        await maestro.pedido_produccion.update({
-                            cant_requerida: insumo.cantidad,
-                        });
+            
+
+            
+                for (const maestro of oldpedido_produccion.maestro_articulos) {
+                    for (const insumo of dataUpdated.insumos) {
+                        if (maestro.id === insumo.id) {
+                            await maestro.pedido_produccion.update({
+                                cant_requerida: insumo.cantidad,
+                            });
+                        }
                     }
                 }
-            }
+            
+        
+           
     
             return dataUpdated;
         } catch (err) {
@@ -280,9 +310,13 @@ const { where } = require('sequelize');
             if (deletedpedido_produccion) {
 
 
+
                 for (const maestro of deletedpedido_produccion.maestro_articulos) {
                     
                     let maestroReal = await listOnemaestro_articulos(maestro.id)
+
+                    let pedidos = await models.pedido_produccion.findAll({ where: { ventaId: deletedpedido_produccion.id } });
+                    let pedido = pedidos.find(item => item.maestroId === maestroReal.id);
 
                     if(maestroReal.tipo_articulo.description === 'Bebidas'){
 
@@ -305,14 +339,14 @@ const { where } = require('sequelize');
                             let total = alto / 100
 
                             let cant_principal = total / 1000
-                            let cant_principal_exacta = cant_principal * maestro.pedido_produccion.cant_requerida
+                            let cant_principal_exacta = cant_principal * pedido.cant_requerida
 
 
                             //  <=================== Actualizamos ======================>
                             await disponibilidad.update({
                                 cant_comprometida: disponibilidad.cant_comprometida - cant_principal_exacta,
                                 cant_disponible: disponibilidad.cant_disponible + cant_principal_exacta,
-                                cant_fisica: disponibilidad.cant_fisica + cant_principal_exacta,
+                                cant_fisica: disponibilidad.cant_fisica,
                             });
                             
 
@@ -321,24 +355,30 @@ const { where } = require('sequelize');
                         }));
 
 
-                    }else{
+                    }else if(maestroReal.tipo_articulo.description === 'Productos Elaborados'){
                         const disponibilidad = await listOnemaestro_articulos(maestro.id);
-                        if (disponibilidad.receta.length > 0) {
-                            disponibilidad.receta.forEach(async receta => {
+                        
+                        disponibilidad.receta.forEach(async receta => {
                                 const disponibilidad = await listOnedisponibilidad_articulos(receta.disponibilidad_articulo.id);
                                 await disponibilidad.update({
-                                    cant_fisica: disponibilidad.cant_fisica + receta.cant_necesaria,
-                                    cant_disponible: disponibilidad.cant_disponible + receta.cant_necesaria,
-                                    cant_comprometida: disponibilidad.cant_comprometida - receta.cant_necesaria,
+                                    cant_fisica: disponibilidad.cant_fisica,
+                                    cant_disponible: disponibilidad.cant_disponible + receta.cant_necesaria * pedido.cant_requerida,
+                                    cant_comprometida: disponibilidad.cant_comprometida - receta.cant_necesaria * pedido.cant_requerida,
                                 });
-                            });
-                        }else{
-                            await disponibilidad.update({
-                                cant_fisica: disponibilidad.cant_fisica + maestro.pedido_produccion.cant_requerida,
-                                cant_disponible: disponibilidad.cant_disponible + maestro.pedido_produccion.cant_requerida,
-                                cant_comprometida: disponibilidad.cant_comprometida - maestro.pedido_produccion.cant_requerida,
-                            });
-                        }
+                        });
+                        
+                    }
+                    else{
+                        
+                        const disponibilidad = await models.disponibilidad_articulos.findOne({
+                            where:  { articuloId: maestro.id }
+                        })
+
+                        await disponibilidad.update({
+                            cant_fisica: disponibilidad.cant_fisica,
+                            cant_disponible: disponibilidad.cant_disponible + pedido.cant_requerida,
+                            cant_comprometida: disponibilidad.cant_comprometida - pedido.cant_requerida,
+                        });
                     }
                     
                    
