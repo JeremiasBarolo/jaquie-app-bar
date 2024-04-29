@@ -9,6 +9,7 @@ import { DisponibilidadArticulosService } from '../../../services/disponibilidad
 import { reduce } from 'rxjs';
 import { RecetasService } from '../../../services/recetas.service';
 import { BebidasService } from '../../../services/bebidas.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-recetas',
@@ -38,6 +39,7 @@ export class RecetasComponent {
   listBebidas:any[] = []
   dataModal:any={}
   cantidadNueva: any
+  tipoRecetaSeleccionada: string | undefined;
   
 
 
@@ -47,7 +49,8 @@ export class RecetasComponent {
     private bebidasService:BebidasService, 
     private recetasService:RecetasService,
     private fb: FormBuilder,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private router: Router
     
     
     ){}
@@ -139,5 +142,16 @@ export class RecetasComponent {
       })
     }
 
-  
+
+    Reenviar(){
+      console.log(this.tipoRecetaSeleccionada);
+      
+      if(this.tipoRecetaSeleccionada === this.accionReceta){
+        this.router.navigate(['admin/recetas/crear-editar', this.accionReceta]);
+      }else{
+        this.router.navigate(['admin/recetas/crear-editar', this.accionBebida]);
+      }
+      }
 }
+  
+

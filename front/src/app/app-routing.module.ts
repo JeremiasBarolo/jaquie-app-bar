@@ -30,7 +30,7 @@ const routes: Routes = [
   },
   { path: 'login', component: LoginComponent },
 
-  { path: '**', redirectTo: 'login' }, 
+  // { path: '**', redirectTo: 'login' }, 
 ];
 
 @NgModule({

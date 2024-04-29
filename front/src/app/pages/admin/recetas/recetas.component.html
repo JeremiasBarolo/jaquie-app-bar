@@ -1,8 +1,9 @@
 
 <app-breadcrumbs [titulo]= 'breadcrumbItems'></app-breadcrumbs>
 <div class="text-right">
-    <button type="button" class="btn btn-success mr-2" aria-label="Editar Tipo" [routerLink]="['crear-editar', accionReceta]">Agregar Receta Comida</button>
-    <button type="button" class="btn btn-primary mr-2" aria-label="Editar Tipo" [routerLink]="['crear-editar', accionBebida]">Agregar Receta Bebida</button>
+    <!-- <button type="button" class="btn btn-success mr-2" aria-label="Editar Tipo" [routerLink]="['crear-editar', accionReceta]">Agregar Receta Comida</button> -->
+    <button type="button" class="btn btn-success mr-2" aria-label="Editar Tipo" data-target="#RecetaModal" data-toggle="modal"> Agregar Receta</button>
+    <!-- <button type="button" class="btn btn-primary mr-2" aria-label="Editar Tipo" [routerLink]="['crear-editar', accionBebida]">Agregar Receta Bebida</button> -->
 </div>
 
 <div class="container">
@@ -329,6 +330,31 @@
     </div>
 </div>
 
+
+<div class="modal fade" id="RecetaModal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCrearTipoLabel">¿Qué receta desea crear?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center" >
+                <label for="">Elija la opcion requerida:</label>
+                <br>
+                <select id="tipoReceta" [(ngModel)]="tipoRecetaSeleccionada">
+                    <option [value]="accionBebida">Bebida</option>
+                    <option [value]="accionReceta">Producto Elaborado</option>
+                </select>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="Reenviar()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
