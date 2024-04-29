@@ -4,10 +4,11 @@ var models = require('../models');
 
     const sumarPedidoStock = async (dataPedido) => {
         try {
-            const existingPedidoStock = await models.disponibilidad_articulos.findOne({ where: { articuloId: dataPedido.articuloId } });
-            if (existingPedidoStock) {
-                const suma = existingPedidoStock.cant_fisica += dataPedido.cant_requerida;
-                await existingPedidoStock.update({ cant_fisica: suma });
+            const existingDisp = await models.disponibilidad_articulos.findOne({ where: { articuloId: dataPedido.articuloId } });
+
+            if (existingDisp) {
+                const suma = existingDisp.cant_fisica += dataPedido.cant_requerida;
+                await existingDisp.update({ cant_fisica: suma });
             } else {
                 
                 await models.disponibilidad_articulos.create({
