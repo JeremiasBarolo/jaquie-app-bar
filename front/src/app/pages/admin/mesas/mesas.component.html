@@ -1,9 +1,9 @@
 <app-breadcrumbs [titulo]= 'breadcrumbItems' class="mb-3" ></app-breadcrumbs>
 
 <div class="text-right">
-    <button type="button" id="agregar" class="btn btn-outline-success mr-2"  data-target="#cerrarCaja" data-toggle="modal"> Cerrar Caja</button>
-    <button type="button" class="btn btn-success add mr-2" data-target="#crearMesa" data-toggle="modal" > Agregar
-        Pedido</button>
+    <button type="button" id="agregar" class="btn btn-outline-danger mr-2"  data-target="#cerrarCaja" data-toggle="modal"> Cerrar Caja</button>
+    <button type="button" class="btn btn-success add mr-2" data-target="#crearMesa" data-toggle="modal" > Crear
+        Mesa</button>
 </div>
 
 
@@ -22,7 +22,7 @@
               </div>
               <div class="card-footer">
                 <a class="btn btn-success mr-1" (click)="cambiarEstado(preparacion.id, preparacion, 'COMIENDO')">Llego su comida</a>
-                <a class="btn btn-warning ml-1" href="admin/pedido-produccion">Crear Pedido</a>
+                <a class="btn btn-warning ml-1" href="admin/pedido-produccion/crear-editar">Crear Pedido</a>
                 <a class="btn btn-outline-danger ml-1" data-target="#cancelarMesa" data-toggle="modal"(click)="showCardDetails(preparacion)" >Cancelado</a>
               </div>
             </div>

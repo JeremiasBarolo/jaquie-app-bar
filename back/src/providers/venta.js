@@ -196,16 +196,56 @@
                         let entidad = await listOnemaestro_articulos(maestro.id);
                         let pedidos = await models.pedido_produccion.findAll({ where: { ventaId: venta_id } });
             
-                        if (entidad.tipo_articulo.description === "Bebidas" || entidad.tipo_articulo.description === "Productos Elaborados") {
+                        if (entidad.tipo_articulo.description === "Productos Elaborados") {
                             for (const receta of entidad.receta) {
                                 let pedido = pedidos.find(item => item.maestroId === maestro.id);
                                 await receta.disponibilidad_articulo.update({
                                     cant_disponible: receta.disponibilidad_articulo.cant_disponible + (receta.cant_necesaria * pedido.cant_requerida),
                                     cant_comprometida: receta.disponibilidad_articulo.cant_comprometida - (receta.cant_necesaria * pedido.cant_requerida),
-                                    cant_fisica: receta.disponibilidad_articulo.cant_disponible + (receta.cant_necesaria * pedido.cant_requerida),
+                                    cant_fisica: receta.disponibilidad_articulo.cant_fisica ,
                                 });
                             }
-                        } else {
+                        } else if(entidad.tipo_articulo.description === "Bebidas" ){
+                            const bebida = await models.Bebidas.findOne({
+                                where: {nombre: entidad.id}
+                            });
+    
+                            
+                            
+                            let componentes = await traerComponentesDeBebida(bebida)
+    
+                            await Promise.all(componentes.map(async receta => {
+    
+                                let disponibilidad = await models.disponibilidad_articulos.findOne({
+                                    where:  { articuloId: receta.componente }
+                                })
+
+
+                                let pedidos = await models.pedido_produccion.findAll({ where: { ventaId: venta_id } });
+                                let pedido = pedidos.find(item => item.maestroId === maestro.id);
+
+
+                                //  <=================== calculamos cantidad exacta ======================>
+                                let alto = bebida.cantidadTotalRecipiente * receta.cantidad
+                                let total = alto / 100
+    
+                                let cant_principal = total / 1000
+                                let cant_principal_exacta = cant_principal * pedido.cant_requerida
+    
+    
+                                //  <=================== Actualizamos ======================>
+                                await disponibilidad.update({
+                                    cant_comprometida: disponibilidad.cant_comprometida - cant_principal_exacta,
+                                    cant_disponible: disponibilidad.cant_disponible + cant_principal_exacta,
+                                    cant_fisica: disponibilidad.cant_fisica ,
+                                });
+                                
+    
+    
+    
+                            }));
+                            
+                        } else{
                             let pedido = pedidos.find(item => item.maestroId === entidad.id);
                             let disponibilidad = await models.disponibilidad_articulos.findOne({ where: { articuloId: entidad.id } });
             
@@ -286,7 +326,7 @@
                                 });
                             }
                         }else{
-                            let disp = models.disponibilidad_articulos.findOne({
+                            let disp = await models.disponibilidad_articulos.findOne({
                                 where:  { articuloId: maestro_articulo.id }
                             })
 

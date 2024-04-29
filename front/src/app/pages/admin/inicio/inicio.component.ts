@@ -6,6 +6,6 @@ import { Component } from '@angular/core';
   styleUrl: './inicio.component.css'
 })
 export class InicioComponent {
-  breadcrumbItems: string[] = ['Inicio', 'Login','Inicio'];
+  breadcrumbItems: string[] = ['Inicio', 'login','Inicio'];
 
 }
