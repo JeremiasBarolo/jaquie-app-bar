@@ -5,6 +5,7 @@
     const { listAlldisponibilidad_articulos, listOnedisponibilidad_articulos } = require('./disponibilidad_articulos');
     const {listOnemaestro_articulos} = require('./maestro_articulos');
     const {traerComponentesDeBebida} = require('./pedido_produccion')
+    
 
     const listAllventa= async () => {
         try {
@@ -220,8 +221,88 @@
                     await models.venta.destroy({ where: { id: venta_id } });
                 }
             }else{
+
                 let costo = await calcularCosto(oldventa.maestro_articulos)
                 let newventa = await oldventa.update({...dataUpdated, total:dataUpdated.subtotal, precio:costo});
+
+
+                // <========== SI PASO A COMIENDO ====>
+                if(oldventa.estado === "COMIENDO"){
+                    for(const maestro of oldventa.maestro_articulos){
+                        let maestro_articulo = await listOnemaestro_articulos(maestro.id);
+    
+                        if(maestro_articulo.tipo_articulo.description === "Bebidas"){
+                            let pedidos = await models.pedido_produccion.findAll({ where: { ventaId: venta_id } });
+                            let pedido = pedidos.find(item => item.maestroId === maestro.id);
+    
+                            const bebida = await models.Bebidas.findOne({
+                                where: {nombre: maestro_articulo.id}
+                            });
+    
+                            
+                            
+                            let componentes = await traerComponentesDeBebida(bebida)
+    
+                            await Promise.all(componentes.map(async receta => {
+    
+                                let disponibilidad = await models.disponibilidad_articulos.findOne({
+                                    where:  { articuloId: receta.componente }
+                                })
+    
+                                //  <=================== calculamos cantidad exacta ======================>
+                                let alto = bebida.cantidadTotalRecipiente * receta.cantidad
+                                let total = alto / 100
+    
+                                let cant_principal = total / 1000
+                                let cant_principal_exacta = cant_principal * maestro.pedido_produccion.cant_requerida
+    
+    
+                                //  <=================== Actualizamos ======================>
+                                await disponibilidad.update({
+                                    cant_comprometida: disponibilidad.cant_comprometida,
+                                    cant_disponible: disponibilidad.cant_disponible,
+                                    cant_fisica: disponibilidad.cant_fisica - cant_principal_exacta,
+                                });
+                                
+    
+    
+    
+                            }));
+    
+                            
+                        }else if(maestro_articulo.tipo_articulo.description === "Productos Elaborados"){
+                            let pedidos = await models.pedido_produccion.findAll({ where: { ventaId: venta_id } });
+                            let pedido = pedidos.find(item => item.maestroId === maestro.id);
+    
+                            for(const receta of maestro_articulo.receta){
+                                let disponibilidad = await models.disponibilidad_articulos.findOne({
+                                    where:  { id: receta.articuloId }
+                                })
+    
+                                await disponibilidad.update({
+                                    cant_comprometida: disponibilidad.cant_comprometida,
+                                    cant_disponible: disponibilidad.cant_disponible,
+                                    cant_fisica: disponibilidad.cant_fisica - (receta.cant_necesaria * pedido.cant_requerida),
+                                });
+                            }
+                        }else{
+                            let disp = models.disponibilidad_articulos.findOne({
+                                where:  { articuloId: maestro_articulo.id }
+                            })
+
+                            await disp.update({
+                                cant_comprometida: disp.cant_comprometida,
+                                cant_disponible: disp.cant_disponible,
+                                cant_fisica: disp.cant_fisica - maestro.pedido_produccion.cant_requerida,
+                            });
+
+
+                        }
+                    }
+                }
+               
+
+
                 return true
             }
         } catch (err) {
