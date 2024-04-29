@@ -62,10 +62,10 @@ const { where } = require('sequelize');
                         if (!existente) {
                             insumos_recorridos.push({
                                 id: disponibilidad.id,
-                                cant_necesaria: receta.cant_necesaria,
+                                cant_necesaria: receta.cant_necesaria * insumo.cantidad
                             });
                         } else {
-                            existente.cant_necesaria += insumo.cantidad;
+                            existente.cant_necesaria += insumo.cantidad * insumo.cantidad
                         }
                     }));
                 }else if(maestro.tipo_articulo.description === "Bebidas"){
@@ -86,16 +86,16 @@ const { where } = require('sequelize');
                             let alto = maestroReal.cantidadTotalRecipiente * receta.cantidad
                             let total = alto / 100
 
-                            let cant_principal_exacta = total / 1000
+                            let cant_principal_exacta = total / 1000 
 
                             const existente = insumos_recorridos.find(item => item.id === disponibilidad.id);
                             if (!existente) {
                                 insumos_recorridos.push({
                                     id: disponibilidad.id,
-                                    cant_necesaria: cant_principal_exacta,
+                                    cant_necesaria: cant_principal_exacta * insumo.cantidad,
                                 });
                             } else {
-                                existente.cant_necesaria += cant_principal_exacta;
+                                existente.cant_necesaria += cant_principal_exacta * insumo.cantidad;
                             }
 
                             //  <=================== Actualizamos ======================>
