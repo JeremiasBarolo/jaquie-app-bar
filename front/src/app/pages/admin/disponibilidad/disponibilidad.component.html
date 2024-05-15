@@ -87,6 +87,17 @@
                 <form [formGroup]="disponibilidadForm" (ngSubmit)="guardarNuevoMaetro()">
                     <div class="form-group">
 
+                        <div class="form-group">
+                            <label for="maestro">Articulo para Generar Stock</label>
+                            <select class="form-control" id="tipoArticulo" formControlName="maestro">
+                                <option *ngFor="let maestro of listMaestro" [value]="maestro.id">{{ maestro.descripcion }}</option>
+                            </select>
+                            <div *ngIf="disponibilidadForm.get('maestro')?.invalid && disponibilidadForm.get('maestro')?.touched" class="text-danger">
+                                Tipo de artículo es requerido
+                            </div>
+                    </div>
+
+
                       <label for="nombreTipo">Cantidad Fisica</label>
                       <input type="number" class="form-control" id="nombreTipo" formControlName="cant_fisica">
                       <div *ngIf="disponibilidadForm.get('cant_fisica')?.invalid && disponibilidadForm.get('cant_fisica')?.touched" class="text-danger">
@@ -105,16 +116,7 @@
                         Cantidad Disponible es requerido
                       </div>
 
-                        <div class="form-group">
-                                <label for="maestro">Articulo para Generar Stock</label>
-                                <select class="form-control" id="tipoArticulo" formControlName="maestro">
-                                    <option *ngFor="let maestro of listMaestro" [value]="maestro.id">{{ maestro.descripcion }}</option>
-                                </select>
-                                <div *ngIf="disponibilidadForm.get('maestro')?.invalid && disponibilidadForm.get('maestro')?.touched" class="text-danger">
-                                    Tipo de artículo es requerido
-                                </div>
-                        </div>
-
+                        
 
                         <!-- Campo de selección para Conversión de Unidad de Medida -->
                             <div class="form-group">

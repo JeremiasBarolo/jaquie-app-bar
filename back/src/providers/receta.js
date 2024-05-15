@@ -68,26 +68,47 @@
 
     try {
 
-        // trae las recetas de el maestro de articulos
-        const oldreceta=  await models.maestro_articulos.findByPk(receta_id, {include: { all: true }});
-        const recetas =  oldreceta.receta;
+        
+            const oldreceta = await models.maestro_articulos.findByPk(receta_id, { include: { all: true } });
+            const recetas = oldreceta.receta;
 
-       const newreceta = await recetas.map(async (recetaActual) => {
-            dataUpdated.insumos.forEach(async element => {
-                if(recetaActual.articuloId === element.id){
-                    const updatedReceta = await models.receta.findByPk(recetaActual.id)
+            
+
+            
+            await Promise.all(recetas.map(async (recetaActual) => {
+                const insumo = dataUpdated.insumos.find(element => recetaActual.articuloId === element.id);
+
+                if (insumo) {
+                    const updatedReceta = await models.receta.findByPk(recetaActual.id);
                     await updatedReceta.update({
-                        cant_fisica:dataUpdated.cant_fisica,
-                        maestroId:dataUpdated.maestro,
-                        n_linea:dataUpdated.n_linea,
+                        cant_necesaria: insumo.cantidad,
+                    });
+                }
+            }));
+
+           
+            for (const element of dataUpdated.insumos) {
+                if (!recetas.some(recetaActual => recetaActual.articuloId === element.id)) {
+                    await models.receta.create({
+                        cant_fisica: dataUpdated.cant_fisica,
+                        maestroId: dataUpdated.maestro,
+                        n_linea: dataUpdated.n_linea,
                         articuloId: element.id,
                         cant_necesaria: element.cantidad,
-                    })
+                    });
                 }
-            })
-        })
+            }
 
-        return newreceta;
+
+                    // Elimina los elementos de la receta que ya no están en dataUpdated.insumos
+        await Promise.all(recetas.map(async (recetaActual) => {
+            if (!dataUpdated.insumos.some(element => recetaActual.articuloId === element.id)) {
+                const recetaToDelete = await models.receta.findByPk(recetaActual.id);
+                await recetaToDelete.destroy();
+            }
+        }));
+
+        return true
     } catch (err) {
         console.error('🛑 Error when updating receta', err);
         throw err;
@@ -107,14 +128,15 @@
         return null;
         }
         
-        deletedreceta.receta.map(async (receta) => {
-            await models.receta.findByPk(receta.id)
-            .then(async (receta) => {
-                await receta.destroy();
-            })
+        await deletedreceta.receta.map(async (receta) => {
+            const recetaReal = await models.receta.findByPk(receta.id)
+            if(recetaReal){
+                await recetaReal.destroy()
+            }
             
         })
 
+        // await deletedreceta.destroy()
 
         return deletedreceta;
     } catch (err) {
