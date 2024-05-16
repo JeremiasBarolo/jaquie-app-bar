@@ -315,12 +315,13 @@ export class CrearEditarComponent {
             
             
             
-            // Filtrar los elementos de listDisponibilidad que no están en la receta
+            
             this.listDisponibilidad = this.listDisponibilidad.filter(insumo =>
               !this.selectedEntities.some(selected => selected.id === insumo.id)
             );
   
-            // Asignar los valores al formulario
+            this.listMaestro.push(res)
+            
             this.form.patchValue({
               maestro: res.id,
               cant_fisica: res.receta[0].cant_fisica,

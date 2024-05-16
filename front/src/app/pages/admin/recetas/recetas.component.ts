@@ -10,6 +10,7 @@ import { reduce } from 'rxjs';
 import { RecetasService } from '../../../services/recetas.service';
 import { BebidasService } from '../../../services/bebidas.service';
 import { Router } from '@angular/router';
+import { CrearEditarComponent } from './crear-editar/crear-editar.component';
 
 @Component({
   selector: 'app-recetas',
@@ -151,7 +152,25 @@ export class RecetasComponent {
       }else{
         this.router.navigate(['admin/recetas/crear-editar', this.accionBebida]);
       }
+    }
+
+    redirectCrearElaborado(receta:any){
+      if (receta && receta.receta && receta.receta.length === 0) {
+        this.router.navigate(['admin/recetas/crear-editar', this.accionReceta]);
+      }else{
+        this.router.navigate(['admin/recetas/crear-editar', this.accionReceta, receta.id]);
       }
+    
+    }
+
+    // redirectCrearBebida(tipo:any){
+    //   if (tipo && tipo.recetas && tipo.recetas.length === 0) {
+    //     this.router.navigate(['crear-editar', this.accionBebida]);
+    //   }else{
+    //     this.router.navigate(['crear-editar', this.accionBebida, tipo.id]);
+    //   }
+    
+    // }
 }
   
 
