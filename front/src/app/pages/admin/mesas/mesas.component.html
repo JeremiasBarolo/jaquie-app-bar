@@ -118,6 +118,7 @@
                 <th scope="col">Descripcion</th>
                 <th scope="col">Costo </th>
                 <th scope="col">Can. Solicitada</th>
+                <th scope="col">Estado</th>
               </tr>
             </thead>
             <tbody style="max-height: 300px; overflow-y: auto;">
@@ -126,6 +127,7 @@
                 <td>{{item.descripcion}}</td>
                 <td>{{item.costo_unitario | currency}}</td>
                 <td>{{item.pedido_produccion?.cant_requerida}}</td>
+                <td>{{item.pedido_produccion?.estado}}</td>
               </tr>
             </tbody>
           </table>
@@ -165,6 +167,7 @@
                 <th scope="col">Descripcion</th>
                 <th scope="col">Costo </th>
                 <th scope="col">Can. Solicitada</th>
+                <th scope="col">Estado</th>
               </tr>
             </thead>
             <tbody style="max-height: 300px; overflow-y: auto;">
@@ -173,6 +176,7 @@
                 <td>{{item.descripcion}}</td>
                 <td>{{item.costo_unitario | currency}}</td>
                 <td>{{item.pedido_produccion?.cant_requerida}}</td>
+                <td>{{item.pedido_produccion?.estado}}</td>
               </tr>
             </tbody>
           </table>

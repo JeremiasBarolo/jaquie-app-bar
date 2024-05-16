@@ -264,7 +264,7 @@
 
                 let costo = await calcularCosto(oldventa.maestro_articulos)
                 let newventa = await oldventa.update({...dataUpdated, total:dataUpdated.subtotal, precio:costo});
-
+                let pedidos = await models.pedido_produccion.findAll({ where: { ventaId: venta_id } });
 
                 // <========== SI PASO A COMIENDO ====>
                 if(oldventa.estado === "COMIENDO"){
@@ -338,12 +338,18 @@
 
 
                         }
+
+
+                    }
+
+                    for(const pedido of pedidos){
+                        await pedido.update({estado: 'FINALIZADO'})
                     }
                 }
                
 
 
-                return true
+                return newventa
             }
         } catch (err) {
             console.error('🛑 Error when updating venta', err);

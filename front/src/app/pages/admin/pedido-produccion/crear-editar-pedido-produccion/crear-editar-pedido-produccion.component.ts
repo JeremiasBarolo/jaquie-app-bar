@@ -23,6 +23,7 @@ export class CrearEditarPedidoProduccionComponent {
   listMeaesto: any[] = []
   recetaData: any = {}
   listMesas: any[] = []
+  entidad:any
 
   constructor(
     private fb: FormBuilder,
@@ -60,14 +61,13 @@ export class CrearEditarPedidoProduccionComponent {
     this.recetaData = {
       insumos: this.selectedEntities.map(entity => ({ id: entity.id, cantidad: entity.cantidad })),
       mesa: this.form.value.mesa,
-      estado: 'PENDIENTE'
     };
     
     
 
     if (this.id !== 0) {
       try {
-        this.pedidoProduccionService.update(this.id, this.recetaData).subscribe(() => {
+        this.pedidoProduccionService.update(this.id, {...this.recetaData, estado: this.entidad.estado}).subscribe(() => {
           this.router.navigate(['admin/pedido-produccion']);
           this.toastr.success('Pedido Actualizado');
         });
@@ -76,7 +76,7 @@ export class CrearEditarPedidoProduccionComponent {
       }
     } else {
       try {
-        this.pedidoProduccionService.create(this.recetaData).subscribe(() => {
+        this.pedidoProduccionService.create({...this.recetaData, estado: 'PENDIENTE'}).subscribe(() => {
           this.router.navigate(['admin/pedido-produccion']);
           this.toastr.success('Pedido Creado Exitosamente');
         });
@@ -150,6 +150,7 @@ export class CrearEditarPedidoProduccionComponent {
     if (this.id) {
       this.mesasService.getById(this.id).subscribe(
         (res: any) => {
+          this.entidad = res
           if (res.maestro_articulos && res.maestro_articulos.length > 0) {
             
             const selectedEntitiesWithDescription = res.maestro_articulos.map((item: { id: any; pedido_produccion: { cant_requerida: any; }; descripcion: any; })  => {
