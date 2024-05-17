@@ -17,6 +17,7 @@
               <div class="card-header bg-primary" (click)="showCardDetails(preparacion)" data-target="#InsumoModal2" data-toggle="modal">
                 {{preparacion.mesa}}
               </div>
+
               <div class="card-body" (click)="showCardDetails(preparacion)" data-target="#InsumoModal2" data-toggle="modal">
                Esta mesa se encuentra en preparacion...
               </div>
@@ -35,6 +36,9 @@
           <div class="card" *ngFor="let comiendo of listComiendo">
             <div class="card-header bg-primary"(click)="showCardDetails(comiendo)"data-target="#InsumoModal" data-toggle="modal">
               {{comiendo.mesa}}
+
+              
+              <i *ngIf="comiendo?.pedidoPreparacion?.length" class="fa-solid fa-exclamation-triangle text-danger ml-1 text-end" style="font-size: 0.8rem;"></i>
             </div>
     
             <div class="card-body"(click)="showCardDetails(comiendo)"data-target="#InsumoModal" data-toggle="modal">
@@ -43,7 +47,7 @@
     
             <div class="card-footer">
               <button class="btn btn-success"  (click)="showCardDetails(comiendo)" data-target="#finalizarMesa" data-toggle="modal"(click)="showCardDetails(comiendo)" >Finalizar</button>
-              <a class="btn btn-warning ml-1" href="admin/pedido-produccion" >Agregar a Pedido...</a>
+              <a class="btn btn-warning ml-1" (click)="agregarPedido(comiendo)" >Agregar a Pedido...</a>
             </div>
           </div>
         </div>
@@ -97,45 +101,97 @@
 </div>
 
 <!-- Modal ver una mesa -->
-<div class="modal fade modal" id="InsumoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+<div class="modal fade" id="InsumoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header bg-primary">
-        <h5 class="modal-title text-center ">{{ cardData.mesa }}</h5>
+        <h5 class="modal-title text-center">{{ cardData.mesa }}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <p><strong>Forma de Pago:</strong> Sin Definir.</p>
-        <h6 class="text-center">Pedido:</h6>
         
-        <div class="table-container">
-          <table class="table">
-            <thead class="thead-light">
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Descripcion</th>
-                <th scope="col">Costo </th>
-                <th scope="col">Can. Solicitada</th>
-                <th scope="col">Estado</th>
-              </tr>
-            </thead>
-            <tbody style="max-height: 300px; overflow-y: auto;">
-              <tr *ngFor="let item of cardData?.maestro_articulos">
-                <th scope="row">{{item.id}}</th>
-                <td>{{item.descripcion}}</td>
-                <td>{{item.costo_unitario | currency}}</td>
-                <td>{{item.pedido_produccion?.cant_requerida}}</td>
-                <td>{{item.pedido_produccion?.estado}}</td>
-              </tr>
-            </tbody>
-          </table>
-          <p><strong>Subtotal de Mesa:</strong> {{cardData.total | currency}}</p>
-          <p><strong>Costo Produccion:</strong> {{cardData.precio | currency}}</p>
+
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs " role="tablist">
+          <li class="nav-item col-md-6">
+            <a class="nav-link active" id="finalizados-tab" data-toggle="tab" href="#finalizados" role="tab" aria-controls="finalizados" aria-selected="true">Pedidos Finalizados</a>
+          </li>
+          <li class="nav-item col-md-6">
+            <a class="nav-link bg-warning" id="pendientes-tab" data-toggle="tab" href="#pendientes" role="tab" aria-controls="pendientes" aria-selected="false">
+              Pedidos Pendientes
+              <i *ngIf="cardData?.pedidoPreparacion?.length" class="fa-solid fa-exclamation-triangle text-danger ml-1" style="font-size: 0.8rem;"></i>
+            </a>
+          </li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+          <div class="tab-pane fade show active" id="finalizados" role="tabpanel" aria-labelledby="finalizados-tab">
+            <div class="table-container">
+              <table class="table">
+                <thead class="thead-light">
+                  <tr>
+                    
+                    <th scope="col">Descripción</th>
+                    <th scope="col">Costo</th>
+                    <th scope="col">Cantidad Solicitada</th>
+                    <th scope="col">Estado</th>
+                  </tr>
+                </thead>
+                <tbody style="max-height: 300px; overflow-y: auto;">
+                  <tr *ngFor="let item of cardData.pedidoFinalizado">
+                    
+                    <td>{{item.name}}</td>
+                    <td>{{item.costo_unitario | currency}}</td>
+                    <td class="text-center">{{item.cant_requerida}}</td>
+                    <td>{{item.estado}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="pendientes" role="tabpanel" aria-labelledby="pendientes-tab">
+            <div class="table-container">
+              <table class="table">
+                <thead class="thead-light">
+                  <tr>
+                    
+                    <th scope="col">Descripción</th>
+                    <th scope="col">Costo</th>
+                    <th scope="col">Cantidad Solicitada</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Accion</th>
+
+                  </tr>
+                </thead>
+                <tbody style="max-height: 300px; overflow-y: auto;">
+                  <tr *ngFor="let item of cardData.pedidoPreparacion">
+                    
+                    <td>{{item.name}}</td>
+                    <td>{{item.costo_unitario | currency}}</td>
+                    <td class="text-center">{{item.cant_requerida}}</td>
+                    <td>{{item.estado}}</td>
+                    <td>
+                      <div class="d-inline-block">
+                        <button type="button" data-toggle="modal" data-target="#SumarCantidad" class="btn btn-outline-success btn-sm" aria-label="Editar Tipo">
+                          <i class="fa-solid fa-plus"></i>
+                        </button>
+                      </div>
+                      <div class="d-inline-block ml-2"> 
+                        <button type="button" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#EliminarMaestro" aria-label="Borrar Tipo">
+                          <i class="fa-solid fa-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
-        
-        
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal">Volver</button>

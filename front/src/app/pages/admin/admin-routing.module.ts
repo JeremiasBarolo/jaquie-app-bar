@@ -37,6 +37,7 @@ const routes: Routes = [
       { path: 'pedido-produccion', component: PedidoProduccionComponent},
       { path: 'pedido-produccion/crear-editar', component: CrearEditarPedidoProduccionComponent},
       { path: 'pedido-produccion/crear-editar/:id', component: CrearEditarPedidoProduccionComponent},
+      { path: 'pedido-produccion/:agregarPedido/:id', component: CrearEditarPedidoProduccionComponent},
       { path: 'estadisticas', component: EstadisticaComponent},
       { path: 'mesas', component: MesasComponent},
       { path: 'usuarios', component: UsuariosComponent},

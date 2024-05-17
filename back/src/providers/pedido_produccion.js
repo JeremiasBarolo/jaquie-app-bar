@@ -2,7 +2,7 @@
     var models = require('../models');
     const {listOnemaestro_articulos} = require('./maestro_articulos');
     const {listOnedisponibilidad_articulos} = require('./disponibilidad_articulos');
-const { where } = require('sequelize');
+
 
     
 

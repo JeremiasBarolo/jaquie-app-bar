@@ -63,6 +63,34 @@ export class PedidoProduccionService {
       );
   }
 
+  agregarPedido(id: number, Entity: FormData): Observable<any> {
+    
+    
+    return this.http.put<any>(`http://localhost:8081/agregarPedido/${id}`, Entity)
+    .pipe(
+      catchError((error: HttpErrorResponse) => {
+        this.handleHttpError(error);
+        return throwError(error);
+      })
+    );
+
+  }
+
+  traerPedidos(id: number): Observable<any> {
+    console.log('esoty aca');
+    
+    return this.http.get<any>(`http://localhost:8081/traerPedidos/${id}`)
+    .pipe(
+      catchError((error: HttpErrorResponse) => {
+        this.handleHttpError(error);
+        return throwError(error);
+      })
+    );
+
+  }
+
+  
+
 
 
 

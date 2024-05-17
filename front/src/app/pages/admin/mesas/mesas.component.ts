@@ -6,6 +6,7 @@ import { MesasService } from '../../../services/mesas.service';
 import { LoginComponent } from '../../../auth/login/login.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EstadisticaService } from '../../../services/estadistica.service';
+import { PedidoProduccionService } from '../../../services/pedido-produccion.service';
 
 
 @Component({
@@ -32,6 +33,7 @@ export class MesasComponent implements OnInit{
   IdsInsumosCantidad: any[] = []
   recetaData: any;
   costoTotal: number = 0;
+  accion:any = 'agregarPedido'
 
 
   constructor(
@@ -41,7 +43,8 @@ export class MesasComponent implements OnInit{
     private viewport: ViewportScroller,
     private mesasService: MesasService,
     private fb: FormBuilder,
-    private estadisticaService: EstadisticaService
+    private estadisticaService: EstadisticaService,
+    private pedidoProduccionService: PedidoProduccionService
 
 
 
@@ -68,8 +71,13 @@ export class MesasComponent implements OnInit{
         }
       )
     
+      this.traerPedidosMesas()
+    })
+
     
-     })
+
+    
+    
   }
 
 cambiarEstado(id?: number, pedido?: any, estado?: string, devolverInsumos?: any, selectedId?:number) {
@@ -197,6 +205,40 @@ cerrarCaja(){
       console.error(error.error);
   });
 }
+
+agregarPedido(entidad:any){
+    this.router.navigate(['admin/pedido-produccion', this.accion, entidad.id]);
+    
+
+}
+
+traerPedidosMesas() {
+  this.listComiendo.forEach((mesa) => {
+    this.pedidoProduccionService.traerPedidos(mesa.id).subscribe(
+      (pedidos: any[]) => {
+        
+        mesa.pedidoFinalizado = mesa.pedidoFinalizado || [];
+        mesa.pedidoPreparacion = mesa.pedidoPreparacion || [];
+
+        
+        pedidos.forEach((pedido) => {
+          if (pedido.estado === 'FINALIZADO') {
+            mesa.pedidoFinalizado.push(pedido);
+          } else {
+            mesa.pedidoPreparacion.push(pedido);
+          }
+        });
+      },
+      (error: any) => {
+        console.error('Error al obtener los pedidos:', error);
+      }
+    );
+  });
+
+  console.log(this.listComiendo);
+  
+}
+
 
 
 

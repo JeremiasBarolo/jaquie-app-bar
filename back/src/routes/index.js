@@ -12,6 +12,7 @@ const pedido_stockRouter = require('./pedido_stock');
 const pedido_produccionRouter = require('./pedido_produccion');
 const bebidasRouter = require('./Bebidas');
 const loginRouter = require('./login');
+const agregarPedidoRouter = require('./agregarPedido');
 
 
 module.exports = {
@@ -27,5 +28,6 @@ module.exports = {
     pedido_stockRouter,
     pedido_produccionRouter,
     bebidasRouter,
-    loginRouter
+    loginRouter,
+    agregarPedidoRouter
 };

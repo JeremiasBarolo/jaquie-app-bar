@@ -11,6 +11,7 @@ const pedido_stockController= require('./pedido_stock');
 const pedido_produccionController= require('./pedido_produccion');
 const BebidasController= require('./Bebidas');
 const loginController= require('./login');
+const agregarPedidoController= require('./agregarPedido');
 
 
 module.exports= {
@@ -26,5 +27,6 @@ module.exports= {
     pedido_stockController,
     pedido_produccionController,
     BebidasController,
-    loginController
+    loginController,
+    agregarPedidoController
 }
