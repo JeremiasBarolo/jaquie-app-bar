@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { EstadisticaService } from '../../../services/estadistica.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-estadistica',
@@ -13,7 +14,8 @@ export class EstadisticaComponent implements OnInit {
   ultimos7Dias: any[] = [];
   costoTotalPorMes: any[] = [];
   recaudacionPorMes: any[] = [];
-  // Configuración del gráfico
+  private destroy$ = new Subject<void>();
+
   chartOptions: any = {
     chart: {
       type: 'line'
@@ -35,8 +37,13 @@ export class EstadisticaComponent implements OnInit {
     this.obtenerEstadisticas();
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   obtenerEstadisticas(): void {
-    this.estadisticasService.getAll().subscribe(
+    this.estadisticasService.getAll().pipe(takeUntil(this.destroy$)).subscribe(
       (data) => {
         this.estadisticas = data;
         this.procesarDatosParaGrafico();
@@ -108,7 +115,7 @@ export class EstadisticaComponent implements OnInit {
   }
 
   generarEstadisticasAleatorias(): void {
-    this.estadisticasService.create({ generarEstadisticas: true }).subscribe(
+    this.estadisticasService.create({ generarEstadisticas: true }).pipe(takeUntil(this.destroy$)).subscribe(
       (data) => {
         setTimeout(() => {
           window.location.reload();
@@ -121,7 +128,7 @@ export class EstadisticaComponent implements OnInit {
   }
 
   borrarTodasLasEstadisticas(): void {
-    this.estadisticasService.create({ generarEstadisticas: true, tirarDatos: true }).subscribe(
+    this.estadisticasService.create({ generarEstadisticas: true, tirarDatos: true }).pipe(takeUntil(this.destroy$)).subscribe(
       (data) => {
         setTimeout(() => {
           window.location.reload();

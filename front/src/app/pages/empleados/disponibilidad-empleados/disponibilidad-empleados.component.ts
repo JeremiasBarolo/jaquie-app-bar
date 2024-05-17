@@ -8,7 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 import { MaestroArticulosService } from '../../../services/maestro-articulos.service';
 import { TipoArticulosService } from '../../../services/tipo-articulos.service';
 import { DisponibilidadArticulosService } from '../../../services/disponibilidad-articulos.service';
-import { reduce } from 'rxjs';
+import { Subject, reduce, takeUntil } from 'rxjs';
 import { Table } from 'primeng/table';
 
 
@@ -41,6 +41,7 @@ export class DisponibilidadEmpleadosComponent {
 
   @ViewChild('dt')
   table!: Table; 
+  private destroy$ = new Subject<void>();
 
   constructor(
     private maestroArticulosService:MaestroArticulosService,
@@ -55,7 +56,7 @@ export class DisponibilidadEmpleadosComponent {
 
   ngOnInit(): void {
 
-    this.maestroArticulosService.getAll().subscribe(maestros => {
+    this.maestroArticulosService.getAll().pipe(takeUntil(this.destroy$)).subscribe(maestros => {
       maestros.forEach(maestro => {
         if(maestro.tipo_articulo.description !== 'Productos Elaborados' && maestro.tipo_articulo.description !== 'Bebidas'){
           this.listMaestro.push(maestro)
@@ -63,11 +64,11 @@ export class DisponibilidadEmpleadosComponent {
       })
         
       })
-      this.disponibilidadService.getAll().subscribe(data => {
+      this.disponibilidadService.getAll().pipe(takeUntil(this.destroy$)).subscribe(data => {
         this.listDisponibilidad = data;
         this.filteredDisp = this.listDisponibilidad
       })
-      this.conversionUmService.getAll().subscribe(data => {
+      this.conversionUmService.getAll().pipe(takeUntil(this.destroy$)).subscribe(data => {
         this.conversionesUM = data;
       })
 
@@ -88,6 +89,10 @@ export class DisponibilidadEmpleadosComponent {
 
 
       
+  }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
 
@@ -128,7 +133,7 @@ export class DisponibilidadEmpleadosComponent {
       maestro: this.disponibilidadForm.value.maestro,
     }
    if(this.DataArticulos.editar === true){
-    this.disponibilidadService.update(this.DataArticulos.id, this.maestroNuevo).subscribe(() => {
+    this.disponibilidadService.update(this.DataArticulos.id, this.maestroNuevo).pipe(takeUntil(this.destroy$)).subscribe(() => {
       setTimeout(() => {
         window.location.reload();
       }, 600)
@@ -136,7 +141,7 @@ export class DisponibilidadEmpleadosComponent {
     });
    } else{
     try {
-      this.disponibilidadService.create(this.maestroNuevo).subscribe(() => {
+      this.disponibilidadService.create(this.maestroNuevo).pipe(takeUntil(this.destroy$)).subscribe(() => {
         setTimeout(() => {
           window.location.reload();
         }, 600)
@@ -154,7 +159,7 @@ export class DisponibilidadEmpleadosComponent {
 
   // <============ Eliminar Tipo ==========>
   EliminarArticulo(){
-    this.disponibilidadService.delete(this.EntidadEliminar.id).subscribe(() => {
+    this.disponibilidadService.delete(this.EntidadEliminar.id).pipe(takeUntil(this.destroy$)).subscribe(() => {
       setTimeout(() => {
         window.location.reload();
       }, 600)
@@ -174,7 +179,7 @@ export class DisponibilidadEmpleadosComponent {
       add: true
     }
     try {
-      this.disponibilidadService.update(this.cantidadNueva.id, this.cantidadNueva ).subscribe(() => {
+      this.disponibilidadService.update(this.cantidadNueva.id, this.cantidadNueva ).pipe(takeUntil(this.destroy$)).subscribe(() => {
         setTimeout(() => {
           window.location.reload();
         }, 600)
@@ -191,7 +196,7 @@ export class DisponibilidadEmpleadosComponent {
 
    set_Numbers(){
     this.listDisponibilidad.map((dispo)=>{
-      this.disponibilidadService.update(dispo.id, {...dispo, cant_fisica: 1000, cant_disponible:1000, cant_comprometida:0} ).subscribe(() => {
+      this.disponibilidadService.update(dispo.id, {...dispo, cant_fisica: 1000, cant_disponible:1000, cant_comprometida:0} ).pipe(takeUntil(this.destroy$)).subscribe(() => {
         setTimeout(() => {
           window.location.reload();
         }, 600)

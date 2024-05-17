@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { MaestroArticulosService } from '../../../../services/maestro-articulos.service';
 import { PedidoProduccionService } from '../../../../services/pedido-produccion.service';
 import { MesasService } from '../../../../services/mesas.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-crear-editar-pedido-produccion',
@@ -22,6 +23,7 @@ export class CrearEditarPedidoProduccionComponent {
   listMesas: any[] = []
   entidad:any
   agregarPedido:any
+  private destroy$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -57,6 +59,11 @@ export class CrearEditarPedidoProduccionComponent {
     
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   addReceta() {
     this.recetaData = {
       insumos: this.selectedEntities.map(entity => ({ id: entity.id, cantidad: entity.cantidad })),
@@ -68,12 +75,12 @@ export class CrearEditarPedidoProduccionComponent {
     if (this.id !== 0) {
       try {
         if(this.agregarPedido){
-          this.pedidoProduccionService.agregarPedido(this.id,{...this.recetaData, estado: this.entidad.estado}).subscribe(() => {
+          this.pedidoProduccionService.agregarPedido(this.id,{...this.recetaData, estado: this.entidad.estado}).pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.router.navigate(['admin/mesas']);
             this.toastr.success('Pedido Actualizado');
           });
         }else{
-          this.pedidoProduccionService.update(this.id, {...this.recetaData, estado: this.entidad.estado}).subscribe(() => {
+          this.pedidoProduccionService.update(this.id, {...this.recetaData, estado: this.entidad.estado}).pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.router.navigate(['admin/mesas']);
             this.toastr.success('Pedido Actualizado');
           });
@@ -84,7 +91,7 @@ export class CrearEditarPedidoProduccionComponent {
       }
     } else {
       try {
-        this.pedidoProduccionService.create({...this.recetaData, estado: 'PENDIENTE'}).subscribe(() => {
+        this.pedidoProduccionService.create({...this.recetaData, estado: 'PENDIENTE'}).pipe(takeUntil(this.destroy$)).subscribe(() => {
           this.router.navigate(['admin/mesas']);
           this.toastr.success('Pedido Creado Exitosamente');
         });
@@ -115,7 +122,7 @@ export class CrearEditarPedidoProduccionComponent {
 
   loadAllEntities() {
     if(this.id !== 0){
-      this.maestroArticulosService.getAll().subscribe(
+      this.maestroArticulosService.getAll().pipe(takeUntil(this.destroy$)).subscribe(
         (maestros: any[]) => {
           this.listMeaesto = maestros.filter(maestro => maestro.tipo_articulo.description !== 'Insumos');
         },
@@ -124,7 +131,7 @@ export class CrearEditarPedidoProduccionComponent {
         }
       );
   
-      this.mesasService.getAll().subscribe(
+      this.mesasService.getAll().pipe(takeUntil(this.destroy$)).subscribe(
         (mesas: any[]) => {
           this.listMesas = mesas;
         },
@@ -133,7 +140,7 @@ export class CrearEditarPedidoProduccionComponent {
         }
       );
     } else {
-      this.maestroArticulosService.getAll().subscribe(
+      this.maestroArticulosService.getAll().pipe(takeUntil(this.destroy$)).subscribe(
         (maestros: any[]) => {
           this.listMeaesto = maestros.filter(maestro => maestro.tipo_articulo.description !== 'Insumos');
         },
@@ -142,7 +149,7 @@ export class CrearEditarPedidoProduccionComponent {
         }
       );
   
-      this.mesasService.getAll().subscribe(
+      this.mesasService.getAll().pipe(takeUntil(this.destroy$)).subscribe(
         (mesas: any[]) => {
           this.listMesas = mesas.filter(mesa => mesa.maestro_articulos.length === 0);
         },
@@ -157,7 +164,7 @@ export class CrearEditarPedidoProduccionComponent {
   loadSelectedProducts() {
     if (this.id) {
       if(!this.agregarPedido){
-        this.mesasService.getById(this.id).subscribe(
+        this.mesasService.getById(this.id).pipe(takeUntil(this.destroy$)).subscribe(
           (res: any) => {
             this.entidad = res
             if (res.maestro_articulos && res.maestro_articulos.length > 0) {
@@ -193,7 +200,7 @@ export class CrearEditarPedidoProduccionComponent {
   
         
       }else{
-        this.mesasService.getById(this.id).subscribe(
+        this.mesasService.getById(this.id).pipe(takeUntil(this.destroy$)).subscribe(
           (res: any) => {
             this.entidad = res;
         

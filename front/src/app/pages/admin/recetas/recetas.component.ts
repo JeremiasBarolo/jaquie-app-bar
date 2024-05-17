@@ -6,7 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { MaestroArticulosService } from '../../../services/maestro-articulos.service';
 import { TipoArticulosService } from '../../../services/tipo-articulos.service';
 import { DisponibilidadArticulosService } from '../../../services/disponibilidad-articulos.service';
-import { reduce } from 'rxjs';
+import { Subject, reduce, takeUntil } from 'rxjs';
 import { RecetasService } from '../../../services/recetas.service';
 import { BebidasService } from '../../../services/bebidas.service';
 import { Router } from '@angular/router';
@@ -41,7 +41,7 @@ export class RecetasComponent {
   dataModal:any={}
   cantidadNueva: any
   tipoRecetaSeleccionada: string | undefined;
-  
+  private destroy$ = new Subject<void>(); 
 
 
   constructor(
@@ -59,7 +59,7 @@ export class RecetasComponent {
 
   ngOnInit(): void {
 
-      this.maestroArticulosService.getAll().subscribe(maestros => {
+      this.maestroArticulosService.getAll().pipe(takeUntil(this.destroy$)).subscribe(maestros => {
         maestros.forEach(maestro => {
           if(maestro.tipo_articulo.description === 'Productos Elaborados'){
             this.listMaestro.push(maestro)
@@ -67,15 +67,15 @@ export class RecetasComponent {
         })
         
       })
-      this.recetasService.getAll().subscribe(data => {
+      this.recetasService.getAll().pipe(takeUntil(this.destroy$)).subscribe(data => {
         this.listRecetas = data;
       })
 
-      this.bebidasService.getAll().subscribe(data => {
+      this.bebidasService.getAll().pipe(takeUntil(this.destroy$)).subscribe(data => {
         this.listBebidas = data
       })
 
-      this.disponibilidadService.getAll().subscribe(data => {
+      this.disponibilidadService.getAll().pipe(takeUntil(this.destroy$)).subscribe(data => {
         this.listDisponibilidad = data;
       })
 
@@ -91,6 +91,10 @@ export class RecetasComponent {
       });
 
       
+  }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
 
@@ -123,7 +127,7 @@ export class RecetasComponent {
 
   // <============ Eliminar Tipo ==========>
   RecetaArticulo(){
-    this.recetasService.delete(this.EntidadEliminar.id).subscribe(() => {
+    this.recetasService.delete(this.EntidadEliminar.id).pipe(takeUntil(this.destroy$)).subscribe(() => {
       setTimeout(() => {
         window.location.reload();
       }, 600)
@@ -134,7 +138,7 @@ export class RecetasComponent {
 
   // <============ Eliminar Tipo ==========>
     eliminarBebida(){
-      this.bebidasService.delete(this.EntidadEliminar.id).subscribe(() => {
+      this.bebidasService.delete(this.EntidadEliminar.id).pipe(takeUntil(this.destroy$)).subscribe(() => {
         setTimeout(() => {
           window.location.reload();
         }, 600)

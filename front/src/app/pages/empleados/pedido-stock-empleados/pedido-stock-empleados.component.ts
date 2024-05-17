@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PedidoStockService } from '../../../services/pedido-stock.service';
 import { MaestroArticulosService } from '../../../services/maestro-articulos.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-pedido-stock-empleados',
@@ -28,6 +29,7 @@ export class PedidoStockEmpleadosComponent {
   depositos: any[] = [] 
   selectedDepositoId: number | undefined;
   pedidoNuevo: any
+  private destroy$ = new Subject<void>();
 
   constructor(
     private pedidoStockService: PedidoStockService,
@@ -49,11 +51,11 @@ export class PedidoStockEmpleadosComponent {
 
 
   ngOnInit(): void {
-    this.pedidoStockService.getAll().subscribe(data =>{
+    this.pedidoStockService.getAll().pipe(takeUntil(this.destroy$)).subscribe(data =>{
       this.listPedido = data
     });
 
-    this.maestroService.getAll().subscribe(maestros => {
+    this.maestroService.getAll().pipe(takeUntil(this.destroy$)).subscribe(maestros => {
       maestros.forEach(maestro => {
         if(maestro.tipo_articulo.description === 'Insumos'){
           this.listMaestro.push(maestro)
@@ -61,6 +63,11 @@ export class PedidoStockEmpleadosComponent {
       })
       
     })
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   editarPedido(card: any) {  
@@ -81,7 +88,7 @@ export class PedidoStockEmpleadosComponent {
     }
 
     if(this.DataArticulos.editar === true){
-      this.pedidoStockService.update(this.DataArticulos.id, this.pedidoNuevo).subscribe(() => {
+      this.pedidoStockService.update(this.DataArticulos.id, this.pedidoNuevo).pipe(takeUntil(this.destroy$)).subscribe(() => {
         setTimeout(() => {
           window.location.reload();
         }, 600)
@@ -89,7 +96,7 @@ export class PedidoStockEmpleadosComponent {
       });
      } else{
       try {
-        this.pedidoStockService.create(this.pedidoNuevo).subscribe(() => {
+        this.pedidoStockService.create(this.pedidoNuevo).pipe(takeUntil(this.destroy$)).subscribe(() => {
           setTimeout(() => {
             window.location.reload();
           }, 600)
@@ -111,7 +118,7 @@ export class PedidoStockEmpleadosComponent {
 
   SumarPedido(pedido: any) {
     try {
-      this.pedidoStockService.create({...pedido, sumarCantidades: true}).subscribe(() => {
+      this.pedidoStockService.create({...pedido, sumarCantidades: true}).pipe(takeUntil(this.destroy$)).subscribe(() => {
      
         
         
@@ -164,7 +171,7 @@ calcularSubtotalGeneral(): number {
 
 
 eliminarPedido(id?: number){
-  this.pedidoStockService.delete(id!).subscribe(() => {
+  this.pedidoStockService.delete(id!).pipe(takeUntil(this.destroy$)).subscribe(() => {
     this.toastr.success('Entidad eliminado exitosamente')
     setTimeout(() => {
       window.location.reload();

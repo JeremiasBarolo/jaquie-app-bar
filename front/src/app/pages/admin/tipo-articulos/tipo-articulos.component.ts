@@ -4,6 +4,7 @@ import { ConversionUmService } from '../../../services/conversion-um.service';
 import {NgIf} from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-tipo-articulos',
@@ -27,6 +28,7 @@ export class TipoArticulosComponent implements OnInit{
     editar:false
   }
   EntidadEliminar:any
+  private destroy$ = new Subject<void>();
 
 
   constructor(
@@ -41,13 +43,13 @@ export class TipoArticulosComponent implements OnInit{
 
   ngOnInit(): void {
 
-      this.conversionUmService.getAll().subscribe(data => {
+      this.conversionUmService.getAll().pipe(takeUntil(this.destroy$)).subscribe(data => {
         this.conversionUm = data;
         this.filteredUnidades = [...this.conversionUm];
 
       })
 
-      this.tipoArticulosService.getAll().subscribe(data => {
+      this.tipoArticulosService.getAll().pipe(takeUntil(this.destroy$)).subscribe(data => {
         this.tipoArticulos = data;
         this.filteredTipo = [...this.tipoArticulos];
       })
@@ -62,6 +64,11 @@ export class TipoArticulosComponent implements OnInit{
         cant_principal: ['',Validators.required],
         cant_secundaria: ['',Validators.required],
       });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   editarTipo(card: any) {  
@@ -96,7 +103,7 @@ export class TipoArticulosComponent implements OnInit{
       description: this.tipoForm.value.description
     }
    if(this.DataArticulos.editar === true){
-    this.tipoArticulosService.update(this.DataArticulos.id, this.tipoArtiuculoNuevo).subscribe(() => {
+    this.tipoArticulosService.update(this.DataArticulos.id, this.tipoArtiuculoNuevo).pipe(takeUntil(this.destroy$)).subscribe(() => {
       setTimeout(() => {
         window.location.reload();
       }, 600)
@@ -104,7 +111,7 @@ export class TipoArticulosComponent implements OnInit{
     });
    } else{
     try {
-      this.tipoArticulosService.create(this.tipoArtiuculoNuevo).subscribe(() => {
+      this.tipoArticulosService.create(this.tipoArtiuculoNuevo).pipe(takeUntil(this.destroy$)).subscribe(() => {
         setTimeout(() => {
           window.location.reload();
         }, 600)
@@ -122,7 +129,7 @@ export class TipoArticulosComponent implements OnInit{
 
   // <============ Eliminar Tipo ==========>
   EliminarArticulo(){
-    this.tipoArticulosService.delete(this.EntidadEliminar.id).subscribe(() => {
+    this.tipoArticulosService.delete(this.EntidadEliminar.id).pipe(takeUntil(this.destroy$)).subscribe(() => {
       setTimeout(() => {
         window.location.reload();
       }, 600)
@@ -140,7 +147,7 @@ export class TipoArticulosComponent implements OnInit{
       cant_secundaria: this.conversionForm.value.cant_secundaria,
     }
    if(this.DataConversion.editar === true){
-    this.conversionUmService.update(this.DataConversion.id, this.conversionNuevo).subscribe(() => {
+    this.conversionUmService.update(this.DataConversion.id, this.conversionNuevo).pipe(takeUntil(this.destroy$)).subscribe(() => {
       setTimeout(() => {
         window.location.reload();
       }, 600)
@@ -149,7 +156,7 @@ export class TipoArticulosComponent implements OnInit{
     });
    } else{
     try {
-      this.conversionUmService.create(this.conversionNuevo).subscribe(() => {
+      this.conversionUmService.create(this.conversionNuevo).pipe(takeUntil(this.destroy$)).subscribe(() => {
         setTimeout(() => {
           window.location.reload();
         }, 600)
@@ -167,7 +174,7 @@ export class TipoArticulosComponent implements OnInit{
 
  // <============ Eliminar Conversion ==========>
   EliminarConversion(){
-    this.conversionUmService.delete(this.EntidadEliminar.id).subscribe(() => {
+    this.conversionUmService.delete(this.EntidadEliminar.id).pipe(takeUntil(this.destroy$)).subscribe(() => {
       setTimeout(() => {
         window.location.reload();
       }, 600)

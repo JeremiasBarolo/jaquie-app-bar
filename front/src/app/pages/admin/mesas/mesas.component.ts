@@ -7,6 +7,7 @@ import { LoginComponent } from '../../../auth/login/login.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EstadisticaService } from '../../../services/estadistica.service';
 import { PedidoProduccionService } from '../../../services/pedido-produccion.service';
+import { Subject, takeUntil } from 'rxjs';
 
 
 @Component({
@@ -24,6 +25,7 @@ export class MesasComponent implements OnInit{
   depositos:any[] = []
   form!: FormGroup;
 
+
   cardData: any = {
     name: ''
   }
@@ -35,6 +37,7 @@ export class MesasComponent implements OnInit{
   costoTotal: number = 0;
   accion:any = 'agregarPedido'
   idAccion:any
+  private destroy$ = new Subject<void>();
 
 
   constructor(
@@ -57,7 +60,7 @@ export class MesasComponent implements OnInit{
      }
 
   ngOnInit(): void {
-    this.mesasService.getAll().subscribe((data: any) => {
+    this.mesasService.getAll().pipe(takeUntil(this.destroy$)).subscribe((data: any) => {
       console.log(data);
       
       data.forEach(
@@ -80,6 +83,10 @@ export class MesasComponent implements OnInit{
     
     
   }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
 cambiarEstado(id?: number, pedido?: any, estado?: string, devolverInsumos?: any, selectedId?:number) {
   if (id){
@@ -95,7 +102,7 @@ cambiarEstado(id?: number, pedido?: any, estado?: string, devolverInsumos?: any,
         pedido.subtotal = this.calcularSubtotal(pedido);
         
         
-        this.mesasService.update(id, pedido).subscribe(() => {
+        this.mesasService.update(id, pedido).pipe(takeUntil(this.destroy$)).subscribe(() => {
         this.toastr.success(`Mesa ${pedido.name} ${estado} exitosamente`)
         setTimeout(() => {
           window.location.reload();
@@ -115,7 +122,7 @@ cambiarEstado(id?: number, pedido?: any, estado?: string, devolverInsumos?: any,
         pedido.forma_pago = this.form.value.pago
         pedido.subtotal = this.calcularSubtotal(pedido);
 
-        this.mesasService.update(id, {...pedido, estado:"FINALIZADO"}).subscribe(() => {
+        this.mesasService.update(id, {...pedido, estado:"FINALIZADO"}).pipe(takeUntil(this.destroy$)).subscribe(() => {
         this.toastr.success(`Mesa ${pedido.name} ${estado} exitosamente`)
         setTimeout(() => {
           window.location.reload();
@@ -129,7 +136,7 @@ cambiarEstado(id?: number, pedido?: any, estado?: string, devolverInsumos?: any,
 
     }else if (estado === 'DEVOLVER'){
 
-      this.mesasService.update(id, {...pedido}).subscribe(() => {
+      this.mesasService.update(id, {...pedido}).pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.toastr.success(`Mesa ${pedido.name} ${estado} exitosamente`)
       setTimeout(() => {
         window.location.reload();
@@ -138,7 +145,7 @@ cambiarEstado(id?: number, pedido?: any, estado?: string, devolverInsumos?: any,
 
 
     }else{
-      this.mesasService.update(id, {...pedido, devolverInsumos:devolverInsumos}).subscribe(() => {
+      this.mesasService.update(id, {...pedido, devolverInsumos:devolverInsumos}).pipe(takeUntil(this.destroy$)).subscribe(() => {
         this.toastr.success(`Mesa ${pedido.name} ${estado} exitosamente`)
         setTimeout(() => {
           window.location.reload();
@@ -160,7 +167,7 @@ guardarMesa(finalizar?:any){
 
  
 
-  this.mesasService.create({...this.recetaData, forma_pago: this.form.value.pago}).subscribe(() => {
+  this.mesasService.create({...this.recetaData, forma_pago: this.form.value.pago}).pipe(takeUntil(this.destroy$)).subscribe(() => {
     this.toastr.success('Mesa creada exitosamente');
     setTimeout(() => {
       window.location.reload();
@@ -197,7 +204,7 @@ calcularSubtotal(ventas: any) {
 }
 
 cerrarCaja(){
-  this.estadisticaService.create({cerrarCaja: true}).subscribe(
+  this.estadisticaService.create({cerrarCaja: true}).pipe(takeUntil(this.destroy$)).subscribe(
     (response) => {
      
       if (response && response.recaudacion !== undefined) {
@@ -222,7 +229,7 @@ agregarPedido(entidad:any){
 
 traerPedidosMesas() {
   this.listComiendo.forEach((mesa) => {
-    this.pedidoProduccionService.traerPedidos(mesa.id).subscribe(
+    this.pedidoProduccionService.traerPedidos(mesa.id).pipe(takeUntil(this.destroy$)).subscribe(
       (pedidos: any[]) => {
         
         mesa.pedidoFinalizado = mesa.pedidoFinalizado || [];
@@ -244,7 +251,7 @@ traerPedidosMesas() {
   });
 
   this.listFinalizado.forEach((mesa) => {
-    this.pedidoProduccionService.traerPedidos(mesa.id).subscribe(
+    this.pedidoProduccionService.traerPedidos(mesa.id).pipe(takeUntil(this.destroy$)).subscribe(
       (pedidos: any[]) => {
         
         mesa.pedidoFinalizado = mesa.pedidoFinalizado || [];
@@ -266,7 +273,7 @@ traerPedidosMesas() {
 
 
 devolverPedido(){
- this.mesasService.devolverPedido(this.idAccion).subscribe(
+ this.mesasService.devolverPedido(this.idAccion).pipe(takeUntil(this.destroy$)).subscribe(
     (response) => {
       if (response) {
         this.toastr.success('Pedido devuelto exitosamente');
@@ -283,7 +290,7 @@ devolverPedido(){
 }
 
 sumarPedido(){
-this.mesasService.sumarPedido(this.idAccion).subscribe(
+this.mesasService.sumarPedido(this.idAccion).pipe(takeUntil(this.destroy$)).subscribe(
   (response) => {
     if (response) {
       this.toastr.success('Pedido sumado exitosamente');

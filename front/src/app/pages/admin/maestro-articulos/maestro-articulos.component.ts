@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MaestroArticulosService } from '../../../services/maestro-articulos.service';
 import { TipoArticulosService } from '../../../services/tipo-articulos.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-maestro-articulos',
@@ -36,6 +37,7 @@ export class MaestroArticulosComponent implements OnInit {
   }
 
   filteredMaestro: any[] =[]
+  private destroy$ = new Subject<void>();
   
 
 
@@ -52,15 +54,15 @@ export class MaestroArticulosComponent implements OnInit {
 
   ngOnInit(): void {
 
-      this.maestroArticulosService.getAll().subscribe(data => {
+      this.maestroArticulosService.getAll().pipe(takeUntil(this.destroy$)).subscribe(data => {
         this.listMaestro = data;
         this.filteredMaestro = [...this.listMaestro];
 
       })
-      this.tipoArticulosService.getAll().subscribe(data => {
+      this.tipoArticulosService.getAll().pipe(takeUntil(this.destroy$)).subscribe(data => {
         this.tiposArticulos = data;
       })
-      this.conversionUmService.getAll().subscribe(data => {
+      this.conversionUmService.getAll().pipe(takeUntil(this.destroy$)).subscribe(data => {
         this.conversionesUM = data;
       })
 
@@ -74,6 +76,11 @@ export class MaestroArticulosComponent implements OnInit {
       });
 
       
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
 
@@ -110,7 +117,7 @@ export class MaestroArticulosComponent implements OnInit {
       conversionUM: this.maestroForm.value.conversionUM,
     }
    if(this.DataArticulos.editar === true){
-    this.maestroArticulosService.update(this.DataArticulos.id, this.maestroNuevo).subscribe(() => {
+    this.maestroArticulosService.update(this.DataArticulos.id, this.maestroNuevo).pipe(takeUntil(this.destroy$)).subscribe(() => {
       setTimeout(() => {
         window.location.reload();
       }, 600)
@@ -118,7 +125,7 @@ export class MaestroArticulosComponent implements OnInit {
     });
    } else{
     try {
-      this.maestroArticulosService.create(this.maestroNuevo).subscribe(() => {
+      this.maestroArticulosService.create(this.maestroNuevo).pipe(takeUntil(this.destroy$)).subscribe(() => {
         setTimeout(() => {
           window.location.reload();
         }, 600)
@@ -136,7 +143,7 @@ export class MaestroArticulosComponent implements OnInit {
 
   // <============ Eliminar Tipo ==========>
   EliminarArticulo(){
-    this.maestroArticulosService.delete(this.EntidadEliminar.id).subscribe(() => {
+    this.maestroArticulosService.delete(this.EntidadEliminar.id).pipe(takeUntil(this.destroy$)).subscribe(() => {
       setTimeout(() => {
         window.location.reload();
       }, 600)

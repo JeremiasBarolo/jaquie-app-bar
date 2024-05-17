@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { DisponibilidadArticulosService } from '../../../../services/disponibilidad-articulos.service';
 import { MaestroArticulosService } from '../../../../services/maestro-articulos.service';
 import { RecetasService } from '../../../../services/recetas.service';
@@ -24,7 +24,7 @@ export class CrearEditarComponent {
   listDisponibilidad: any[] = []
   recetaData: any = {}
   accion: string;
- 
+  private destroy$ = new Subject<void>();
 
   constructor(
     private disponibilidadService: DisponibilidadArticulosService,
@@ -69,6 +69,11 @@ export class CrearEditarComponent {
     
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   addReceta() {
 
     
@@ -93,7 +98,7 @@ export class CrearEditarComponent {
         
 
         try {
-          this.bebidasService.update(this.id, this.recetaData).subscribe(() => {
+          this.bebidasService.update(this.id, this.recetaData).pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.router.navigate(['admin/recetas']);
             this.toastr.success('Receta Actualizada');
           });
@@ -103,7 +108,7 @@ export class CrearEditarComponent {
       } else {
         try {
           console.log(this.recetaData.insumos);
-          this.bebidasService.create(this.recetaData).subscribe(() => {
+          this.bebidasService.create(this.recetaData).pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.router.navigate(['admin/recetas']);
             this.toastr.success('Receta Creada Exitosamente');
           });
@@ -120,7 +125,7 @@ export class CrearEditarComponent {
 
       if (this.id !== 0) {
         try {
-          this.recetasService.update(this.id, this.recetaData).subscribe(() => {
+          this.recetasService.update(this.id, this.recetaData).pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.router.navigate(['admin/recetas']);
             this.toastr.success('Receta Actualizada');
           });
@@ -130,7 +135,7 @@ export class CrearEditarComponent {
       } else {
         try {
           console.log(this.recetaData.insumos);
-          this.recetasService.create(this.recetaData).subscribe(() => {
+          this.recetasService.create(this.recetaData).pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.router.navigate(['admin/recetas']);
             this.toastr.success('Receta Creada Exitosamente');
           });
@@ -182,7 +187,7 @@ export class CrearEditarComponent {
 
   loadAllEntities() {
     if(this.accion === 'receta'){
-      this.maestroArticulosService.getAll().subscribe(
+      this.maestroArticulosService.getAll().pipe(takeUntil(this.destroy$)).subscribe(
         (maestros: any[]) => {
           
           this.listMaestro = maestros.filter(maestro => 
@@ -200,7 +205,7 @@ export class CrearEditarComponent {
       );
 
        
-      this.disponibilidadService.getAll().subscribe(
+      this.disponibilidadService.getAll().pipe(takeUntil(this.destroy$)).subscribe(
         (data: any[]) => {
           console.log(data);
           
@@ -213,7 +218,7 @@ export class CrearEditarComponent {
 
 
     }else if(this.accion === 'bebida'){
-      this.maestroArticulosService.getAll().subscribe(
+      this.maestroArticulosService.getAll().pipe(takeUntil(this.destroy$)).subscribe(
         (maestros: any[]) => {
 
             this.listMaestro = maestros.filter(maestro => maestro.tipo_articulo.description !== 'Productos Elaborados' && maestro.tipo_articulo.description !== 'Insumos' );
@@ -246,7 +251,7 @@ export class CrearEditarComponent {
   }
 
   loadBebidaData(id: number) {
-    this.bebidasService.getById(id).subscribe((data) => {
+    this.bebidasService.getById(id).pipe(takeUntil(this.destroy$)).subscribe((data) => {
 
       if(this.id !== 0 ){
         this.form.patchValue({
@@ -268,7 +273,7 @@ export class CrearEditarComponent {
       componentes = componentes.filter(item => item.componente !== null && item.cantidad !== null);
 
       for(const insumo of componentes){
-        this.maestroArticulosService.getById(insumo.componente).subscribe((maestro)=>{
+        this.maestroArticulosService.getById(insumo.componente).pipe(takeUntil(this.destroy$)).subscribe((maestro)=>{
           this.listDisponibilidad = this.listDisponibilidad.filter(disp => disp.maestro_articulo.id === insumo.componente);
             this.selectedEntities.push({
               id: maestro.id,
@@ -294,7 +299,7 @@ export class CrearEditarComponent {
   
   loadSelectedProducts() {
     if (this.id !== 0) {
-      this.maestroArticulosService.getById(this.id).subscribe(
+      this.maestroArticulosService.getById(this.id).pipe(takeUntil(this.destroy$)).subscribe(
         (res: any) => {
           if (res.receta && res.receta.length > 0) {
             
@@ -337,7 +342,7 @@ export class CrearEditarComponent {
   }
 
   getBebida(id:number){
-    this.bebidasService.getById(id).subscribe((data)=>{
+    this.bebidasService.getById(id).pipe(takeUntil(this.destroy$)).subscribe((data)=>{
         this.form.patchValue({
             maestro: data.nombre,
         });

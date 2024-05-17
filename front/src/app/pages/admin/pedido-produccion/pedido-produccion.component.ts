@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MaestroArticulosService } from '../../../services/maestro-articulos.service';
 import { PedidoProduccionService } from '../../../services/pedido-produccion.service';
 import { MesasService } from '../../../services/mesas.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-pedido-produccion',
@@ -21,6 +22,7 @@ export class PedidoProduccionComponent {
   cardData: any = {
     name: ''
   }
+  private destroy$ = new Subject<void>();
   DataArticulos: any={
     editar:false
   }
@@ -54,11 +56,11 @@ export class PedidoProduccionComponent {
 
 
   ngOnInit(): void {
-    this.pedidoProduccion.getAll().subscribe(data =>{
+    this.pedidoProduccion.getAll().pipe(takeUntil(this.destroy$)).subscribe(data =>{
       this.listPedido = data
     });
 
-    this.mesasService.getAll().subscribe(data => {
+    this.mesasService.getAll().pipe(takeUntil(this.destroy$)).subscribe(data => {
       this.listMesas = data.filter(mesa => 
         mesa.maestro_articulos.some((item: { pedido_produccion: { estado: string; }; }) =>
           item.pedido_produccion.estado !== "FINALIZADO"
@@ -67,6 +69,11 @@ export class PedidoProduccionComponent {
       this.filteredPedidos = this.listMesas;
     });
 
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   editarPedido(card: any) {
@@ -124,7 +131,7 @@ eliminarPedido(id?: number, pedido?:any){
  if(pedido.estado ==="COMIENDO" || pedido.estado ==="FINALIZADO" ){
   this.toastr.error(`No se puede eliminar el pedido, este esta ${pedido.estado}`)
  }else{
-  this.pedidoProduccion.delete(id!).subscribe(() => {
+  this.pedidoProduccion.delete(id!).pipe(takeUntil(this.destroy$)).subscribe(() => {
     setTimeout(() => {
       window.location.reload();
     }, 600)

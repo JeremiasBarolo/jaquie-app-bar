@@ -7,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Table } from 'primeng/table';
 import { PersonasService } from '../../../services/personas.service';
 import { UsuariosService } from '../../../services/usuarios.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-usuarios',
@@ -32,6 +33,7 @@ export class UsuariosComponent {
   EntidadEliminar:any
   @ViewChild('dt')
   table!: Table; 
+  private destroy$ = new Subject<void>();
 
 
   constructor(
@@ -46,12 +48,12 @@ export class UsuariosComponent {
 
   ngOnInit(): void {
 
-      this.usuariosService.getAll().subscribe(data => {
+      this.usuariosService.getAll().pipe(takeUntil(this.destroy$)).subscribe(data => {
         this.usuarios = data;
         this.filteredUsuarios = [...this.usuarios];
       })
 
-      this.personasService.getAll().subscribe(data => {
+      this.personasService.getAll().pipe(takeUntil(this.destroy$)).subscribe(data => {
         this.personas = data;
         this.filteredPersonas = [...this.personas];
       })
@@ -71,6 +73,12 @@ export class UsuariosComponent {
       });
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  
   editarPersona(card: any) {  
       this.DataArticulos = {...card, editar:true};  
       console.log(this.DataArticulos);
@@ -104,7 +112,7 @@ export class UsuariosComponent {
   guardarNuevaPersona(){
     this.tipoArtiuculoNuevo = this.personaForm.value
    if(this.DataArticulos.editar === true){
-    this.personasService.update(this.DataArticulos.id, this.tipoArtiuculoNuevo).subscribe(() => {
+    this.personasService.update(this.DataArticulos.id, this.tipoArtiuculoNuevo).pipe(takeUntil(this.destroy$)).subscribe(() => {
       setTimeout(() => {
         window.location.reload();
       }, 600)
@@ -112,7 +120,7 @@ export class UsuariosComponent {
     });
    } else{
     try {
-      this.personasService.create(this.tipoArtiuculoNuevo).subscribe(() => {
+      this.personasService.create(this.tipoArtiuculoNuevo).pipe(takeUntil(this.destroy$)).subscribe(() => {
         setTimeout(() => {
           window.location.reload();
         }, 600)
@@ -130,7 +138,7 @@ export class UsuariosComponent {
 
   // <============ Eliminar persona ==========>
   EliminarPersona(){
-    this.personasService.delete(this.EntidadEliminar.id).subscribe(() => {
+    this.personasService.delete(this.EntidadEliminar.id).pipe(takeUntil(this.destroy$)).subscribe(() => {
       setTimeout(() => {
         window.location.reload();
       }, 600)
@@ -144,7 +152,7 @@ export class UsuariosComponent {
     this.usuarioNuevo = this.usuarioForm.value
 
    if(this.DataConversion.editar === true){
-    this.usuariosService.update(this.DataConversion.id, this.usuarioNuevo).subscribe(() => {
+    this.usuariosService.update(this.DataConversion.id, this.usuarioNuevo).pipe(takeUntil(this.destroy$)).subscribe(() => {
       setTimeout(() => {
         window.location.reload();
       }, 600)
@@ -153,7 +161,7 @@ export class UsuariosComponent {
     });
    } else{
     try {
-      this.usuariosService.create(this.usuarioNuevo).subscribe(() => {
+      this.usuariosService.create(this.usuarioNuevo).pipe(takeUntil(this.destroy$)).subscribe(() => {
         setTimeout(() => {
           window.location.reload();
         }, 600)
@@ -171,7 +179,7 @@ export class UsuariosComponent {
 
  // <============ Eliminar Usuario ==========>
   EliminarUsuario(){
-    this.usuariosService.delete(this.EntidadEliminar.id).subscribe(() => {
+    this.usuariosService.delete(this.EntidadEliminar.id).pipe(takeUntil(this.destroy$)).subscribe(() => {
       setTimeout(() => {
         window.location.reload();
       }, 600)
