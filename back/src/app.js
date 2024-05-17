@@ -49,6 +49,7 @@ app.use("/bebidas", bebidasRouter)
 app.use("/login", loginRouter)
 app.use("/agregarPedido", agregarPedidoRouter)
 app.use("/traerPedidos", agregarPedidoRouter)
+app.use("/pedidosVenta", agregarPedidoRouter)
 
 
 

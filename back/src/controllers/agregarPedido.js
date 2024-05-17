@@ -9,7 +9,7 @@ const { where } = require('sequelize');
 const agregarPedido = async (req, res) => {
 
     let insumos_recorridos = [];
-    let nashes = []
+    
 
   try {
 
@@ -17,14 +17,14 @@ const agregarPedido = async (req, res) => {
     
     for(const insumo of insumos){
 
-        let nashe = await models.pedido_produccion.create({
+        await models.pedido_produccion.create({
             maestroId: insumo.id,
             cant_requerida: insumo.cantidad,
             ventaId: mesa,
             estado: 'PENDIENTE'
         });
 
-        await nashes.push(nashe)
+        
         
 
         const maestro = await listOnemaestro_articulos(insumo.id);
@@ -107,10 +107,10 @@ const agregarPedido = async (req, res) => {
     }));
     
 
-    return true
+    return res.status(200).json({message: 'Pedido Actualizado'})
     
   } catch (err) {
-    res.status(500).json({ action: 'updateconversion_UM', error: err.message });
+    res.status(500).json({ action: 'agregarPedido', error: err.message });
   }
 };
 
@@ -123,6 +123,7 @@ const traerPedidos = async (req, res) => {
                 ventaId: req.params.id
             
             },
+            attributes: ['id', 'cant_requerida', 'estado'],
             include: [
                 {
                     model: models.maestro_articulos,
@@ -135,6 +136,7 @@ const traerPedidos = async (req, res) => {
         
             const pedidosFormateados = await Promise.all(pedidos.map(async (pedido) => {
                 return {
+                id: pedido.id,
                 name: pedido.maestro_articulo.descripcion,
                 costo_unitario: pedido.maestro_articulo.costo_unitario,
                 cant_requerida: pedido.cant_requerida,
@@ -147,10 +149,169 @@ const traerPedidos = async (req, res) => {
     }
 }
 
+const devolverPedido = async (req, res) => {
+    try {
+        const pedido = await models.pedido_produccion.findOne({where:{id:req.params.id}});
+
+        const maestro = await listOnemaestro_articulos(pedido.maestroId);
+        
+        if (maestro.tipo_articulo.description === "Productos Elaborados") {
+            await Promise.all(maestro.receta.map(async receta => {
+                const disponibilidad = await listOnedisponibilidad_articulos(receta.disponibilidad_articulo.id);
+                let cant_exacta = receta.cant_necesaria * pedido.cant_requerida
+                await disponibilidad.update({
+                        id: disponibilidad.id,
+                        cant_disponible: disponibilidad.cant_disponible + cant_exacta,
+                        cant_comprometida: disponibilidad.cant_comprometida - cant_exacta,
+                        cant_fisica: disponibilidad.cant_fisica,
+                    });
+                
+                
+            }));
+
+        }else if(maestro.tipo_articulo.description === "Bebidas"){
+           
+                const maestroReal = await models.Bebidas.findOne({
+                    where: {nombre: maestro.id}
+                });
+                
+                let componentes = await traerComponentesDeBebida(maestroReal)
+
+                await Promise.all(componentes.map(async receta => {
+
+                    let disponibilidad = await models.disponibilidad_articulos.findOne({
+                        where:  { articuloId: receta.componente }
+                    })
+
+                    //  <=================== calculamos cantidad exacta ======================>
+                    let alto = maestroReal.cantidadTotalRecipiente * receta.cantidad
+                    let total = alto / 100
+
+                    let cant_principal_exacta = total / 1000 
+
+                    await disponibilidad.update({
+                        
+                        cant_disponible: disponibilidad.cant_disponible + cant_principal_exacta,
+                        cant_comprometida: disponibilidad.cant_comprometida - cant_principal_exacta,
+                        cant_fisica: disponibilidad.cant_fisica,
+                    })
+
+                    
+
+                }));
+
+                
+
+            
+        } else {
+            const disponibilidad = await models.disponibilidad_articulos.findOne({ where: { articuloId: maestro.id } });
+            await disponibilidad.update({
+                id: disponibilidad.id,
+                cant_disponible: disponibilidad.cant_disponible + pedido.cant_requerida,
+                cant_comprometida: disponibilidad.cant_comprometida - pedido.cant_requerida,
+                cant_fisica: disponibilidad.cant_fisica,
+            });
+            
+            
+        }
+
+
+        await models.pedido_produccion.destroy({
+            where:{ id: req.params.id, maestroId: pedido.maestroId, ventaId: pedido.ventaId, estado: 'PENDIENTE'}
+        });
+  
+        res.status(200).json({message: 'Ingredientes devueltos de manera correcta.'});
+    } catch (err) {
+        res.status(500).json({ action: 'traerPedidos', error: err.message });
+    }
+}
+
+const sumarPedido = async (req, res) => {
+
+    try {
+        const pedido = await models.pedido_produccion.findOne({where:{id:req.params.id}});
+
+        const maestro = await listOnemaestro_articulos(pedido.maestroId);
+        
+        if (maestro.tipo_articulo.description === "Productos Elaborados") {
+            await Promise.all(maestro.receta.map(async receta => {
+                const disponibilidad = await listOnedisponibilidad_articulos(receta.disponibilidad_articulo.id);
+                let cant_exacta = receta.cant_necesaria * pedido.cant_requerida
+                await disponibilidad.update({
+                        id: disponibilidad.id,
+                        cant_fisica: disponibilidad.cant_fisica - cant_exacta,
+                    });
+                
+                
+            }));
+
+        }else if(maestro.tipo_articulo.description === "Bebidas"){
+           
+                const maestroReal = await models.Bebidas.findOne({
+                    where: {nombre: maestro.id}
+                });
+                
+                let componentes = await traerComponentesDeBebida(maestroReal)
+
+                await Promise.all(componentes.map(async receta => {
+
+                    let disponibilidad = await models.disponibilidad_articulos.findOne({
+                        where:  { articuloId: receta.componente }
+                    })
+
+                    //  <=================== calculamos cantidad exacta ======================>
+                    let alto = maestroReal.cantidadTotalRecipiente * receta.cantidad
+                    let total = alto / 100
+
+                    let cant_principal_exacta = total / 1000 
+
+                    await disponibilidad.update({
+                        cant_fisica: disponibilidad.cant_fisica - (cant_principal_exacta * pedido.cant_requerida)
+                    })
+
+                    
+
+                }));
+
+                
+
+            
+        } else {
+            const disponibilidad = await models.disponibilidad_articulos.findOne({ where: { articuloId: maestro.id } });
+            await disponibilidad.update({
+                cant_fisica: disponibilidad.cant_fisica - pedido.cant_requerida,
+            });
+            
+            
+        }
+
+
+        let existente = await models.pedido_produccion.findOne({ where: { maestroId: pedido.maestroId, ventaId: pedido.ventaId, estado: 'FINALIZADO' } });
+        if(existente){
+            await existente.update({
+                cant_requerida: existente.cant_requerida + pedido.cant_requerida,
+            });
+            await models.pedido_produccion.destroy({
+                where:{ id: req.params.id, maestroId: pedido.maestroId, ventaId: pedido.ventaId, estado: 'PENDIENTE'}
+            });
+            
+        }else{
+            await pedido.update({
+                estado: "FINALIZADO",
+            });
+        }
+        
+  
+        return res.status(200).json({message: 'Pedido Actualizado'});
+    } catch (err) {
+        res.status(500).json({ action: 'sumarPedido', error: err.message }); 
+    }
+}
+
 
 
 
 
 module.exports = {
-    agregarPedido, traerPedidos
+    agregarPedido, traerPedidos, devolverPedido, sumarPedido
 };

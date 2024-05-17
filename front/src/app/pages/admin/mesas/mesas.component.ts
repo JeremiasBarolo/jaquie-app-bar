@@ -34,6 +34,7 @@ export class MesasComponent implements OnInit{
   recetaData: any;
   costoTotal: number = 0;
   accion:any = 'agregarPedido'
+  idAccion:any
 
 
   constructor(
@@ -106,16 +107,23 @@ cambiarEstado(id?: number, pedido?: any, estado?: string, devolverInsumos?: any,
   
   }
   else if(estado === 'FINALIZADO'){
-      
-    pedido.forma_pago = this.form.value.pago
-    pedido.subtotal = this.calcularSubtotal(pedido);
 
-    this.mesasService.update(id, {...pedido, estado:"FINALIZADO"}).subscribe(() => {
-    this.toastr.success(`Mesa ${pedido.name} ${estado} exitosamente`)
-    setTimeout(() => {
-      window.location.reload();
-    }, 600)
-  })
+    if(pedido.pedidoPreparacion.length !== 0){
+      this.toastr.error(`No puede realizar esta accion. Esta mesa tiene pedido pendientes.`)
+    
+    }else{
+        pedido.forma_pago = this.form.value.pago
+        pedido.subtotal = this.calcularSubtotal(pedido);
+
+        this.mesasService.update(id, {...pedido, estado:"FINALIZADO"}).subscribe(() => {
+        this.toastr.success(`Mesa ${pedido.name} ${estado} exitosamente`)
+        setTimeout(() => {
+          window.location.reload();
+        }, 600)
+      })
+    }
+      
+    
     
 
 
@@ -166,10 +174,10 @@ guardarMesa(finalizar?:any){
   
 showCardDetails(card: any) {  
   this.cardData = card;  
-  console.log(this.cardData);
   let subtotal = this.calcularSubtotal(card) 
   this.cardData.total = subtotal
-  console.log(subtotal);
+
+ 
   
 }
 
@@ -235,10 +243,65 @@ traerPedidosMesas() {
     );
   });
 
+  this.listFinalizado.forEach((mesa) => {
+    this.pedidoProduccionService.traerPedidos(mesa.id).subscribe(
+      (pedidos: any[]) => {
+        
+        mesa.pedidoFinalizado = mesa.pedidoFinalizado || [];
+        pedidos.forEach((pedido) => {
+          
+            mesa.pedidoFinalizado.push(pedido);
+          
+        });
+      },
+      (error: any) => {
+        console.error('Error al obtener los pedidos:', error);
+      }
+    );
+  });
+
   console.log(this.listComiendo);
   
 }
 
+
+devolverPedido(){
+ this.mesasService.devolverPedido(this.idAccion).subscribe(
+    (response) => {
+      if (response) {
+        this.toastr.success('Pedido devuelto exitosamente');
+        setTimeout(() => {
+          window.location.reload();
+        }, 600);
+      }
+    },
+    (error) => {
+      console.error('Error al devolver el pedido:', error);
+      this.toastr.error('Error al devolver el pedido');
+    }
+  );
+}
+
+sumarPedido(){
+this.mesasService.sumarPedido(this.idAccion).subscribe(
+  (response) => {
+    if (response) {
+      this.toastr.success('Pedido sumado exitosamente');
+      setTimeout(() => {
+        window.location.reload();
+      }, 600);
+    }
+  },
+  (error) => {
+    console.error('Error al sumar el pedido:', error);
+    this.toastr.error('Error al sumar el pedido');
+  }
+);
+}
+
+setIdEentidad(id:any){
+  this.idAccion = id
+}
 
 
 

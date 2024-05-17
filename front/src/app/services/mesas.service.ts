@@ -40,4 +40,14 @@ export class MesasService {
   delete(id: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${id}`)
   }
+
+  sumarPedido(id: number): Observable<any> {
+    console.log('ase');
+    
+    return this.http.delete<any>(`http://localhost:8081/pedidosVenta/sumar/${id}`)
+  }
+
+  devolverPedido(id: number): Observable<any> {
+    return this.http.delete<any>(`http://localhost:8081/pedidosVenta/eliminar/${id}`)
+  }
 }

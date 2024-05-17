@@ -111,7 +111,8 @@
         </button>
       </div>
       <div class="modal-body">
-        <p><strong>Forma de Pago:</strong> Sin Definir.</p>
+
+        <p *ngIf="cardData.estado === 'FINALIZADO'"><strong>Forma de Pago:</strong> {{cardData.forma_pago}}</p>
         
 
         <!-- Nav tabs -->
@@ -119,7 +120,7 @@
           <li class="nav-item col-md-6">
             <a class="nav-link active" id="finalizados-tab" data-toggle="tab" href="#finalizados" role="tab" aria-controls="finalizados" aria-selected="true">Pedidos Finalizados</a>
           </li>
-          <li class="nav-item col-md-6">
+          <li class="nav-item col-md-6" *ngIf="cardData.estado === 'COMIENDO'">
             <a class="nav-link bg-warning" id="pendientes-tab" data-toggle="tab" href="#pendientes" role="tab" aria-controls="pendientes" aria-selected="false">
               Pedidos Pendientes
               <i *ngIf="cardData?.pedidoPreparacion?.length" class="fa-solid fa-exclamation-triangle text-danger ml-1" style="font-size: 0.8rem;"></i>
@@ -176,12 +177,12 @@
                     <td>{{item.estado}}</td>
                     <td>
                       <div class="d-inline-block">
-                        <button type="button" data-toggle="modal" data-target="#SumarCantidad" class="btn btn-outline-success btn-sm" aria-label="Editar Tipo">
+                        <button type="button" data-toggle="modal" data-target="#SumarCantidad" (click)="setIdEentidad(item.id)" class="btn btn-outline-success btn-sm" aria-label="Editar Tipo">
                           <i class="fa-solid fa-plus"></i>
                         </button>
                       </div>
                       <div class="d-inline-block ml-2"> 
-                        <button type="button" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#EliminarMaestro" aria-label="Borrar Tipo">
+                        <button type="button" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#devolver" (click)="setIdEentidad(item.id)" aria-label="Borrar Tipo">
                           <i class="fa-solid fa-trash"></i>
                         </button>
                       </div>
@@ -312,6 +313,46 @@
           </div>
           <div class="modal-footer">
             <button type="button" id="agregar" class="btn btn-outline-danger mr-2" (click)="cambiarEstado(cardData.id,cardData, 'DEVOLVER')" > Aceptar</button>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- Modal para cancelar mesa -->
+<div class="modal fade" id="SumarCantidad" tabindex="-1" role="dialog" aria-labelledby="crearMesa" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header bg-warning">
+              <h5 class="modal-title" id="modalCrearTipoLabel">Llego la comida a la mesa? </h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+              <strong>Esta accion debe de realizarse una vez el cliente tenga ya su pedido.</strong>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="agregar" (click)="sumarPedido()" class="btn btn-outline-danger mr-2"> Aceptar</button>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- Modal para cancelar mesa -->
+<div class="modal fade" id="devolver" tabindex="-1" role="dialog" aria-labelledby="crearMesa" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header bg-danger">
+              <h5 class="modal-title" id="modalCrearTipoLabel">Desea cancelar el pedido?</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+              <strong>Recuerde que esta accion devolvera todos los ingredientes del pedido</strong>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="agregar" (click)="devolverPedido()" class="btn btn-outline-danger mr-2"> Aceptar</button>
           </div>
       </div>
   </div>
