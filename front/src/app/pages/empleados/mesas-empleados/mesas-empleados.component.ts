@@ -6,6 +6,7 @@ import { MesasService } from '../../../services/mesas.service';
 import { LoginComponent } from '../../../auth/login/login.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EstadisticaService } from '../../../services/estadistica.service';
+import { PedidoProduccionService } from '../../../services/pedido-produccion.service';
 
 @Component({
   selector: 'app-mesas-empleados',
@@ -13,7 +14,7 @@ import { EstadisticaService } from '../../../services/estadistica.service';
   styleUrl: './mesas-empleados.component.css'
 })
 export class MesasEmpleadosComponent {
-  breadcrumbItems: string[] = ['Mesas'];
+  breadcrumbItems: string[] = ['Mesas','Inicio', 'Mesas'];
   listComiendo: any[] = [];
   listFinalizado: any[] = [];
   listPreparacion: any[] = [];
@@ -31,6 +32,8 @@ export class MesasEmpleadosComponent {
   IdsInsumosCantidad: any[] = []
   recetaData: any;
   costoTotal: number = 0;
+  accion:any = 'agregarPedido'
+  idAccion:any
 
 
   constructor(
@@ -40,7 +43,8 @@ export class MesasEmpleadosComponent {
     private viewport: ViewportScroller,
     private mesasService: MesasService,
     private fb: FormBuilder,
-    private estadisticaService: EstadisticaService
+    private estadisticaService: EstadisticaService,
+    private pedidoProduccionService: PedidoProduccionService
 
 
 
@@ -67,8 +71,13 @@ export class MesasEmpleadosComponent {
         }
       )
     
+      this.traerPedidosMesas()
+    })
+
     
-     })
+
+    
+    
   }
 
 cambiarEstado(id?: number, pedido?: any, estado?: string, devolverInsumos?: any, selectedId?:number) {
@@ -96,17 +105,24 @@ cambiarEstado(id?: number, pedido?: any, estado?: string, devolverInsumos?: any,
 
   
   }
-    else if(estado === 'FINALIZADO'){
-      
-      pedido.forma_pago = this.form.value.pago
-      pedido.subtotal = this.calcularSubtotal(pedido);
+  else if(estado === 'FINALIZADO'){
 
-      this.mesasService.update(id, {...pedido, estado:"FINALIZADO"}).subscribe(() => {
-      this.toastr.success(`Mesa ${pedido.name} ${estado} exitosamente`)
-      setTimeout(() => {
-        window.location.reload();
-      }, 600)
-    })
+    if(pedido.pedidoPreparacion.length !== 0){
+      this.toastr.error(`No puede realizar esta accion. Esta mesa tiene pedido pendientes.`)
+    
+    }else{
+        pedido.forma_pago = this.form.value.pago
+        pedido.subtotal = this.calcularSubtotal(pedido);
+
+        this.mesasService.update(id, {...pedido, estado:"FINALIZADO"}).subscribe(() => {
+        this.toastr.success(`Mesa ${pedido.name} ${estado} exitosamente`)
+        setTimeout(() => {
+          window.location.reload();
+        }, 600)
+      })
+    }
+      
+    
     
 
 
@@ -157,10 +173,10 @@ guardarMesa(finalizar?:any){
   
 showCardDetails(card: any) {  
   this.cardData = card;  
-  console.log(this.cardData);
   let subtotal = this.calcularSubtotal(card) 
   this.cardData.total = subtotal
-  console.log(subtotal);
+
+ 
   
 }
 
@@ -180,14 +196,112 @@ calcularSubtotal(ventas: any) {
 }
 
 cerrarCaja(){
-  this.estadisticaService.create({cerrarCaja: true}).subscribe((res) => {
-    this.toastr.success('Caja cerrada exitosamente');
-    setTimeout(() => {
-      window.location.reload();
-    }, 600)
+  this.estadisticaService.create({cerrarCaja: true}).subscribe(
+    (response) => {
+     
+      if (response && response.recaudacion !== undefined) {
+          this.toastr.success('Caja cerrada exitosamente');
+          setTimeout(() => {
+              window.location.reload();
+          }, 600);
+      }
+  },
+  (error) => {
+    console.log(error.error);
+      this.toastr.error(error.error.error);
+      console.error(error.error);
+  });
+}
+
+agregarPedido(entidad:any){
+    this.router.navigate(['empleados/pedido-produccion', this.accion, entidad.id]);
     
 
-
-  })
 }
+
+traerPedidosMesas() {
+  this.listComiendo.forEach((mesa) => {
+    this.pedidoProduccionService.traerPedidos(mesa.id).subscribe(
+      (pedidos: any[]) => {
+        
+        mesa.pedidoFinalizado = mesa.pedidoFinalizado || [];
+        mesa.pedidoPreparacion = mesa.pedidoPreparacion || [];
+
+        
+        pedidos.forEach((pedido) => {
+          if (pedido.estado === 'FINALIZADO') {
+            mesa.pedidoFinalizado.push(pedido);
+          } else {
+            mesa.pedidoPreparacion.push(pedido);
+          }
+        });
+      },
+      (error: any) => {
+        console.error('Error al obtener los pedidos:', error);
+      }
+    );
+  });
+
+  this.listFinalizado.forEach((mesa) => {
+    this.pedidoProduccionService.traerPedidos(mesa.id).subscribe(
+      (pedidos: any[]) => {
+        
+        mesa.pedidoFinalizado = mesa.pedidoFinalizado || [];
+        pedidos.forEach((pedido) => {
+          
+            mesa.pedidoFinalizado.push(pedido);
+          
+        });
+      },
+      (error: any) => {
+        console.error('Error al obtener los pedidos:', error);
+      }
+    );
+  });
+
+  console.log(this.listComiendo);
+  
+}
+
+
+devolverPedido(){
+ this.mesasService.devolverPedido(this.idAccion).subscribe(
+    (response) => {
+      if (response) {
+        this.toastr.success('Pedido devuelto exitosamente');
+        setTimeout(() => {
+          window.location.reload();
+        }, 600);
+      }
+    },
+    (error) => {
+      console.error('Error al devolver el pedido:', error);
+      this.toastr.error('Error al devolver el pedido');
+    }
+  );
+}
+
+sumarPedido(){
+this.mesasService.sumarPedido(this.idAccion).subscribe(
+  (response) => {
+    if (response) {
+      this.toastr.success('Pedido sumado exitosamente');
+      setTimeout(() => {
+        window.location.reload();
+      }, 600);
+    }
+  },
+  (error) => {
+    console.error('Error al sumar el pedido:', error);
+    this.toastr.error('Error al sumar el pedido');
+  }
+);
+}
+
+setIdEentidad(id:any){
+  this.idAccion = id
+}
+
+
+
 }

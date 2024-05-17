@@ -1,4 +1,4 @@
-<app-title-empleados [titulo]= 'breadcrumbItems' class="mb-3"></app-title-empleados>
+<app-breadcrumbs [titulo]= 'breadcrumbItems' class="mb-3"></app-breadcrumbs>
 
 <div class="container">
   
@@ -8,7 +8,7 @@
           <div class="form-group">
             
             <label for="mesa">Para la Mesa:</label>
-            <select class="form-control col-md-11 pr-2" id="mesa" formControlName="mesa">
+            <select class="form-control col-md-11" id="mesa" formControlName="mesa">
                 <option *ngFor="let mesa of listMesas" [value]="mesa.id">{{mesa.mesa}}</option>
             </select>
             <div *ngIf="form.get('mesa')?.invalid && form.get('mesa')?.touched" class="text-danger">
@@ -18,10 +18,10 @@
         </form>  
         <div class="col-md-6 text-center">
           <h6>Articulos Disponibles</h6>
-          <div class="card mb-" style="height: 550px; overflow-y: auto; border-color: #343a40;">
-            <div class="card-body bg-dark" style="border-color: black; ">
+          <div class="card bg-dark" style="height: 550px; overflow-y: auto;">
+            <div class="card-body bg-dark">
               <ul class="list-group" *ngFor="let entity of listMeaesto">
-                <li class="list-group-item d-flex justify-content-between align-items-center bg-dark" style="border-color: #343a40;">
+                <li class="list-group-item d-flex justify-content-between align-items-center bg-dark">
                   {{ entity.descripcion }}
                   <button class="btn btn-success" (click)="selectedEntity(entity)">Agregar a Pedido</button>
                 </li>
@@ -33,15 +33,15 @@
         <!-- Lista de Insumos Seleccionados -->
         <div class="col-md-5 text-center">
           <h6>Articulos Seleccionados</h6>
-          <div class="card mb-3" style="height: 550px; overflow-y: auto; border-color: #343a40;">
+          <div class="card mb-3" style="height: 550px; overflow-y: auto;">
             <div class="card-body bg-dark">
               <ul class="list-group" *ngFor="let entity of selectedEntities; let i = index">
-                <li class="list-group-item bg-dark" style="border-color: #343a40;">
-                  <div class="bg-dark text-center">
+                <li class="list-group-item bg-dark">
+                  <div>
                     <p>{{ entity.maestro_articulo.descripcion }}</p>
                   </div>
                   <div>
-                    <label class="mr-1" for="quantity{{ i }}">Cantidad: </label>
+                    <label for="quantity{{ i }}">Cantidad:</label>
                     <input type="number" name="quantity{{ i }}" [(ngModel)]="entity.cantidad"/>
                   </div>
                   <button type="button" class="btn btn-outline-danger" aria-label="Eliminar Entidad" (click)="returnEntities(entity)">
@@ -65,7 +65,7 @@
       </div>
       <div class="row mt-3">
         <div class="col-md-6 offset-md-3 text-center mb-3">
-          <button [routerLink]="['/empleados/pedido-produccion']" type="button" class="btn btn-info">Volver</button>
+          <button [routerLink]="['/empleados/mesas']" type="button" class="btn btn-info">Volver</button>
         </div>
       </div>
     </div>

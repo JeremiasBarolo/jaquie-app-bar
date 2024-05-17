@@ -22,6 +22,7 @@ const routes: Routes = [
   { path: 'pedido-stock', component: PedidoStockEmpleadosComponent },
   { path: 'disponibilidad', component: DisponibilidadEmpleadosComponent },
   { path: 'stock-disponible', component: ConsultaDisponibilidadEmpleadosComponent},
+  { path: 'pedido-produccion/:agregarPedido/:id', component: CrearPedidoProduccionEmpleadosComponent},
   ]
   }
   
