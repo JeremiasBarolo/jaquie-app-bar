@@ -1,27 +1,26 @@
 <div class="hold-transition login-page">
-    <div class="login-box">
-      <div class="login-logo">
-        <a><b>Dr</b>Soft</a>
-      </div>
-      
-      <div class="card">
-        <div class="card-body login-card-body">
-          <p class="login-box-msg">Inicie sesión para continuar</p>
-          <form  [formGroup]="loginForm">
-            <div class="input-group mb-3">
-              <input type="text" class="form-control" placeholder="Usuario" formControlName="username">
-            </div>
-            <div class="input-group mb-3">
-              <input type="password" class="form-control" placeholder="Contraseña" formControlName="password">
-            </div>
-            <div class="row">
-              <div class="col-12">
-                <button type="submit" class="btn btn-primary btn-block" (click)="login()" >Iniciar sesión</button>
-              </div>
-            </div>
-          </form>
+  <div class="login-box">
+    <div class="card">
+      <div class="card-body login-card-body">
+        <div class="login-logo">
+          <img class="logo img-fluid" src="../../../assets/img/logo.png" alt="Logo">
         </div>
+        <p class="login-box-msg">Inicie sesión para continuar</p>
+        <form [formGroup]="loginForm">
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Usuario" formControlName="username">
+          </div>
+          <div class="input-group mb-3">
+            <input type="password" class="form-control" placeholder="Contraseña" formControlName="password">
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <button type="submit" class="btn btn-primary btn-block" (click)="login()">Iniciar sesión</button>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
   </div>
+</div>
   
