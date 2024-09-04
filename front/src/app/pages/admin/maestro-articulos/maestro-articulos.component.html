@@ -14,7 +14,7 @@
             <section style="margin: 16px">
 
                 <input pInputText type="text" (input)="applyFilter($event)" placeholder="Buscar por nombre.." class="mb-3">
-                <p-table #dt [value]="filteredMaestro" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20]" class="custom-datatable">
+                <p-table #dt [value]="filteredMaestro" [paginator]="true" [rows]="5" [rowsPerPageOptions]="[5, 10, 20]" class="custom-datatable">
                 <ng-template  pTemplate="header"  class="p-overlaypanel-header p-component-header">
                     <tr >
                     
@@ -94,32 +94,32 @@
 <!-- Modal para crear un nuevo tipo de artículo -->
 <div class="modal fade" id="modalMaestroCrear" tabindex="-1" role="dialog" aria-labelledby="modalCrearTipoLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
+        <div class="modal-content bg-dark">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalCrearTipoLabel">Crear/Editar Tipo de Artículo</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body bg-dark">
                 <form [formGroup]="maestroForm" (ngSubmit)="guardarNuevoMaetro()">
                     <div class="form-group">
 
                       <label for="nombreTipo">Descricion</label>
-                      <input type="text" class="form-control" id="nombreTipo" formControlName="description">
+                      <input type="text" class="form-control bg-dark" id="nombreTipo" formControlName="description">
                       <div *ngIf="maestroForm.get('description')?.invalid && maestroForm.get('description')?.touched" class="text-danger">
                         Descripcion es requerido
                       </div>
 
                       <label for="nombreTipo">Costo Unitario</label>
-                      <input type="number" class="form-control" id="costo_unit" formControlName="costo_unit">
+                      <input type="number" class="form-control bg-dark" id="costo_unit" formControlName="costo_unit">
                       <div *ngIf="maestroForm.get('costo_unit')?.invalid && maestroForm.get('costo_unit')?.touched" class="text-danger">
                         Costo Unitario es requerido
                       </div>
 
                         <div class="form-group">
                                 <label for="tipoArticulo">Tipo de Artículo</label>
-                                <select class="form-control" id="tipoArticulo" formControlName="tipoArticulo">
+                                <select class="form-control bg-dark" id="tipoArticulo" formControlName="tipoArticulo">
                                     <option *ngFor="let tipo of tiposArticulos" [value]="tipo.id">{{ tipo.description }}</option>
                                 </select>
                                 <div *ngIf="maestroForm.get('tipoArticulo')?.invalid && maestroForm.get('tipoArticulo')?.touched" class="text-danger">
@@ -131,7 +131,7 @@
                         
                             <div class="form-group">
                                 <label for="conversionUM">Conversión de Unidad de Medida</label>
-                                <select class="form-control" id="conversionUM" formControlName="conversionUM">
+                                <select class="form-control bg-dark" id="conversionUM" formControlName="conversionUM">
                                     <option *ngFor="let conversion of conversionesUM" [value]="conversion.id">{{ conversion.uni_medida }} / {{ conversion.seg_umedida }}</option>
                                 </select>
                                 <div *ngIf="maestroForm.get('conversionUM')?.invalid && maestroForm.get('conversionUM')?.touched" class="text-danger">
@@ -151,14 +151,14 @@
 <!-- Modal para eliminar tipo de artículo -->
 <div class="modal fade" id="EliminarMaestro" tabindex="-1" role="dialog" aria-labelledby="modalCrearTipoLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
+        <div class="modal-content bg-dark">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalCrearTipoLabel">Desea usted eliminar este Maestro de Articulos?</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body text-center">
+            <div class="modal-body text-center bg-dark">
                 
                 <p>Eliminar este Maestro de Articulos causara que todas las entidades que estes enlazadas a el queden sin un Maestro de Articulos definido.</p>
 
@@ -174,27 +174,51 @@
 
 <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
+        <div class="modal-content bg-dark">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalCrearTipoLabel">{{dataModal?.descripcion}}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body text-left">
+            <div class="modal-body text-left bg-dark">
                 <p><strong>Costo Unditario:</strong>  {{dataModal?.costo_unitario}}</p>
                 <p><strong>Tipo de Articulo:</strong>  {{dataModal?.tipo_articulo?.description}}</p>
                 <p><strong>Unidad de Medida:</strong>  {{ dataModal?.conversion_UM?.uni_medida}} / {{ dataModal.conversion_UM?.seg_umedida}}</p>
                 <ng-container *ngIf="dataModal.receta && dataModal.receta.length > 0;">
                     <h6 class="text-center">Receta:</h6>
+                    <p-table #dt [value]="dataModal.receta" [paginator]="true" [rows]="5" [rowsPerPageOptions]="[5, 10, 20]" class="custom-datatable">
+                        <ng-template  pTemplate="header"  class="p-overlaypanel-header p-component-header">
+                            <tr >
+                              
+                  
+                                <th pSortableColumn="maestro_articulo.descripcion">
+                                  Descripcion
+                                  
+                              </th>
+                                <th pSortableColumn="cant_necesaria">
+                                    Cantidad necesaria
+                                    
+                                </th>
+                  
+                                
+                                  
+                             
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-rowData>
+                          <tr>
+                              
+                              <td>{{ rowData.disponibilidad_articulo.maestro_articulo.descripcion}}</td>
+                              <td class="text-center">{{ rowData.cant_necesaria}}</td>
+                              
+                           
+    
+                          </tr>
+                        </ng-template>
+                      </p-table>
 
-                    <span class="card text-center" *ngFor="let item of dataModal.receta">
-                        <div class="card-header"> {{item.disponibilidad_articulo.maestro_articulo.descripcion}}</div>
-                        <div class="card-body">
-                          <p><strong>Cantidad Necesaria:</strong> {{item.cant_necesaria}} </p>
-                          <p><strong>Cantidad Fisica:</strong> {{item.cant_fisica}}</p>
-                        </div>
-                    </span>
+                   
                 </ng-container>
                 
                 

@@ -188,7 +188,7 @@ applyFilter(event: any): void {
   const value = event.target.value;
   
   this.filteredPedidos = this.listPedidos.filter(pedido => {
-    return pedido.description.toLowerCase().includes(value.toLowerCase());
+    return pedido.maestro_articulo.descripcion.toLowerCase().includes(value.toLowerCase());
   });
 }
 

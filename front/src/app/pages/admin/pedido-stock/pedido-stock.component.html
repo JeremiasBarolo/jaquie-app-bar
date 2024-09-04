@@ -9,7 +9,7 @@
 
   <div class="container">
     <input pInputText type="text" (input)="applyFilter($event)" placeholder="Buscar por nombre.." class="mb-3">
-    <p-table #dt [value]="filteredPedidos" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20]" class="custom-datatable">
+    <p-table #dt [value]="filteredPedidos" [paginator]="true" [rows]="5" [rowsPerPageOptions]="[5, 10, 20]" class="custom-datatable">
       <ng-template  pTemplate="header"  class="p-overlaypanel-header p-component-header">
           <tr >
             <th pSortableColumn="id">
@@ -69,21 +69,21 @@
   
     <div class="modal fade modal" id="InsumoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
-        <div class="modal-content">
+        <div class="modal-content bg-dark">
           <div class="modal-header">
             <h5 class="modal-title text-center">{{ cardData?.maestro_articulo?.descripcion }}</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div class="modal-body">
+          <div class="modal-body bg-dark">
             <p><strong>Cantidad Requerida:</strong> {{cardData?.cant_requerida}}</p>
             <p><strong>Subtotal Esperado:</strong> {{calcularSubtotal(cardData) | currency}}</p>
             <p><strong>Fecha de emision:</strong> {{cardData?.createdAt | date}}</p>
             
             
           </div>
-          <div class="modal-footer">
+          <div class="modal-footer bg-dark">
             <button type="button" class="btn btn-primary" data-dismiss="modal">Volver</button>
   
             <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa-solid fa-pen-to-square"></i></button>
@@ -95,22 +95,22 @@
     </div>
 
 
-    <!-- Modal para crear un nuevo tipo de artículo -->
+    
 <div class="modal fade" id="modalCrearPedido" tabindex="-1" role="dialog" aria-labelledby="modalCrearTipoLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
+        <div class="modal-content bg-dark">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalCrearTipoLabel">Crear/Editar Tipo de Artículo</h5>
+                <h5 class="modal-title bg-dark" id="modalCrearTipoLabel">Crear/Editar Tipo de Artículo</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body bg-dark">
                 <form [formGroup]="form" (ngSubmit)="addPedido()">
                    
                     <div class="form-group">
                         <label for="articuloId">Conversión de Unidad de Medida</label>
-                        <select class="form-control" id="articuloId" formControlName="articuloId">
+                        <select class="form-control bg-dark" id="articuloId" formControlName="articuloId">
                             <option *ngFor="let maestro of listMaestro" [value]="maestro.id">{{maestro.descripcion}}</option>
                         </select>
                         <div *ngIf="form.get('articuloId')?.invalid && form.get('articuloId')?.touched" class="text-danger">
@@ -120,7 +120,7 @@
 
                     <div class="form-group">
                         <label for="nombreTipo">Cantidad Requerida</label>
-                        <input type="number" class="form-control" id="nombreTipo" formControlName="cant_requerida">
+                        <input type="number" class="form-control bg-dark" id="nombreTipo" formControlName="cant_requerida">
                         <div *ngIf="form.get('cant_requerida')?.invalid && form.get('cant_requerida')?.touched" class="text-danger">
                           Campo requerido
                         </div>

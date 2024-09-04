@@ -18,10 +18,46 @@ export class EstadisticaComponent implements OnInit {
 
   chartOptions: any = {
     chart: {
-      type: 'line'
+      type: 'line',
+      foreColor: '#000',  
     },
     xaxis: {
       categories: [],
+      labels: {
+        style: {
+          colors: '#000',  
+          fontSize: '12px',
+          fontFamily: 'Arial, sans-serif',
+          fontWeight: 400,
+        }
+      }
+    },
+    yaxis: {
+      labels: {
+        style: {
+          colors: '#000',  
+          fontSize: '12px',
+          fontFamily: 'Arial, sans-serif',
+          fontWeight: 400,
+        }
+      }
+    },
+    dataLabels: {
+      enabled: true,
+      style: {
+        colors: ['#000'],  
+        fontSize: '12px',
+        fontFamily: 'Arial, sans-serif',
+        fontWeight: 'bold',
+      }
+    },
+    tooltip: {
+      enabled: true,
+      style: {
+        fontSize: '12px',
+        fontFamily: 'Arial, sans-serif',
+        colors: ['#000'],  
+      }
     },
     series: [
       {
@@ -30,6 +66,9 @@ export class EstadisticaComponent implements OnInit {
       }
     ]
   };
+  
+  
+  
 
   constructor(private estadisticasService: EstadisticaService) { }
 

@@ -76,20 +76,20 @@
 <!-- Modal para crear un nuevo tipo de artículo -->
 <div class="modal fade" id="modalMaestroCrear" tabindex="-1" role="dialog" aria-labelledby="modalCrearTipoLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
+        <div class="modal-content bg-dark">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalCrearTipoLabel">Crear/Editar Tipo de Artículo</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body bg-dark">
                 <form [formGroup]="disponibilidadForm" (ngSubmit)="guardarNuevoMaetro()">
                     <div class="form-group">
 
                         <div class="form-group">
                             <label for="maestro">Articulo para Generar Stock</label>
-                            <select class="form-control" id="tipoArticulo" formControlName="maestro">
+                            <select class="form-control bg-dark" id="tipoArticulo" formControlName="maestro">
                                 <option *ngFor="let maestro of listMaestro" [value]="maestro.id">{{ maestro.descripcion }}</option>
                             </select>
                             <div *ngIf="disponibilidadForm.get('maestro')?.invalid && disponibilidadForm.get('maestro')?.touched" class="text-danger">
@@ -99,29 +99,29 @@
 
 
                       <label for="nombreTipo">Cantidad Fisica</label>
-                      <input type="number" class="form-control" id="nombreTipo" formControlName="cant_fisica">
+                      <input type="number" class="form-control bg-dark" id="nombreTipo" formControlName="cant_fisica">
                       <div *ngIf="disponibilidadForm.get('cant_fisica')?.invalid && disponibilidadForm.get('cant_fisica')?.touched" class="text-danger">
                         Cantidad Fisica es requerido
                       </div>
 
                       <label for="nombreTipo">Cantidad Comprometida</label>
-                      <input type="number" class="form-control" id="costo_unit" formControlName="cant_comprometida">
+                      <input type="number" class="form-control bg-dark" id="costo_unit" formControlName="cant_comprometida">
                       <div *ngIf="disponibilidadForm.get('cant_comprometida')?.invalid && disponibilidadForm.get('cant_comprometida')?.touched" class="text-danger">
                         Cantidad Comprometida es requerido
                       </div>
 
                       <label for="nombreTipo">Cantidad Disponible</label>
-                      <input type="number" class="form-control" id="costo_unit" formControlName="cant_disponible">
+                      <input type="number" class="form-control bg-dark" id="costo_unit" formControlName="cant_disponible">
                       <div *ngIf="disponibilidadForm.get('cant_disponible')?.invalid && disponibilidadForm.get('cant_disponible')?.touched" class="text-danger">
                         Cantidad Disponible es requerido
                       </div>
 
                         
 
-                        <!-- Campo de selección para Conversión de Unidad de Medida -->
+                        
                             <div class="form-group">
                                 <label for="conversionUM">Conversión de Unidad de Medida</label>
-                                <select class="form-control" id="conversionUM" formControlName="conversionUM">
+                                <select class="form-control bg-dark" id="conversionUM" formControlName="conversionUM">
                                     <option *ngFor="let conversion of conversionesUM" [value]="conversion.id">{{ conversion.uni_medida }} / {{ conversion.seg_umedida }}</option>
                                 </select>
                                 <div *ngIf="disponibilidadForm.get('conversionUM')?.invalid && disponibilidadForm.get('conversionUM')?.touched" class="text-danger">
@@ -141,14 +141,14 @@
 <!-- Modal para eliminar tipo de artículo -->
 <div class="modal fade" id="EliminarMaestro" tabindex="-1" role="dialog" aria-labelledby="modalCrearTipoLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
+        <div class="modal-content bg-dark ">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalCrearTipoLabel">Desea usted eliminar este Articulo?</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body text-center">
+            <div class="modal-body text-center bg-dark">
                 
                 <p>Eliminar este Articulo causara que todas las entidades que estes enlazadas a el queden sin un Articulo definido.</p>
 
@@ -164,14 +164,14 @@
 
 <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
+        <div class="modal-content bg-dark">
+            <div class="modal-header ">
                 <h5 class="modal-title" id="modalCrearTipoLabel">{{ dataModal?.maestro_articulo?.descripcion }}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body text-left">
+            <div class="modal-body text-left bg-dark">
                 <p><strong>Costo Unditario:</strong>  {{ dataModal?.maestro_articulo?.costo_unitario }}</p>
                 <p><strong>Unidad de Medida:</strong>  {{ dataModal?.conversion_UM?.uni_medida}} / {{ dataModal?.conversion_UM?.seg_umedida}}</p>
                 <p><strong>Can. Fisica:</strong>  {{ dataModal?.cant_fisica}}</p>
@@ -186,19 +186,19 @@
 
 <div class="modal fade" id="SumarCantidad" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
+        <div class="modal-content bg-dark">
+            <div class="modal-header ">
                 <h5 class="modal-title" id="modalCrearTipoLabel">{{ dataModal?.maestro_articulo?.descripcion }}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body text-left">
+            <div class="modal-body text-left bg-dark">
                 <form [formGroup]="sumarForm" (ngSubmit)="SumarCantidades()">
                     <div class="form-group">
 
                       <label for="nombreTipo">Cuanta cantidad fisica deseas sumar a {{ dataModal?.maestro_articulo?.descripcion }}?</label>
-                      <input type="number" class="form-control" id="nombreTipo" formControlName="cant_fisica_sumada">
+                      <input type="number" class="form-control bg-dark" id="nombreTipo" formControlName="cant_fisica_sumada">
                       <div *ngIf="disponibilidadForm.get('cant_fisica_sumada')?.invalid && disponibilidadForm.get('cant_fisica_sumada')?.touched" class="text-danger">
                         Este campo es requerido es requerido
                       </div>
