@@ -30,7 +30,9 @@ export class PedidoStockComponent {
   depositos: any[] = [] 
   selectedDepositoId: number | undefined;
   pedidoNuevo: any
+  listPedidos: any[] = []
   private destroy$ = new Subject<void>();
+  filteredPedidos: any;
 
   constructor(
     private pedidoStockService: PedidoStockService,
@@ -53,7 +55,9 @@ export class PedidoStockComponent {
 
   ngOnInit(): void {
     this.pedidoStockService.getAll().pipe(takeUntil(this.destroy$)).subscribe(data =>{
-      this.listPedido = data
+
+      this.listPedidos = data
+      this.filteredPedidos = [...this.listPedidos];
     });
 
     this.maestroService.getAll().pipe(takeUntil(this.destroy$)).subscribe(maestros => {
@@ -178,6 +182,14 @@ eliminarPedido(id?: number){
     
 
   })
+}
+
+applyFilter(event: any): void {
+  const value = event.target.value;
+  
+  this.filteredPedidos = this.listPedidos.filter(pedido => {
+    return pedido.description.toLowerCase().includes(value.toLowerCase());
+  });
 }
 
 

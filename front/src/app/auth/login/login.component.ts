@@ -34,11 +34,7 @@ export class LoginComponent {
       (data) => {
         localStorage.setItem('token', data.token);
         this.toastr.success('Bienvenido');
-        if (this.authService.isAdmin()) {
-          this.router.navigate(['/admin/inicio']);
-        } else {
-          this.router.navigate(['/empleados']);
-        }
+        this.router.navigate(['/admin/inicio']);
       },
       (error) => {
         console.error(error);

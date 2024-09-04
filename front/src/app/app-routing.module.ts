@@ -11,10 +11,6 @@ import { AdminGuard } from './auth/admin-guard/admin-guard.component';
 const routes: Routes = [
   { path: '', redirectTo: 'empleados', pathMatch: 'full' },
   {
-    path: 'empleados',
-    loadChildren: () => import('./pages/empleados/empleados.module').then(m => m.EmpleadosModule)
-  },
-  {
     path: 'admin',
     loadChildren: () => import('./pages/admin/admin.module').then(m => m.AdminModule),
     canActivate: [AdminGuard] 

@@ -44,7 +44,7 @@
             </a>            
           </li>
 
-          <li class="nav-item">
+          <li class="nav-item" *ngIf="isAdmin">
 
             <a class="nav-link" href="admin/padrones">
               <i class="fa-solid fa-ruler mr-2"></i>
@@ -66,7 +66,7 @@
             </a>            
           </li>
 
-          <li class="nav-item">
+          <li class="nav-item" *ngIf="isAdmin">
 
             <a class="nav-link" href="admin/usuarios">
               <i class="fa-solid fa-user mr-2"></i>
@@ -77,7 +77,7 @@
             </a>            
           </li>
 
-          <li class="nav-item">
+          <li class="nav-item" *ngIf="isAdmin">
 
             <a class="nav-link"href="admin/maestro">
               <i class="fa-solid fa-folder mr-2" ></i>
@@ -121,7 +121,7 @@
             </a>            
           </li>
 
-          <li class="nav-item">
+          <li class="nav-item" *ngIf="isAdmin">
 
             <a class="nav-link" href="admin/recetas">
               <i class="fa-solid fa-kitchen-set"></i>

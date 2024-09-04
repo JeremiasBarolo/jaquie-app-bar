@@ -13,12 +13,12 @@
 
         <div class="col-md-4 border-right">
             <h4 class="mb-3">Preparacion</h4>
-            <div class="card" *ngFor="let preparacion of listPreparacion" >
-              <div class="card-header bg-primary" (click)="showCardDetails(preparacion)" data-target="#InsumoModal2" data-toggle="modal">
+            <div class="card bg-dark" *ngFor="let preparacion of listPreparacion" >
+              <div class="card-header bg-primary " (click)="showCardDetails(preparacion)" data-target="#InsumoModal2" data-toggle="modal">
                 {{preparacion.mesa}}
               </div>
 
-              <div class="card-body" (click)="showCardDetails(preparacion)" data-target="#InsumoModal2" data-toggle="modal">
+              <div class="card-body bg-dark" (click)="showCardDetails(preparacion)" data-target="#InsumoModal2" data-toggle="modal">
                Esta mesa se encuentra en preparacion...
               </div>
               <div class="card-footer">
@@ -33,7 +33,7 @@
         <div class="col-md-4 border-right">
           <h4 class="mb-3">Comiendo</h4>
     
-          <div class="card" *ngFor="let comiendo of listComiendo">
+          <div class="card bg-dark" *ngFor="let comiendo of listComiendo">
             <div class="card-header bg-primary"(click)="showCardDetails(comiendo)"data-target="#InsumoModal" data-toggle="modal">
               {{comiendo.mesa}}
 
@@ -41,7 +41,7 @@
               <i *ngIf="comiendo?.pedidoPreparacion?.length" class="fa-solid fa-exclamation-triangle text-danger ml-1 text-end" style="font-size: 0.8rem;"></i>
             </div>
     
-            <div class="card-body"(click)="showCardDetails(comiendo)"data-target="#InsumoModal" data-toggle="modal">
+            <div class="card-body bg-dark"(click)="showCardDetails(comiendo)"data-target="#InsumoModal" data-toggle="modal">
                 Esta mesa se encuentra esta comiendo...
             </div>
     
@@ -56,12 +56,12 @@
         <div class="col-md-4 border-right" >
           <h4 class="mb-3">Finalizado</h4>
     
-          <div class="card" *ngFor="let finalizado of listFinalizado">
+          <div class="card bg-dark" *ngFor="let finalizado of listFinalizado">
             <div class="card-header bg-primary"(click)="showCardDetails(finalizado)" data-target="#InsumoModal" data-toggle="modal">
               {{finalizado.mesa}}
             </div>
     
-            <div class="card-body"(click)="showCardDetails(finalizado)"data-target="#InsumoModal" data-toggle="modal">
+            <div class="card-body bg-dark"(click)="showCardDetails(finalizado)"data-target="#InsumoModal" data-toggle="modal">
                 Esta mesa ya pidio la cuenta.
             </div>
             
@@ -76,9 +76,9 @@
 <!-- Modal para crear una mesa -->
 <div class="modal fade" id="crearMesa" tabindex="-1" role="dialog" aria-labelledby="crearMesa" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
+        <div class="modal-content bg-dark">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalCrearTipoLabel">Crear/Editar Tipo de Artículo</h5>
+                <h5 class="modal-title" id="modalCrearTipoLabel">Crear/Editar Mesas</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -87,7 +87,7 @@
                 <form [formGroup]="form" (ngSubmit)="guardarMesa()">
                     <div class="form-group">
                       <label for="nombreTipo">Nombre de la Mesa</label>
-                      <input type="text" class="form-control" id="nombreTipo" formControlName="mesa">
+                      <input type="text" class="form-control bg-dark" id="nombreTipo" formControlName="mesa">
                       <div *ngIf="form.get('mesa')?.invalid && form.get('mesa')?.touched" class="text-danger">
                         Descripcion del tipo es requerido
                       </div>
@@ -103,7 +103,7 @@
 <!-- Modal ver una mesa -->
 <div class="modal fade" id="InsumoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
+    <div class="modal-content bg-dark">
       <div class="modal-header bg-primary">
         <h5 class="modal-title text-center">{{ cardData.mesa }}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -118,7 +118,7 @@
         <!-- Nav tabs -->
         <ul class="nav nav-tabs " role="tablist">
           <li class="nav-item col-md-6">
-            <a class="nav-link active" id="finalizados-tab" data-toggle="tab" href="#finalizados" role="tab" aria-controls="finalizados" aria-selected="true">Pedidos Finalizados</a>
+            <a class="nav-link active bg-dark" id="finalizados-tab" data-toggle="tab" href="#finalizados" role="tab" aria-controls="finalizados" aria-selected="true">Pedidos Finalizados</a>
           </li>
           <li class="nav-item col-md-6" *ngIf="cardData.estado === 'COMIENDO'">
             <a class="nav-link bg-warning" id="pendientes-tab" data-toggle="tab" href="#pendientes" role="tab" aria-controls="pendientes" aria-selected="false">
@@ -132,8 +132,8 @@
         <div class="tab-content">
           <div class="tab-pane fade show active" id="finalizados" role="tabpanel" aria-labelledby="finalizados-tab">
             <div class="table-container">
-              <table class="table">
-                <thead class="thead-light">
+              <table class="table bg-dark">
+                <thead class="thead-dark">
                   <tr>
                     
                     <th scope="col">Descripción</th>
@@ -142,13 +142,13 @@
                     <th scope="col">Estado</th>
                   </tr>
                 </thead>
-                <tbody style="max-height: 300px; overflow-y: auto;">
-                  <tr *ngFor="let item of cardData.pedidoFinalizado">
+                <tbody style="max-height: 300px; overflow-y: auto;" class="bg-dark">
+                  <tr *ngFor="let item of cardData.pedidoFinalizado" class="bg-dark">
                     
-                    <td>{{item.name}}</td>
-                    <td>{{item.costo_unitario | currency}}</td>
-                    <td class="text-center">{{item.cant_requerida}}</td>
-                    <td>{{item.estado}}</td>
+                    <td class="bg-dark">{{item.name}}</td>
+                    <td class="bg-dark">{{item.costo_unitario | currency}}</td>
+                    <td class="bg-dark text-center" >{{item.cant_requerida}}</td>
+                    <td class="bg-dark">{{item.estado}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -156,8 +156,8 @@
           </div>
           <div class="tab-pane fade" id="pendientes" role="tabpanel" aria-labelledby="pendientes-tab">
             <div class="table-container">
-              <table class="table">
-                <thead class="thead-light">
+              <table class="table bg-dark">
+                <thead class="thead-dark">
                   <tr>
                     
                     <th scope="col">Descripción</th>
@@ -168,14 +168,14 @@
 
                   </tr>
                 </thead>
-                <tbody style="max-height: 300px; overflow-y: auto;">
+                <tbody style="max-height: 300px; overflow-y: auto;" class="bg-dark">
                   <tr *ngFor="let item of cardData.pedidoPreparacion">
                     
-                    <td>{{item.name}}</td>
-                    <td>{{item.costo_unitario | currency}}</td>
-                    <td class="text-center">{{item.cant_requerida}}</td>
-                    <td>{{item.estado}}</td>
-                    <td>
+                    <td class="bg-dark">{{item.name}}</td>
+                    <td class="bg-dark">{{item.costo_unitario | currency}}</td>
+                    <td class="bg-dark" class="text-center">{{item.cant_requerida}}</td>
+                    <td class="bg-dark">{{item.estado}}</td>
+                    <td class="bg-dark">
                       <div class="d-inline-block">
                         <button type="button" data-toggle="modal" data-target="#SumarCantidad" (click)="setIdEentidad(item.id)" class="btn btn-outline-success btn-sm" aria-label="Editar Tipo">
                           <i class="fa-solid fa-plus"></i>
@@ -194,7 +194,7 @@
           </div>
         </div>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer bg-dark">
         <button type="button" class="btn btn-primary" data-dismiss="modal">Volver</button>
         <button *ngIf="cardData.state=='PRESUPUESTADO'" type="button" class="btn btn-primary" data-dismiss="modal" (click)="updateEntidad(cardData.id)"><i class="fa-solid fa-pen-to-square"></i></button>
       </div>
@@ -205,7 +205,7 @@
 <!-- Modal ver una mesa -->
 <div class="modal fade modal" id="InsumoModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <div class="modal-content">
+    <div class="modal-content bg-dark">
       <div class="modal-header bg-primary">
         <h5 class="modal-title text-center ">{{ cardData.mesa }}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -217,8 +217,8 @@
         <h6 class="text-center">Pedido:</h6>
         
         <div class="table-container">
-          <table class="table">
-            <thead class="thead-light">
+          <table class="table bg-dark">
+            <thead class="thead-dark">
               <tr>
                 <th scope="col">#</th>
                 <th scope="col">Descripcion</th>
@@ -227,13 +227,13 @@
                 <th scope="col">Estado</th>
               </tr>
             </thead>
-            <tbody style="max-height: 300px; overflow-y: auto;">
+            <tbody style="max-height: 300px; overflow-y: auto;" class="bg-dark">
               <tr *ngFor="let item of cardData?.maestro_articulos">
-                <th scope="row">{{item.id}}</th>
-                <td>{{item.descripcion}}</td>
-                <td>{{item.costo_unitario | currency}}</td>
-                <td>{{item.pedido_produccion?.cant_requerida}}</td>
-                <td>{{item.pedido_produccion?.estado}}</td>
+                <th scope="row ">{{item.id}}</th>
+                <td class="bg-dark">{{item.descripcion}}</td>
+                <td class="bg-dark">{{item.costo_unitario | currency}}</td>
+                <td class="bg-dark">{{item.pedido_produccion?.cant_requerida}}</td>
+                <td class="bg-dark">{{item.pedido_produccion?.estado}}</td>
               </tr>
             </tbody>
           </table>
@@ -241,7 +241,7 @@
         
         
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer bg-dark">
         <button type="button" class="btn btn-primary" data-dismiss="modal">Volver</button>
         <button *ngIf="cardData.state=='PRESUPUESTADO'" type="button" class="btn btn-primary" data-dismiss="modal" (click)="updateEntidad(cardData.id)"><i class="fa-solid fa-pen-to-square"></i></button>
       </div>
@@ -254,7 +254,7 @@
 <!-- Modal para finalizar una mesa -->
 <div class="modal fade" id="finalizarMesa" tabindex="-1" role="dialog" aria-labelledby="crearMesa" aria-hidden="true">
   <div class="modal-dialog" role="document">
-      <div class="modal-content">
+      <div class="modal-content bg-dark">
           <div class="modal-header">
               <h5 class="modal-title" id="modalCrearTipoLabel">Que forma de pago elegira el cliente?</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -281,17 +281,17 @@
 <!-- Modal para cerrar caja -->
 <div class="modal fade" id="cerrarCaja" tabindex="-1" role="dialog" aria-labelledby="crearMesa" aria-hidden="true">
   <div class="modal-dialog" role="document">
-      <div class="modal-content">
+      <div class="modal-content bg-dark">
           <div class="modal-header bg-danger">
               <h5 class="modal-title" id="modalCrearTipoLabel">Desea cerrar la Caja por el dia?</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
               </button>
           </div>
-          <div class="modal-body">
+          <div class="modal-body bg-dark">
               <strong>Recuerde que esta accion debe de ser ejecutada solo al final del dia.</strong>
           </div>
-          <div class="modal-footer">
+          <div class="modal-footer bg-dark">
             <button type="button" id="agregar" class="btn btn-outline-danger mr-2" (click)="cerrarCaja()" > Aceptar</button>
           </div>
       </div>
@@ -301,17 +301,17 @@
 <!-- Modal para cancelar mesa -->
 <div class="modal fade" id="cancelarMesa" tabindex="-1" role="dialog" aria-labelledby="crearMesa" aria-hidden="true">
   <div class="modal-dialog" role="document">
-      <div class="modal-content">
+      <div class="modal-content bg-dark">
           <div class="modal-header bg-danger">
               <h5 class="modal-title" id="modalCrearTipoLabel">Desea cancelar la mesa {{cardData?.mesa}}?</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
               </button>
           </div>
-          <div class="modal-body">
+          <div class="modal-body bg-dark">
               <strong>Recuerde que esta accion devolvera todos los ingredientes de laca entidad del pedido</strong>
           </div>
-          <div class="modal-footer">
+          <div class="modal-footer bg-dark">
             <button type="button" id="agregar" class="btn btn-outline-danger mr-2" (click)="cambiarEstado(cardData.id,cardData, 'DEVOLVER')" > Aceptar</button>
           </div>
       </div>
@@ -321,17 +321,17 @@
 <!-- Modal para cancelar mesa -->
 <div class="modal fade" id="SumarCantidad" tabindex="-1" role="dialog" aria-labelledby="crearMesa" aria-hidden="true">
   <div class="modal-dialog" role="document">
-      <div class="modal-content">
+      <div class="modal-content bg-dark">
           <div class="modal-header bg-warning">
               <h5 class="modal-title" id="modalCrearTipoLabel">Llego la comida a la mesa? </h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
               </button>
           </div>
-          <div class="modal-body">
+          <div class="modal-body bg-dark">
               <strong>Esta accion debe de realizarse una vez el cliente tenga ya su pedido.</strong>
           </div>
-          <div class="modal-footer">
+          <div class="modal-footer bg-dark">
             <button type="button" id="agregar" (click)="sumarPedido()" class="btn btn-outline-danger mr-2"> Aceptar</button>
           </div>
       </div>
@@ -341,17 +341,17 @@
 <!-- Modal para cancelar mesa -->
 <div class="modal fade" id="devolver" tabindex="-1" role="dialog" aria-labelledby="crearMesa" aria-hidden="true">
   <div class="modal-dialog" role="document">
-      <div class="modal-content">
+      <div class="modal-content bg-dark">
           <div class="modal-header bg-danger">
               <h5 class="modal-title" id="modalCrearTipoLabel">Desea cancelar el pedido?</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
               </button>
           </div>
-          <div class="modal-body">
+          <div class="modal-body bg-dark">
               <strong>Recuerde que esta accion devolvera todos los ingredientes del pedido</strong>
           </div>
-          <div class="modal-footer">
+          <div class="modal-footer bg-dark">
             <button type="button" id="agregar" (click)="devolverPedido()" class="btn btn-outline-danger mr-2"> Aceptar</button>
           </div>
       </div>
