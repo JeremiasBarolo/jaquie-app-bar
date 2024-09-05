@@ -57,11 +57,11 @@
           <h4 class="mb-3">Finalizado</h4>
     
           <div class="card bg-dark" *ngFor="let finalizado of listFinalizado">
-            <div class="card-header bg-primary"(click)="showCardDetails(finalizado)" data-target="#InsumoModal" data-toggle="modal">
+            <div class="card-header bg-primary"(click)="showCardDetails(finalizado)" data-target="#verMesaFinalizada" data-toggle="modal"(click)="abrirModal(finalizado)">
               {{finalizado.mesa}}
             </div>
     
-            <div class="card-body bg-dark"(click)="showCardDetails(finalizado)"data-target="#InsumoModal" data-toggle="modal">
+            <div class="card-body bg-dark"(click)="showCardDetails(finalizado)"data-target="#verMesaFinalizada" data-toggle="modal"(click)="abrirModal(finalizado)">
                 Esta mesa ya pidio la cuenta.
             </div>
             
@@ -265,7 +265,7 @@
               <form [formGroup]="form" (ngSubmit)="cambiarEstado(cardData.id, cardData, 'FINALIZADO')">
                   <div class="form-group">
                     <label for="nombreTipo">Forma de pago:</label>
-                    <input type="text" class="form-control" id="pago" formControlName="pago">
+                    <input type="text" class="form-control" id="pago" formControlName="pago" [(ngModel)]="formaPago">
                     <div *ngIf="form.get('pago')?.invalid && form.get('pago')?.touched" class="text-danger">
                       Descripcion del tipo es requerido
                     </div>
@@ -273,6 +273,8 @@
                   
                   <button type="submit" class="btn btn-primary" >Enviar</button>
               </form>
+              
+              
           </div>
       </div>
   </div>
@@ -293,6 +295,41 @@
           </div>
           <div class="modal-footer bg-dark">
             <button type="button" id="agregar" class="btn btn-outline-danger mr-2" (click)="cerrarCaja()" > Aceptar</button>
+          </div>
+      </div>
+  </div>
+</div>
+
+<div class="modal fade" id="verMesaFinalizada" tabindex="-1" role="dialog" aria-labelledby="crearMesa" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content bg-dark">
+          <div class="modal-header bg-danger text-light">
+              <h5 class="modal-title" id="modalCrearTipoLabel">{{mesa?.mesa}}</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body bg-dark text-center">
+            
+              <div class="ticket" #pdfContent>
+                <div class="ticket-content" >
+                  <div *ngIf="mesa">
+                    <h5>Nombre de la mesa: {{ mesa.mesa }}</h5>
+                    <hr>
+                    <h6>Consumido:</h6>
+                    <ul>
+                      <li *ngFor="let item of mesa.pedidoFinalizado">
+                        {{ item.name }} - {{ item.cant_requerida }}u x {{ item.costo_unitario | currency }}
+                      </li>
+                    </ul>
+                    <hr>
+                    <h5>Total: {{ total | currency }}</h5>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <div class="modal-footer bg-dark">
+            <button class="btn btn-primary"(click)="generatePDF()" >Generar Pdf</button>
           </div>
       </div>
   </div>
