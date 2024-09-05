@@ -194,6 +194,18 @@ await queryInterface.addColumn('Bebidas', 'quintoComponente', {
   onDelete: 'CASCADE'
 });
 
+
+await queryInterface.addColumn('venta', 'tipoFormaPagoId', {
+  type: Sequelize.INTEGER,
+  allowNull: true,
+  references: {
+    model: 'TipoFormaPagos',
+    key: 'id'
+  },
+  onUpdate: 'CASCADE',
+  onDelete: 'CASCADE'
+});
+
 // <=============================== Fin Bebidas ===============================> 
 
     

@@ -13,6 +13,7 @@ const pedido_produccionProvider = require('./pedido_produccion');
 const sumarPedidos = require('./sumarPedidos');
 const cerrarCaja = require('./cerrarCaja'); 
 const BebidasProvider = require('./Bebidas'); 
+const TipoFormaPagosProvider = require('./TipoFormaPagos');
 
 
 
@@ -31,5 +32,6 @@ module.exports = {
     pedido_produccionProvider,
     sumarPedidos,
     cerrarCaja,
-    BebidasProvider
+    BebidasProvider,
+    TipoFormaPagosProvider
 };

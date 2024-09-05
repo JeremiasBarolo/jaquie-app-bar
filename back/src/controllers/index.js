@@ -12,6 +12,7 @@ const pedido_produccionController= require('./pedido_produccion');
 const BebidasController= require('./Bebidas');
 const loginController= require('./login');
 const agregarPedidoController= require('./agregarPedido');
+const TipoFormaPagosController= require('./TipoFormaPagos');
 
 
 module.exports= {
@@ -28,5 +29,6 @@ module.exports= {
     pedido_produccionController,
     BebidasController,
     loginController,
-    agregarPedidoController
+    agregarPedidoController,
+    TipoFormaPagosController
 }

@@ -16,6 +16,7 @@ import { MesasComponent } from './mesas/mesas.component';
 import { EstadisticaComponent } from './estadistica/estadistica.component';
 import { UsuariosComponent } from './usuarios/usuarios.component';
 import { ConsultaDisponibilidadComponent } from '../../shared/consulta-disponibilidad/consulta-disponibilidad.component';
+import { TipoFormasPagoComponent } from './tipo-formas-pago/tipo-formas-pago.component';
 
 
 
@@ -42,6 +43,7 @@ const routes: Routes = [
       { path: 'mesas', component: MesasComponent},
       { path: 'usuarios', component: UsuariosComponent},
       { path: 'stock-disponible', component: ConsultaDisponibilidadComponent},
+      { path: 'formas-pago', component: TipoFormasPagoComponent},
 
       { path: '**', redirectTo: 'inicio' },
     

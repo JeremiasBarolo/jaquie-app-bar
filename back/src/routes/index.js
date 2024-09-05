@@ -13,6 +13,7 @@ const pedido_produccionRouter = require('./pedido_produccion');
 const bebidasRouter = require('./Bebidas');
 const loginRouter = require('./login');
 const agregarPedidoRouter = require('./agregarPedido');
+const TipoFormaPagosRouter = require('./TipoFormaPagos');
 
 
 module.exports = {
@@ -29,5 +30,6 @@ module.exports = {
     pedido_produccionRouter,
     bebidasRouter,
     loginRouter,
-    agregarPedidoRouter
+    agregarPedidoRouter,
+    TipoFormaPagosRouter
 };
