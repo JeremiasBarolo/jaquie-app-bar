@@ -306,8 +306,11 @@ this.mesasService.sumarPedido(this.idAccion).pipe(takeUntil(this.destroy$)).subs
 );
 }
 
-setIdEentidad(id:any){
+setIdEentidad(id:any, accion?:any){
   this.idAccion = id
+  if(accion){
+    this.sumarPedido()
+  }
 }
 
 

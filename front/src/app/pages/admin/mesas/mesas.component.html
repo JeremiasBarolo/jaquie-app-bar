@@ -14,11 +14,11 @@
         <div class="col-md-4 border-right">
             <h4 class="mb-3">Preparacion</h4>
             <div class="card bg-dark" *ngFor="let preparacion of listPreparacion" >
-              <div class="card-header bg-primary " (click)="showCardDetails(preparacion)" data-target="#InsumoModal2" data-toggle="modal">
+              <div class="card-header bg-primary " (click)="showCardDetails(preparacion)" data-target="#verMesaPreparacion" data-toggle="modal">
                 {{preparacion.mesa}}
               </div>
 
-              <div class="card-body bg-dark" (click)="showCardDetails(preparacion)" data-target="#InsumoModal2" data-toggle="modal">
+              <div class="card-body bg-dark" (click)="showCardDetails(preparacion)" data-target="#verMesaPreparacion" data-toggle="modal">
                Esta mesa se encuentra en preparacion...
               </div>
               <div class="card-footer">
@@ -34,14 +34,14 @@
           <h4 class="mb-3">Comiendo</h4>
     
           <div class="card bg-dark" *ngFor="let comiendo of listComiendo">
-            <div class="card-header bg-primary"(click)="showCardDetails(comiendo)"data-target="#InsumoModal" data-toggle="modal">
+            <div class="card-header bg-primary"(click)="showCardDetails(comiendo)"data-target="#verMesaComiendo" data-toggle="modal">
               {{comiendo.mesa}}
 
               
               <i *ngIf="comiendo?.pedidoPreparacion?.length" class="fa-solid fa-exclamation-triangle text-danger ml-1 text-end" style="font-size: 0.8rem;"></i>
             </div>
     
-            <div class="card-body bg-dark"(click)="showCardDetails(comiendo)"data-target="#InsumoModal" data-toggle="modal">
+            <div class="card-body bg-dark"(click)="showCardDetails(comiendo)"data-target="#verMesaComiendo" data-toggle="modal">
                 Esta mesa se encuentra esta comiendo...
             </div>
     
@@ -101,7 +101,7 @@
 </div>
 
 <!-- Modal ver una mesa -->
-<div class="modal fade" id="InsumoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="verMesaComiendo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content bg-dark">
       <div class="modal-header bg-primary">
@@ -147,7 +147,7 @@
                     
                     <td class="bg-dark">{{item.name}}</td>
                     <td class="bg-dark">{{item.costo_unitario | currency}}</td>
-                    <td class="bg-dark text-center" >{{item.cant_requerida}}</td>
+                    <td class="text-center bg-dark " >{{item.cant_requerida}}</td>
                     <td class="bg-dark">{{item.estado}}</td>
                   </tr>
                 </tbody>
@@ -173,11 +173,11 @@
                     
                     <td class="bg-dark">{{item.name}}</td>
                     <td class="bg-dark">{{item.costo_unitario | currency}}</td>
-                    <td class="bg-dark" class="text-center">{{item.cant_requerida}}</td>
+                    <td class="bg-dark text-center" >{{item.cant_requerida}}</td>
                     <td class="bg-dark">{{item.estado}}</td>
                     <td class="bg-dark">
                       <div class="d-inline-block">
-                        <button type="button" data-toggle="modal" data-target="#SumarCantidad" (click)="setIdEentidad(item.id)" class="btn btn-outline-success btn-sm" aria-label="Editar Tipo">
+                        <button type="button" (click)="setIdEentidad(item.id, 'sumar')" class="btn btn-outline-success btn-sm" aria-label="Editar Tipo">
                           <i class="fa-solid fa-plus"></i>
                         </button>
                       </div>
@@ -203,7 +203,7 @@
 </div>
 
 <!-- Modal ver una mesa -->
-<div class="modal fade modal" id="InsumoModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade modal" id="verMesaPreparacion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content bg-dark">
       <div class="modal-header bg-primary">
@@ -229,7 +229,7 @@
             </thead>
             <tbody style="max-height: 300px; overflow-y: auto;" class="bg-dark">
               <tr *ngFor="let item of cardData?.maestro_articulos">
-                <th scope="row ">{{item.id}}</th>
+                <th class="bg-dark" scope="row ">{{item.id}}</th>
                 <td class="bg-dark">{{item.descripcion}}</td>
                 <td class="bg-dark">{{item.costo_unitario | currency}}</td>
                 <td class="bg-dark">{{item.pedido_produccion?.cant_requerida}}</td>
