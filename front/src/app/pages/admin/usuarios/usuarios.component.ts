@@ -116,7 +116,7 @@ export class UsuariosComponent {
       setTimeout(() => {
         window.location.reload();
       }, 600)
-      this.toastr.success('Tipo de Articulo Actualizado', 'Exito');
+      this.toastr.success('Persona Actualizada', 'Exito');
     });
    } else{
     try {
@@ -125,7 +125,7 @@ export class UsuariosComponent {
           window.location.reload();
         }, 600)
 
-        this.toastr.success('Tipo de Articulo Creado', 'Exito');
+        this.toastr.success('Persona Creada', 'Exito');
 
       });
       
@@ -143,7 +143,7 @@ export class UsuariosComponent {
         window.location.reload();
       }, 600)
 
-      this.toastr.success('Tipo de Articulo Eliminado', 'Exito');
+      this.toastr.success('Persona Eliminada', 'Exito');
     })
   }
 
@@ -157,7 +157,7 @@ export class UsuariosComponent {
         window.location.reload();
       }, 600)
 
-      this.toastr.success('Conversion Actualizado', 'Exito');
+      this.toastr.success('Usuario Actualizado', 'Exito');
     });
    } else{
     try {
@@ -166,7 +166,7 @@ export class UsuariosComponent {
           window.location.reload();
         }, 600)
 
-        this.toastr.success('Conversion Creado', 'Exito');
+        this.toastr.success('Usuario Creado', 'Exito');
 
       });
       
@@ -184,7 +184,7 @@ export class UsuariosComponent {
         window.location.reload();
       }, 600)
 
-      this.toastr.success('Conversion Eliminada', 'Exito');
+      this.toastr.success('Usuario Eliminado', 'Exito');
     })
   }
 

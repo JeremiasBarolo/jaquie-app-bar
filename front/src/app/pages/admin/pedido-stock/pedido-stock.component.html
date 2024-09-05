@@ -4,8 +4,6 @@
         Pedido de Stock</button>
   </div>
 
-  <h4 class="text-left mb-5 ml-2">Subtotal general: {{calcularSubtotalGeneral() | currency}}</h4>
-
 
   <div class="container">
     <input pInputText type="text" (input)="applyFilter($event)" placeholder="Buscar por nombre.." class="mb-3">
@@ -21,6 +19,11 @@
                 Descripcion
                 <p-sortIcon field="maestro_articulo.descripcion" style="margin: 16px"></p-sortIcon>
             </th>
+
+            <th pSortableColumn="createdAt">
+              Fecha de Realizacion
+              <p-sortIcon field="createdAt" style="margin: 16px"></p-sortIcon>
+          </th>
               <th pSortableColumn="cant_requerida">
                   Cantidad Pedida
                   <p-sortIcon field="cant_requerida" style="margin: 16px"></p-sortIcon>
@@ -39,22 +42,28 @@
         <tr>
             <td data-toggle="modal" data-target="#InsumoModal" (click)="showCardDetails(rowData)" >{{ rowData.id }}</td>
             <td data-toggle="modal" data-target="#InsumoModal" (click)="showCardDetails(rowData)">{{ rowData.maestro_articulo.descripcion }}</td>
+            <td data-toggle="modal" data-target="#InsumoModal" (click)="showCardDetails(rowData)">{{ rowData.createdAt | date }}</td>
             <td data-toggle="modal" data-target="#InsumoModal" (click)="showCardDetails(rowData)">{{ rowData.cant_requerida}}</td>
             <td data-toggle="modal" data-target="#InsumoModal" (click)="showCardDetails(rowData)">
               <span class="p-overlay-badge">
                   <i class="pi pi-box"></i>
-                  <span class="p-badge">EnProceso</span>
+                  <span class="p-badge">EnProceso...</span>
               </span>
           </td>
          
           <th>
             <button routerLinkActive="router-link-active"
-              type="button" class="btn btn-outline-primary" aria-label="Editar Producto" [routerLink]="['crear-editar', rowData.id]"   >
+              type="button" class="btn btn-outline-success mr-2" aria-label="Finalizar Pedido" (click)="SumarPedido(rowData)" >
+              Finalizar
+          </button>
+
+            <button routerLinkActive="router-link-active"
+              type="button" class="btn btn-outline-primary" aria-label="Editar Producto" data-toggle="modal" data-target="#modalCrearPedido" (click)="editarPedido(rowData)">
               <i class="fa-solid fa-pen-to-square"></i>
           </button>
   
                 <button type="button" (click)="eliminarPedido(rowData.id)"
-                    class="btn btn-outline-danger ms-4" aria-label="Borrar Producto"><i
+                    class="btn btn-outline-danger ms-2" aria-label="Borrar Producto"><i
                         class="fa-solid fa-trash"></i>
                 </button>
           </th>
@@ -67,12 +76,12 @@
   
   
   
-    <div class="modal fade modal" id="InsumoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade modal" id="InsumoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content bg-dark">
           <div class="modal-header">
             <h5 class="modal-title text-center">{{ cardData?.maestro_articulo?.descripcion }}</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -92,7 +101,7 @@
           </div>
         </div>
       </div>
-    </div>
+</div>
 
 
     
@@ -100,7 +109,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content bg-dark">
             <div class="modal-header">
-                <h5 class="modal-title bg-dark" id="modalCrearTipoLabel">Crear/Editar Tipo de Artículo</h5>
+                <h5 class="modal-title bg-dark" id="modalCrearTipoLabel">Crear/Editar Pedido</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>

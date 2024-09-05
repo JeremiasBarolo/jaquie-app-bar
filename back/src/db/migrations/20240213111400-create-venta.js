@@ -10,19 +10,19 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       mesa: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(200)
       },
       precio: {
-        type: Sequelize.INTEGER
+        type: Sequelize.BIGINT(100)
       },
       total: {
-        type: Sequelize.INTEGER
+        type: Sequelize.BIGINT(100)
       },
       forma_pago: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(200)
       },
       estado: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(200)
       },
       createdAt: {
         allowNull: false,

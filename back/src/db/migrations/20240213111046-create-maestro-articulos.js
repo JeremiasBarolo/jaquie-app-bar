@@ -10,10 +10,10 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       costo_unitario: {
-        type: Sequelize.INTEGER
+        type: Sequelize.BIGINT(100)
       },
       descripcion: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(100)
       },
       createdAt: {
         allowNull: false,

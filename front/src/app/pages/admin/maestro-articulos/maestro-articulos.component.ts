@@ -121,7 +121,7 @@ export class MaestroArticulosComponent implements OnInit {
       setTimeout(() => {
         window.location.reload();
       }, 600)
-      this.toastr.success('Tipo de Articulo Actualizado', 'Exito');
+      this.toastr.success('Maestro Actualizado', 'Exito');
     });
    } else{
     try {
@@ -130,7 +130,7 @@ export class MaestroArticulosComponent implements OnInit {
           window.location.reload();
         }, 600)
 
-        this.toastr.success('Tipo de Articulo Creado', 'Exito');
+        this.toastr.success('Maestro Creado', 'Exito');
 
       });
       
@@ -148,7 +148,7 @@ export class MaestroArticulosComponent implements OnInit {
         window.location.reload();
       }, 600)
 
-      this.toastr.success('Tipo de Articulo Eliminado', 'Exito');
+      this.toastr.success('Maestro Eliminado', 'Exito');
     })
   }
 
