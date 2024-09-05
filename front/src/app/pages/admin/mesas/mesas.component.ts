@@ -10,6 +10,7 @@ import { PedidoProduccionService } from '../../../services/pedido-produccion.ser
 import { Subject, takeUntil } from 'rxjs';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { TipoFormaPagoService } from '../../../services/tipo-forma-pago.service';
 
 @Component({
   selector: 'app-mesas',
@@ -41,7 +42,7 @@ export class MesasComponent implements OnInit{
   private destroy$ = new Subject<void>();
   mesa: any;
   total: number | undefined;
-  formaPago: any
+  formasPago: any
   @ViewChild('pdfContent', { static: false })
   pdfContent!: ElementRef;
 
@@ -54,7 +55,8 @@ export class MesasComponent implements OnInit{
     private mesasService: MesasService,
     private fb: FormBuilder,
     private estadisticaService: EstadisticaService,
-    private pedidoProduccionService: PedidoProduccionService
+    private pedidoProduccionService: PedidoProduccionService,
+    private tipoFormaPagoService: TipoFormaPagoService
 
 
 
@@ -83,6 +85,10 @@ export class MesasComponent implements OnInit{
       )
     
       this.traerPedidosMesas()
+    })
+
+    this.tipoFormaPagoService.getAll().pipe(takeUntil(this.destroy$)).subscribe((data: any) => {
+      this.formasPago = data;
     })
 
     

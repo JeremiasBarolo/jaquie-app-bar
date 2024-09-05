@@ -263,13 +263,15 @@
           </div>
           <div class="modal-body">
               <form [formGroup]="form" (ngSubmit)="cambiarEstado(cardData.id, cardData, 'FINALIZADO')">
-                  <div class="form-group">
-                    <label for="nombreTipo">Forma de pago:</label>
-                    <input type="text" class="form-control" id="pago" formControlName="pago" [(ngModel)]="formaPago">
-                    <div *ngIf="form.get('pago')?.invalid && form.get('pago')?.touched" class="text-danger">
-                      Descripcion del tipo es requerido
-                    </div>
+                <div class="form-group">
+                  <label for="pago">Forma de Pago:</label>
+                  <select class="form-control bg-dark" id="pago" formControlName="pago">
+                      <option *ngFor="let forma of formasPago" [value]="forma.id">{{ forma.descripcion }}</option>
+                  </select>
+                  <div *ngIf="form.get('pago')?.invalid && form.get('pago')?.touched" class="text-danger">
+                      Tipo de artículo es requerido
                   </div>
+          </div>
                   
                   <button type="submit" class="btn btn-primary" >Enviar</button>
               </form>
@@ -315,7 +317,7 @@
                 <div class="ticket-content" >
                   <div *ngIf="mesa">
                     <h5>Nombre de la mesa: {{ mesa.mesa }}</h5>
-                    <h5>Forma de Pago: {{ mesa.forma_pago }}</h5>
+                    <h5>Forma de Pago: {{ mesa.TipoFormaPago?.descripcion }}</h5>
 
                     <hr>
                     <h6>Consumido:</h6>
