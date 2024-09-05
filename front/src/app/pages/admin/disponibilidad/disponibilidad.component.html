@@ -45,7 +45,7 @@
         <tr>
             
             <td data-target="#Modal" data-toggle="modal" (click)="showCardDetails(rowData)">{{ rowData?.maestro_articulo?.descripcion }}</td>
-            <td data-target="#Modal" data-toggle="modal" (click)="showCardDetails(rowData)">{{ rowData.maestro_articulo.costo_unitario }}</td>
+            <td data-target="#Modal" data-toggle="modal" (click)="showCardDetails(rowData)">{{ rowData.maestro_articulo.costo_unitario | currency }}</td>
             <td data-target="#Modal" data-toggle="modal" (click)="showCardDetails(rowData)">{{ rowData.conversion_UM.uni_medida}} / {{ rowData.conversion_UM.seg_umedida}}</td>
             <td data-target="#Modal" data-toggle="modal" (click)="showCardDetails(rowData)">{{ rowData.cant_fisica}}</td>
             <td data-target="#Modal" data-toggle="modal" (click)="showCardDetails(rowData)">{{ rowData.cant_disponible}}</td>

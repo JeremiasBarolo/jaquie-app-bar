@@ -42,6 +42,7 @@ export class RecetasComponent {
   cantidadNueva: any
   tipoRecetaSeleccionada: string | undefined;
   private destroy$ = new Subject<void>(); 
+  recetaList: any[] =[]
 
 
   constructor(
@@ -167,14 +168,59 @@ export class RecetasComponent {
     
     }
 
-    // redirectCrearBebida(tipo:any){
-    //   if (tipo && tipo.recetas && tipo.recetas.length === 0) {
-    //     this.router.navigate(['crear-editar', this.accionBebida]);
-    //   }else{
-    //     this.router.navigate(['crear-editar', this.accionBebida, tipo.id]);
-    //   }
+    prepareRecetaData(tipo:any) {
+      const receta = [];
+      
+      if (tipo.PrimerComponenteArticulo) {
+        receta.push({
+          descripcion: tipo.PrimerComponenteArticulo.descripcion,
+          cantidadNecesaria: tipo.primerComponenteCantidad
+        });
+      }
+      
+      if (tipo.SegundoComponenteArticulo) {
+        receta.push({
+          descripcion: tipo.SegundoComponenteArticulo.descripcion,
+          cantidadNecesaria: tipo.segundoComponenteCantidad
+        });
+      }
+      
+      if (tipo.TercerComponenteArticulo) {
+        receta.push({
+          descripcion: tipo.TercerComponenteArticulo.descripcion,
+          cantidadNecesaria: tipo.tercerComponenteCantidad
+        });
+      }
+      
+      if (tipo.CuartoComponenteArticulo) {
+        receta.push({
+          descripcion: tipo.CuartoComponenteArticulo.descripcion,
+          cantidadNecesaria: tipo.cuartoComponenteCantidad
+        });
+      }
+      
+      if (tipo.QuintoComponenteArticulo) {
+        receta.push({
+          descripcion: tipo.QuintoComponenteArticulo.descripcion,
+          cantidadNecesaria: tipo.quintoComponenteCantidad
+        });
+      }
+      
     
-    // }
+      
+      this.recetaList = receta;
+
+      console.log(this.dataModal.receta);
+      
+    }
+  
+    
+    onModalShow(tipo:any) {
+      
+      
+      this.prepareRecetaData(tipo);
+      this.dataModal = tipo
+    }
 }
   
 
