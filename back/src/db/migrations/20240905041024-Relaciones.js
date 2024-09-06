@@ -195,19 +195,30 @@ await queryInterface.addColumn('Bebidas', 'quintoComponente', {
 });
 
 
-await queryInterface.addColumn('venta', 'tipoFormaPagoId', {
-  type: Sequelize.INTEGER,
-  allowNull: true,
-  references: {
-    model: 'TipoFormaPagos',
-    key: 'id'
-  },
-  onUpdate: 'CASCADE',
-  onDelete: 'CASCADE'
-});
 
 // <=============================== Fin Bebidas ===============================> 
 
+  await queryInterface.addColumn('venta', 'tipoFormaPagoId', {
+    type: Sequelize.INTEGER,
+    allowNull: true,
+    references: {
+      model: 'TipoFormaPagos',
+      key: 'id'
+    },
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE'
+  });
+  
+  await queryInterface.addColumn('estadisticas', 'mejorArticuloId', {
+    type: Sequelize.INTEGER,
+    allowNull: true,
+    references: {
+      model: 'maestro_articulos',
+      key: 'id'
+    },
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE'
+  });
     
   },
 

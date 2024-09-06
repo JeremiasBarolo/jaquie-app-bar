@@ -18,6 +18,9 @@ module.exports = {
       profit: {
         type: Sequelize.BIGINT(100)
       },
+      totalArticulo: {
+        type: Sequelize.BIGINT(100)
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

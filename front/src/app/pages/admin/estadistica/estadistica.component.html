@@ -23,6 +23,8 @@
                       <th>Recaudación</th>
                       <th>Costo</th>
                       <th>Profit</th>
+                      <th>Articulo mas vendido</th>
+                      <th>Cantidad</th>
                   </tr>
               </ng-template>
               <ng-template pTemplate="body" let-dia>
@@ -31,6 +33,8 @@
                       <td>{{ dia.recaudacion | currency }}</td>
                       <td>{{ dia.costo_total | currency }}</td>
                       <td>{{ dia.profit | currency }}</td>
+                      <td>{{ dia.MejorArticulo  }}</td>
+                      <td>{{ dia.totalArticulo }} u</td>
                   </tr>
               </ng-template>
           </p-table>

@@ -4,10 +4,23 @@
 
     const listAllestadistica= async () => {
     try {
-        const estadistica = await models.estadistica.findAll(
-        );
+        const estadistica = await models.estadistica.findAll({
+            include: [
+                {all:true}
+            ]
+        });
         console.log('✅ estadistica were found');
-        return estadistica;
+        return estadistica.map(estadistica => ({
+            id: estadistica.id,
+            totalArticulo: estadistica.totalArticulo,
+            profit: estadistica.profit,
+            recaudacion: estadistica.recaudacion,
+            costo_total: estadistica.costo_total,
+            mejorArticuloId: estadistica.mejorArticuloId,
+            MejorArticulo: estadistica.mejorArticulo.descripcion,
+            createdAt: estadistica.createdAt,
+            updatedAt: estadistica.updatedAt
+          }))
     } catch (err) {
         console.error('🛑 Error when fetching estadistica', err);
         throw err;

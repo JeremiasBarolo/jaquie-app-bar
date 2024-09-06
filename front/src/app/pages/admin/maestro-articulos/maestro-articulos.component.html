@@ -96,7 +96,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content bg-dark">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalCrearTipoLabel">Crear/Editar Tipo de Artículo</h5>
+                <h5 class="modal-title" id="modalCrearTipoLabel">Crear/Editar Maestro de Artículo</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -108,13 +108,13 @@
                       <label for="nombreTipo">Descricion</label>
                       <input type="text" class="form-control bg-dark" id="nombreTipo" formControlName="description">
                       <div *ngIf="maestroForm.get('description')?.invalid && maestroForm.get('description')?.touched" class="text-danger">
-                        Descripcion es requerido
+                       Campo requerido
                       </div>
 
                       <label for="nombreTipo">Costo Unitario</label>
                       <input type="number" class="form-control bg-dark" id="costo_unit" formControlName="costo_unit">
                       <div *ngIf="maestroForm.get('costo_unit')?.invalid && maestroForm.get('costo_unit')?.touched" class="text-danger">
-                        Costo Unitario es requerido
+                        Campo requerido
                       </div>
 
                         <div class="form-group">
@@ -135,7 +135,7 @@
                                     <option *ngFor="let conversion of conversionesUM" [value]="conversion.id">{{ conversion.uni_medida }} / {{ conversion.seg_umedida }}</option>
                                 </select>
                                 <div *ngIf="maestroForm.get('conversionUM')?.invalid && maestroForm.get('conversionUM')?.touched" class="text-danger">
-                                    Conversión de unidad de medida es requerida
+                                    Campo requerido
                                 </div>
                             </div>
 
