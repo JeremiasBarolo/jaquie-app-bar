@@ -13,6 +13,7 @@ const BebidasController= require('./Bebidas');
 const loginController= require('./login');
 const agregarPedidoController= require('./agregarPedido');
 const TipoFormaPagosController= require('./TipoFormaPagos');
+const verPdfController= require('./verPdf');
 
 
 module.exports= {
@@ -30,5 +31,6 @@ module.exports= {
     BebidasController,
     loginController,
     agregarPedidoController,
-    TipoFormaPagosController
+    TipoFormaPagosController,
+    verPdfController
 }

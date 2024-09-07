@@ -29,13 +29,27 @@
 
     const listOneestadistica= async (estadistica_id) => {
     try {
-        const oneestadistica= await models.estadistica.findByPk(estadistica_id, 
-        );
+        const oneestadistica= await models.estadistica.findByPk(estadistica_id,{ 
+            include: [
+                {all:true}
+            ]
+        
+        });
         if (!oneestadistica) {
         
         return null;
         }
-        return oneestadistica;
+        return {
+            id: oneestadistica.id,
+            totalArticulo: oneestadistica.totalArticulo,
+            profit: oneestadistica.profit,
+            recaudacion: oneestadistica.recaudacion,
+            costo_total: oneestadistica.costo_total,
+            mejorArticuloId: oneestadistica.mejorArticuloId,
+            MejorArticulo: oneestadistica.mejorArticulo.descripcion,
+            createdAt: oneestadistica.createdAt,
+            updatedAt: oneestadistica.updatedAt
+        };
     } catch (err) {
         
         throw err;

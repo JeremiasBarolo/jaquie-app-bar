@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { EstadisticaService } from '../../../services/estadistica.service';
 import { Subject, takeUntil } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-estadistica',
@@ -70,7 +71,7 @@ export class EstadisticaComponent implements OnInit {
   
   
 
-  constructor(private estadisticasService: EstadisticaService) { }
+  constructor(private estadisticasService: EstadisticaService, private router:Router) { }
 
   ngOnInit(): void {
     this.obtenerEstadisticas();
@@ -177,5 +178,9 @@ export class EstadisticaComponent implements OnInit {
         console.error('Error al borrar todas las estadísticas:', error);
       }
     );
+  }
+
+  verPDF(id: number) {
+    this.router.navigate(['/admin/estadisticas/ver-pdf', id]);
   }
 }

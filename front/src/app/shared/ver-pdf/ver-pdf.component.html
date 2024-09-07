@@ -1,0 +1,56 @@
+<div class="text-right">
+    <button class="btn btn-primary button m-4" (click)="generarDocumento()">Generar PDF</button>
+</div>
+
+<div class="container">
+    <div class="card">
+        <div class="card-body" #pdfContent style="background-color: white;">
+            <div class="row firma-rectangulo-info">
+                <div class="col-md-12">
+                    <div id="info-empresa" class="text-center">
+                        <h3><strong>Dr. Jhon</strong></h3>
+                        <p>Generado por Dr. Soft</p>
+                    </div>
+                </div>
+            </div>
+            
+            <h2 class="mt-4">Detalles de los Productos</h2>
+            
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Cantidad</th>
+                        <th>Precio unit.</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container>
+                        <tr *ngFor="let item of data">
+                            <td>{{ item.articulo }}</td>
+                            <td> {{item.cantidad }}</td>
+                            <td>{{ item.precio | currency }}</td>
+                            <td>{{ calcularTotal(item) | currency }}</td>
+                        </tr>
+                    </ng-container>
+                </tbody>
+            </table>
+            
+            <br>
+            <br>
+            
+            <div class="firma-rectangulo">
+                <div class="text-right">
+                    
+                    <p><strong>Subtotal:</strong> {{ dia.recaudacion | currency }}</p>
+                    <p><strong>Costo Producción:</strong> {{ dia.costo_total | currency }}</p>
+                    <p><strong>Ganancia Total:</strong> {{ dia.profit | currency }}</p>
+                </div>
+            </div>
+            
+            <br>
+            <br>
+        </div>
+    </div>
+</div>

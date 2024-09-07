@@ -7,6 +7,7 @@ import { FooterComponent } from './footer/footer.component';
 
 import { ConsultaDisponibilidadComponent } from './consulta-disponibilidad/consulta-disponibilidad.component';
 import { TableModule } from 'primeng/table';
+import { VerPdfComponent } from './ver-pdf/ver-pdf.component';
 
 
 
@@ -20,6 +21,7 @@ import { TableModule } from 'primeng/table';
     BreadcrumbsComponent,
     FooterComponent,
     ConsultaDisponibilidadComponent,
+    VerPdfComponent,
 
 
 
@@ -36,6 +38,7 @@ import { TableModule } from 'primeng/table';
     BreadcrumbsComponent,
     FooterComponent,
     ConsultaDisponibilidadComponent,
+    VerPdfComponent,
   ]
 })
 export class SharedModule { }

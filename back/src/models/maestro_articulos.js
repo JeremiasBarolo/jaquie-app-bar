@@ -108,6 +108,14 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: 'CASCADE'
       });
 
+      maestro_articulos.hasMany(models.ProductosDelDia, {
+        foreignKey: 'articuloId',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      });
+
+      
+
       
 
     }

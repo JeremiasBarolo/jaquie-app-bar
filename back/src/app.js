@@ -16,7 +16,8 @@ const {
     bebidasRouter,
     loginRouter,
     agregarPedidoRouter,
-    TipoFormaPagosRouter
+    TipoFormaPagosRouter,
+    verPdfRouter
     
  } = require('./routes')
 const { initializeDB } = require('./db/initializeDB');
@@ -52,6 +53,7 @@ app.use("/tipo_forma_pago", TipoFormaPagosRouter)
 app.use("/agregarPedido", agregarPedidoRouter)
 app.use("/traerPedidos", agregarPedidoRouter)
 app.use("/pedidosVenta", agregarPedidoRouter)
+app.use("/ver-pdf", verPdfRouter)
 
 
 

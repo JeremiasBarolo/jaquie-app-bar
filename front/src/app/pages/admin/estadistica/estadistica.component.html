@@ -25,6 +25,7 @@
                       <th>Profit</th>
                       <th>Articulo mas vendido</th>
                       <th>Cantidad</th>
+                      <th>PDF</th>
                   </tr>
               </ng-template>
               <ng-template pTemplate="body" let-dia>
@@ -35,6 +36,11 @@
                       <td>{{ dia.profit | currency }}</td>
                       <td>{{ dia.MejorArticulo  }}</td>
                       <td>{{ dia.totalArticulo }} u</td>
+                      <td>
+                        <button (click)="verPDF(dia.id)">
+                            Ver en PDF
+                        </button>
+                      </td>
                   </tr>
               </ng-template>
           </p-table>

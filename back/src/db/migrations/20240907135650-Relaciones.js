@@ -219,6 +219,29 @@ await queryInterface.addColumn('Bebidas', 'quintoComponente', {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE'
   });
+
+
+  await queryInterface.addColumn('ProductosDelDia', 'articuloId', {
+    type: Sequelize.INTEGER,
+    allowNull: true,
+    references: {
+      model: 'maestro_articulos',
+      key: 'id'
+    },
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE'
+  });
+  
+  await queryInterface.addColumn('ProductosDelDia', 'estadisticaId', {
+    type: Sequelize.INTEGER,
+    allowNull: true,
+    references: {
+      model: 'estadisticas',
+      key: 'id'
+    },
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE'
+  });
     
   },
 

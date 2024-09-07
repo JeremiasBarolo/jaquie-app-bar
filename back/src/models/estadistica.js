@@ -15,6 +15,12 @@ module.exports = (sequelize, DataTypes) => {
         as: 'mejorArticulo',
         onUpdate: 'CASCADE',
       });
+
+      estadistica.hasMany(models.ProductosDelDia, {
+        foreignKey: 'estadisticaId',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      });
     }
   }
   estadistica.init({

@@ -1,20 +1,10 @@
 
 var models = require('../models');
+const {listOnemaestro_articulos} = require('./maestro_articulos');
 
-const fs = require('fs');
-const path = require('path');
-const puppeteer = require('puppeteer');
-const {listAllmaestro_articulos, listOnemaestro_articulos} = require('./maestro_articulos');
-const { log } = require('console');
 
-// <=================== fecha de realizacion =================>
-const now = new Date();
-const year = now.getFullYear();
-const month = String(now.getMonth() + 1).padStart(2, '0');
-const day = String(now.getDate()).padStart(2, '0');
-const hours = String(now.getHours()).padStart(2, '0');
-const minutes = String(now.getMinutes()).padStart(2, '0');
-const seconds = String(now.getSeconds()).padStart(2, '0');
+
+
 
 
 
@@ -55,6 +45,8 @@ const cerrarCaja = async () => {
 
         let mejorArticuloId = await encontrarMejorArticulo(mesas)
 
+       
+
         let costoTotal = 0;
         let recaudacionTotal = 0;
 
@@ -83,7 +75,15 @@ const cerrarCaja = async () => {
             totalArticulo: mejorArticuloId.cantidad
         });
 
-        
+        let productosVendidos = await listadoDeProductos(mesas)
+
+        for(const producto of productosVendidos){
+            await models.ProductosDelDia.create({
+                cantidad: producto.cantidad,
+                articuloId: producto.id,
+                estadisticaId: estadistica.id
+            })
+        }
 
         
         await models.pedido_produccion.destroy({
@@ -153,18 +153,18 @@ const encontrarMejorArticulo = async (ventas) => {
     const articulosVendidos = {};
   
     for (const venta of ventas) {
-      // Recorrer cada venta y sus artículos
+      
       for (const maestroArticulo of venta.maestro_articulos) {
         const cantidadVendida = maestroArticulo.pedido_produccion.cant_requerida;
   
-        // Sumar la cantidad vendida para cada artículo
+        
         if (!articulosVendidos[maestroArticulo.id]) {
           articulosVendidos[maestroArticulo.id] = 0;
         }
   
         articulosVendidos[maestroArticulo.id] += cantidadVendida;
   
-        // Actualizar si este artículo es el más vendido
+        
         if (articulosVendidos[maestroArticulo.id] > mejorCantidad) {
           mejorCantidad = articulosVendidos[maestroArticulo.id];
           mejorArticuloId = maestroArticulo.id;
@@ -175,6 +175,31 @@ const encontrarMejorArticulo = async (ventas) => {
     return { id: mejorArticuloId, cantidad: mejorCantidad };
   };
   
+
+  const listadoDeProductos = async (mesas) => {
+    const productosVendidos = {};
+  
+    // Recorrer todas las mesas
+    for (const mesa of mesas) {
+      
+      for (const maestroArticulo of mesa.maestro_articulos) {
+        const articuloId = maestroArticulo.id;
+        const cantidadVendida = maestroArticulo.pedido_produccion.cant_requerida;
+  
+        
+        if (!productosVendidos[articuloId]) {
+          productosVendidos[articuloId] = {
+            id: articuloId,
+            cantidad: 0
+          };
+        }
+  
+        productosVendidos[articuloId].cantidad += cantidadVendida;
+      }
+    }
+  
+    return Object.values(productosVendidos);
+  };
 
 
 
