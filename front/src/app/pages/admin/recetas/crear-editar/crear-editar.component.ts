@@ -221,7 +221,7 @@ export class CrearEditarComponent {
       this.maestroArticulosService.getAll().pipe(takeUntil(this.destroy$)).subscribe(
         (maestros: any[]) => {
 
-            this.listMaestro = maestros.filter(maestro => maestro.tipo_articulo.description !== 'Productos Elaborados' && maestro.tipo_articulo.description !== 'Insumos' );
+            this.listMaestro = maestros.filter(maestro => maestro.tipo_articulo.description == 'Bebidas'  );
             maestros.map(maestro => {
               if(maestro.tipo_articulo.description == 'Insumos'){
                 console.log(maestro);
@@ -321,9 +321,7 @@ export class CrearEditarComponent {
             
             
             
-            this.listDisponibilidad = this.listDisponibilidad.filter(insumo =>
-              !this.selectedEntities.some(selected => selected.id === insumo.id)
-            );
+            
   
             this.listMaestro.push(res)
             
@@ -332,6 +330,10 @@ export class CrearEditarComponent {
               cant_fisica: res.receta[0].cant_fisica,
               n_linea: res.receta[0].n_linea
             });
+
+            this.listDisponibilidad = this.listDisponibilidad.filter(insumo =>
+              !this.selectedEntities.some(selected => selected.id === insumo.id)
+            );
           } else {
             
             this.listDisponibilidad = res; 

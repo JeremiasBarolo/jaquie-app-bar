@@ -10,10 +10,10 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       cant_requerida: {
-        type: Sequelize.INTEGER
+        type: Sequelize.BIGINT(100)
       },
       estado: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(100)
       },
       createdAt: {
         allowNull: false,

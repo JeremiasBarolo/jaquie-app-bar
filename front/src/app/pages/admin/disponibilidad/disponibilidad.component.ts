@@ -8,6 +8,7 @@ import { MaestroArticulosService } from '../../../services/maestro-articulos.ser
 import { TipoArticulosService } from '../../../services/tipo-articulos.service';
 import { DisponibilidadArticulosService } from '../../../services/disponibilidad-articulos.service';
 import { Subject, reduce, takeUntil } from 'rxjs';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-disponibilidad',
@@ -36,6 +37,7 @@ export class DisponibilidadComponent implements OnInit{
   cantidadNueva: any
   filteredDisp: any[] =[]
   private destroy$ = new Subject<void>();
+  isAdmin: any;
   
 
 
@@ -44,13 +46,16 @@ export class DisponibilidadComponent implements OnInit{
     private conversionUmService:ConversionUmService,
     private disponibilidadService:DisponibilidadArticulosService,
     private fb: FormBuilder,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private authService: AuthService
     
     
     ){}
 
 
   ngOnInit(): void {
+
+      this.isAdmin = this.authService.isAllowed();
 
       this.maestroArticulosService.getAll().pipe(takeUntil(this.destroy$)).subscribe(maestros => {
         maestros.forEach(maestro => {

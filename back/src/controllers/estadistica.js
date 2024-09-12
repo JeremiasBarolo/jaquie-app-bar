@@ -21,7 +21,7 @@ const listOneestadistica = async (req, res) => {
   try {
     const id = req.params.estadistica_id;
     let estadistica = await estadisticaService.listOneestadistica(id);
-    formattedStats(estadistica)
+
     res.json(estadistica);
   } catch (err) {
     res.status(500).json({ action: "listOneestadistica", error: err.message });
@@ -67,7 +67,7 @@ module.exports = {
 const formattedStats = async (stats) => {
   
 
-  return stats.forEach(stat => ({
+  return stats.map(stat => ({
     id: stat.id,
     ganancia: stat.ganancia,
     recaudacionTotal: stat.recaudacionTotal,

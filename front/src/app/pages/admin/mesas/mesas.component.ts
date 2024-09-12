@@ -1,5 +1,5 @@
 import { ViewportScroller } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { MesasService } from '../../../services/mesas.service';
@@ -8,7 +8,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EstadisticaService } from '../../../services/estadistica.service';
 import { PedidoProduccionService } from '../../../services/pedido-produccion.service';
 import { Subject, takeUntil } from 'rxjs';
-
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+import { TipoFormaPagoService } from '../../../services/tipo-forma-pago.service';
 
 @Component({
   selector: 'app-mesas',
@@ -38,6 +40,11 @@ export class MesasComponent implements OnInit{
   accion:any = 'agregarPedido'
   idAccion:any
   private destroy$ = new Subject<void>();
+  mesa: any;
+  total: number | undefined;
+  formasPago: any
+  @ViewChild('pdfContent', { static: false })
+  pdfContent!: ElementRef;
 
 
   constructor(
@@ -48,7 +55,8 @@ export class MesasComponent implements OnInit{
     private mesasService: MesasService,
     private fb: FormBuilder,
     private estadisticaService: EstadisticaService,
-    private pedidoProduccionService: PedidoProduccionService
+    private pedidoProduccionService: PedidoProduccionService,
+    private tipoFormaPagoService: TipoFormaPagoService
 
 
 
@@ -60,6 +68,7 @@ export class MesasComponent implements OnInit{
      }
 
   ngOnInit(): void {
+   
     this.mesasService.getAll().pipe(takeUntil(this.destroy$)).subscribe((data: any) => {
       console.log(data);
       
@@ -78,6 +87,10 @@ export class MesasComponent implements OnInit{
       this.traerPedidosMesas()
     })
 
+    this.tipoFormaPagoService.getAll().pipe(takeUntil(this.destroy$)).subscribe((data: any) => {
+      this.formasPago = data;
+    })
+
     
 
     
@@ -86,7 +99,7 @@ export class MesasComponent implements OnInit{
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-  }
+}
 
 cambiarEstado(id?: number, pedido?: any, estado?: string, devolverInsumos?: any, selectedId?:number) {
   if (id){
@@ -306,10 +319,54 @@ this.mesasService.sumarPedido(this.idAccion).pipe(takeUntil(this.destroy$)).subs
 );
 }
 
-setIdEentidad(id:any){
+setIdEentidad(id:any, accion?:any){
   this.idAccion = id
+  if(accion){
+    this.sumarPedido()
+  }
+}
+
+abrirModal(mesaData: any): void {
+  console.log(mesaData);
+  
+  this.mesa = mesaData;
+  this.total = this.calcularTotal(mesaData.pedidoFinalizado);
+}
+
+calcularTotal(consumo: any[]): number {
+  return consumo.reduce((acc, item) => acc + (item.cant_requerida * item.costo_unitario), 0);
 }
 
 
+generatePDF(): void {
+  const data = this.pdfContent.nativeElement;
+
+  html2canvas(data, {
+    scale: 2,
+    useCORS: true
+  }).then(canvas => {
+    const imgWidth = 210;
+    const pageHeight = 295;
+    const imgHeight = canvas.height * imgWidth / canvas.width;
+    let heightLeft = imgHeight - pageHeight;
+
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    
+    pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, imgWidth, Math.min(imgHeight, pageHeight));
+
+    if (heightLeft > 0) {
+      let position = -pageHeight;
+
+      while (heightLeft > 0) {
+        pdf.addPage();
+        pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, position, imgWidth, imgHeight);
+        position -= pageHeight;
+        heightLeft -= pageHeight;
+      }
+    }
+
+    pdf.save(`ticket-${this.mesa.mesa}-${this.mesa.createdAt}.pdf`);
+  });
+}
 
 }

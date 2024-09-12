@@ -10,13 +10,13 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       cant_necesaria: {
-        type: Sequelize.INTEGER
+        type: Sequelize.FLOAT
       },
       n_linea: {
-        type: Sequelize.INTEGER
+        type: Sequelize.FLOAT
       },
       cant_fisica: {
-        type: Sequelize.INTEGER
+        type: Sequelize.FLOAT
       },
       createdAt: {
         allowNull: false,

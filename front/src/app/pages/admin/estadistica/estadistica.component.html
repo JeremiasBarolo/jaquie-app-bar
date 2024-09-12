@@ -5,52 +5,91 @@
   
 </div>
 <div class="container">
-    <div class="row ">
-        <div class="col-md-8">
-            <h3>Estadisticas del Año</h3>
-            <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [xaxis]="chartOptions.xaxis"></apx-chart>
-        </div>
-        <div class="col-md-4">
-            <h3>Últimos 7 días</h3>
-            <table class="table table-hover">
-              <thead>
-                <tr>
-                  <th>Fecha</th>
-                  <th>Recaudacion</th>
-                  <th>Costo</th>
-                  <th>Profit</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let dia of ultimos7Dias">
-                  <td>{{ dia.fecha }}</td>
-                  <td>{{ dia.recaudacion | currency }}</td>
-                  <td>{{ dia.costo_total | currency }}</td>
-                  <td>{{ dia.profit | currency }}</td>
-                </tr>
-              </tbody>
-            </table>
+      <div class="row ">
+          <div class="col-md-12">
+              <h3>Estadisticas del Año</h3>
+              <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [xaxis]="chartOptions.xaxis"></apx-chart>
           </div>
-        </div>
-
-        <div class="col-md-4">
-          <h3>Recaudacion Mes a Mes</h3>
-          <table class="table table-hover">
-              <thead>
-                  <tr>
-                      <th>Mes</th>
-                      <th>Recaudacion</th>
-                      
-                  </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let mes of recaudacionPorMes">
-                  <td>{{ mes.mes }}</td>
-                  <td>{{ mes.recaudacion | currency }}</td>
-                  
-              </tr>
-              </tbody>
-          </table>
       </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          
+          <h3>Todos los Dias</h3>
+          <p-table [value]="estadisticas" class="p-datatable-sm p-datatable-gridlines bg-dark" [paginator]="true" [rows]="7">
+              <ng-template pTemplate="header">
+                  <tr class="bg-dark">
+                      <th>Fecha</th>
+                      <th>Recaudación</th>
+                      <th>Costo</th>
+                      <th>Profit</th>
+                      <th>Articulo mas vendido</th>
+                      <th>Cantidad</th>
+                      <th>PDF</th>
+                  </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-dia>
+                  <tr class="bg-dark">
+                      <td>{{ dia.createdAt | date }}</td>
+                      <td>{{ dia.recaudacion | currency }}</td>
+                      <td>{{ dia.costo_total | currency }}</td>
+                      <td>{{ dia.profit | currency }}</td>
+                      <td>{{ dia.MejorArticulo  }}</td>
+                      <td>{{ dia.totalArticulo }} u</td>
+                      <td>
+                        <button (click)="verPDF(dia.id)">
+                            Ver en PDF
+                        </button>
+                      </td>
+                  </tr>
+              </ng-template>
+          </p-table>
+      </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col-md-6">
+          
+            <h3>Últimos 7 días</h3>
+            <p-table [value]="ultimos7Dias" class="p-datatable-sm p-datatable-gridlines bg-dark" [paginator]="true" [rows]="7">
+                <ng-template pTemplate="header">
+                    <tr class="bg-dark">
+                        <th>Fecha</th>
+                        <th>Recaudación</th>
+                        <th>Costo</th>
+                        <th>Profit</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-dia>
+                    <tr class="bg-dark">
+                        <td>{{ dia.fecha }}</td>
+                        <td>{{ dia.recaudacion | currency }}</td>
+                        <td>{{ dia.costo_total | currency }}</td>
+                        <td>{{ dia.profit | currency }}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+        <div class="col-md-6">
+          <h3>Recaudación Mes a Mes</h3>
+          <p-table [value]="recaudacionPorMes" class="p-datatable-sm p-datatable-gridlines bg-dark" [paginator]="true" [rows]="7">
+              <ng-template pTemplate="header">
+                  <tr class="bg-dark">
+                      <th>Mes</th>
+                      <th>Recaudación</th>
+                  </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-mes>
+                  <tr class="bg-dark">
+                      <td>{{ mes.mes }}</td>
+                      <td>{{ mes.recaudacion | currency }}</td>
+                  </tr>
+              </ng-template>
+          </p-table>
+      </div>
+      
+      </div>
+        
     
 </div>

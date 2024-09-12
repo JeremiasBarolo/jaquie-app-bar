@@ -199,7 +199,8 @@ var models = require('../models');
                 }
                 resultados.push({
                     name: nombre.descripcion,
-                    cantidadMaxima: cantidadMaxima
+                    cantidadMaxima: cantidadMaxima,
+                    tipo: 'Bebida'
                 });
             }
             console.log('Disponibilidad de bebidas:', resultados);

@@ -1,5 +1,5 @@
 import { ViewportScroller } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -30,7 +30,13 @@ export class PedidoStockComponent {
   depositos: any[] = [] 
   selectedDepositoId: number | undefined;
   pedidoNuevo: any
+  listPedidos: any[] = []
   private destroy$ = new Subject<void>();
+  filteredPedidos: any;
+
+
+
+
 
   constructor(
     private pedidoStockService: PedidoStockService,
@@ -43,28 +49,33 @@ export class PedidoStockComponent {
     
 
 
-    ) {
+  ) {
       this.form = this.fb.group({
         cant_requerida: ['',Validators.required],
         articuloId: ['',Validators.required],
       });
-    }
+  }
 
 
   ngOnInit(): void {
     this.pedidoStockService.getAll().pipe(takeUntil(this.destroy$)).subscribe(data =>{
-      this.listPedido = data
+
+      this.listPedidos = data
+      this.filteredPedidos = [...this.listPedidos];
     });
 
+  
     this.maestroService.getAll().pipe(takeUntil(this.destroy$)).subscribe(maestros => {
       maestros.forEach(maestro => {
-        if(maestro.tipo_articulo.description === 'Insumos'){
+        if(maestro.tipo_articulo.description !== 'Productos Elaborados' && maestro.tipo_articulo.description !== 'Bebidas'){
           this.listMaestro.push(maestro)
         }
       })
       
     })
   }
+
+  
 
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -122,11 +133,11 @@ export class PedidoStockComponent {
         
         
         setTimeout(() => {
-          this.router.navigate(['admin/disponibilidad']);
+        window.location.reload();
         }, 600)
 
       
-        this.toastr.success('Pedido Creado', 'Exito');
+        this.toastr.success('Pedido Finalizado', 'Exito');
 
       });
       
@@ -180,6 +191,21 @@ eliminarPedido(id?: number){
   })
 }
 
+applyFilter(event: any): void {
+  const value = event.target.value;
+  
+  this.filteredPedidos = this.listPedidos.filter(pedido => {
+    return pedido.maestro_articulo.descripcion.toLowerCase().includes(value.toLowerCase());
+  });
+}
 
+resetForm() {
+  this.form.setValue({
+    cant_requerida: '',
+    articuloId: '',
+  });
+
+   
+}
 
 }

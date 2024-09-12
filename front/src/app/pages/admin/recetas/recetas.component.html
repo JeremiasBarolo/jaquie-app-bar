@@ -1,9 +1,7 @@
 
 <app-breadcrumbs [titulo]= 'breadcrumbItems'></app-breadcrumbs>
 <div class="text-right">
-    <!-- <button type="button" class="btn btn-success mr-2" aria-label="Editar Tipo" [routerLink]="['crear-editar', accionReceta]">Agregar Receta Comida</button> -->
     <button type="button" class="btn btn-success mr-2" aria-label="Editar Tipo" data-target="#RecetaModal" data-toggle="modal"> Agregar Receta</button>
-    <!-- <button type="button" class="btn btn-primary mr-2" aria-label="Editar Tipo" [routerLink]="['crear-editar', accionBebida]">Agregar Receta Bebida</button> -->
 </div>
 
 <div class="container">
@@ -13,41 +11,36 @@
             
             <section style="margin: 16px">
                 <h3>Productos elaborados</h3>
-                <table class="table table-hover">
-                   
-                    <thead>
+                <p-table [value]="listMaestro" class="p-datatable-sm p-datatable-gridlines" [paginator]="true" [rows]="10" selectionMode="single" (onRowSelect)="showCardDetails($event.data)">
+                    <ng-template pTemplate="header">
                         <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Descripción</th>
-                            <th scope="col">Costo Unit</th>
-                            <th scope="col">Tipo Articulo</th>
-                            <th scope="col">Unidad de Medida</th>
-                            <th scope="col">Recetas</th>
-                            <th scope="col">Acciones</th>
+                            <th>#</th>
+                            <th>Descripción</th>
+                            <th>Costo Unit</th>
+                            <th>Tipo Articulo</th>
+                            <th>Unidad de Medida</th>
+                            <th>Recetas</th>
+                            <th>Acciones</th>
                         </tr>
-                    </thead>
-                    <tbody>
-                        
-                        <tr *ngFor="let tipo of listMaestro" (click)="showCardDetails(tipo)">
-                            <th scope="row">{{ tipo.id }}</th>
-                            <td data-target="#Modal" data-toggle="modal" >{{ tipo.descripcion }}</td>
-                            <td data-target="#Modal" data-toggle="modal" >{{ tipo.costo_unitario }}</td>
-                            <td data-target="#Modal" data-toggle="modal" >{{ tipo.tipo_articulo.description }}</td>
-                            <td data-target="#Modal" data-toggle="modal" >{{ tipo.conversion_UM.uni_medida}} / {{ tipo.conversion_UM.seg_umedida}}</td>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-tipo>
+                        <tr >
+                            <td data-target="#Modal" data-toggle="modal" (click)="showCardDetails(tipo)">{{ tipo.id }}</td>
+                            <td data-target="#Modal" data-toggle="modal" (click)="showCardDetails(tipo)">{{ tipo.descripcion }}</td>
+                            <td data-target="#Modal" data-toggle="modal" (click)="showCardDetails(tipo)">{{ tipo.costo_unitario | currency }}</td>
+                            <td data-target="#Modal" data-toggle="modal" (click)="showCardDetails(tipo)">{{ tipo.tipo_articulo.description }}</td>
+                            <td data-target="#Modal" data-toggle="modal" (click)="showCardDetails(tipo)">{{ tipo.conversion_UM.uni_medida }} / {{ tipo.conversion_UM.seg_umedida }}</td>
                             <td>
-                                <!-- Verifica si el array de recetas tiene longitud mayor a cero -->
                                 <ng-container *ngIf="tipo.receta && tipo.receta.length > 0; else noContiene">
                                     CONTIENE
                                 </ng-container>
-                               
                                 <ng-template #noContiene>
                                     NO CONTIENE
                                 </ng-template>
                             </td>
                             <td>
-                                <!-- Botones para editar y borrar el tipo de artículo -->
-                                <div class="wrapper d-flex justify-content-end">
-                                    <button type="button" (click)="redirectCrearElaborado(tipo)" class="btn btn-outline-primary" >
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" (click)="redirectCrearElaborado(tipo)" class="btn btn-outline-primary">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </button>
                                     <button type="button" class="btn btn-outline-danger ms-4" data-toggle="modal" data-target="#EliminarMaestro" (click)="DataEntidad(tipo)" aria-label="Borrar Tipo">
@@ -56,8 +49,8 @@
                                 </div>
                             </td>
                         </tr>
-                    </tbody>
-                </table>
+                    </ng-template>
+                </p-table>
             </section>
         </div>
     </div>
@@ -67,32 +60,25 @@
             
         <section style="margin: 16px">
             <h4> Bebidas</h4>
-            <table class="table table-hover">
-               
-                <thead>
+            <p-table [value]="listBebidas" class="p-datatable-sm p-datatable-gridlines" [paginator]="true" [rows]="10" selectionMode="single" (onRowSelect)="showCardDetails($event.data)">
+                <ng-template pTemplate="header">
                     <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Descripción</th>
-                        <th scope="col">Costo Unit</th>
-                        <th scope="col">Tipo Articulo</th>
-                        
-                        
-                        <th scope="col">Acciones</th>
+                        <th>#</th>
+                        <th>Descripción</th>
+                        <th>Costo Unit</th>
+                        <th>Tipo Articulo</th>
+                        <th>Acciones</th>
                     </tr>
-                </thead>
-                <tbody>
-                    
-                    <tr *ngFor="let tipo of listBebidas" (click)="showCardDetails(tipo)">
-                        <th scope="row">{{ tipo.id }}</th>
-                        <td data-target="#BebidaModal" data-toggle="modal" >{{ tipo.NombreArticulo?.descripcion }}</td>
-                        <td data-target="#BebidaModal" data-toggle="modal" >{{ tipo.NombreArticulo?.costo_unitario | currency}}</td>
-                        <td data-target="#BebidaModal" data-toggle="modal" >{{ tipo.NombreArticulo?.tipo_articulo?.description }}</td>
-                        
-                       
+                </ng-template>
+                <ng-template pTemplate="body" let-tipo>
+                    <tr>
+                        <td data-target="#BebidaModal" data-toggle="modal" (click)="onModalShow(tipo)">{{ tipo.id }}</td>
+                        <td data-target="#BebidaModal" data-toggle="modal" (click)="onModalShow(tipo)">{{ tipo.NombreArticulo?.descripcion }}</td>
+                        <td data-target="#BebidaModal" data-toggle="modal" (click)="onModalShow(tipo)">{{ tipo.NombreArticulo?.costo_unitario | currency }}</td>
+                        <td data-target="#BebidaModal" data-toggle="modal" (click)="onModalShow(tipo)">{{ tipo.NombreArticulo?.tipo_articulo?.description }}</td>
                         <td>
-                            <!-- Botones para editar y borrar el tipo de artículo -->
-                            <div class="wrapper d-flex justify-content-end">
-                                <button type="button" [routerLink]="['crear-editar', accionBebida, tipo.id]" class="btn btn-outline-primary" >
+                            <div class="d-flex ">
+                                <button type="button" [routerLink]="['crear-editar', accionBebida, tipo.id]" class="btn btn-outline-primary">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </button>
                                 <button type="button" class="btn btn-outline-danger ms-4" data-toggle="modal" data-target="#EliminarBebida" (click)="DataEntidad(tipo)" aria-label="Borrar Tipo">
@@ -101,9 +87,10 @@
                             </div>
                         </td>
                     </tr>
-                </tbody>
-            </table>
+                </ng-template>
+            </p-table>
         </section>
+        
     </div>
 
 </div>
@@ -116,19 +103,19 @@
 <!-- Modal para eliminar tipo de artículo -->
 <div class="modal fade" id="EliminarMaestro" tabindex="-1" role="dialog" aria-labelledby="modalCrearTipoLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
+        <div class="modal-content bg-dark">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalCrearTipoLabel">Desea usted eliminar este Receta?</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body text-center">
+            <div class="modal-body text-center bg-dark">
                 
                 <p>Esta seguro de que quiere eliminar esta Receta?</p>
 
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer bg-dark">
                 <button type="button" class="btn btn-danger" (click)="RecetaArticulo()">Eliminar</button>
                 <button type="button" class="btn btn-primary" data-dismiss="modal">Volver</button>
             </div>
@@ -139,19 +126,19 @@
 
 <div class="modal fade" id="EliminarBebida" tabindex="-1" role="dialog" aria-labelledby="modalCrearTipoLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
+        <div class="modal-content bg-dark">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalCrearTipoLabel">Desea usted eliminar esta Bebida?</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body text-center">
+            <div class="modal-body text-center bg-dark">
                 
                 <p>Esta seguro de que quiere eliminar esta Bebida?</p>
 
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer bg-dark">
                 <button type="button" class="btn btn-danger" (click)="eliminarBebida()">Eliminar</button>
                 <button type="button" class="btn btn-primary" data-dismiss="modal">Volver</button>
             </div>
@@ -164,29 +151,40 @@
 
 <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
+        <div class="modal-content bg-dark">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalCrearTipoLabel">{{dataModal?.descripcion}}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body text-left">
-                <p><strong>Costo Unditario:</strong>  {{dataModal?.costo_unitario}}</p>
+            <div class="modal-body text-left bg-dark">
+                <p><strong>Costo Unditario:</strong>  {{dataModal?.costo_unitario | currency }}</p>
                 <p><strong>Tipo de Articulo:</strong>  {{dataModal?.tipo_articulo?.description}}</p>
                 <p><strong>Unidad de Medida:</strong>  {{ dataModal?.conversion_UM?.uni_medida}} / {{ dataModal.conversion_UM?.seg_umedida}}</p>
                 <ng-container *ngIf="dataModal.receta && dataModal.receta.length > 0;">
                     <h6 class="text-center">Receta:</h6>
 
-                    <span class="card text-center" *ngFor="let item of dataModal.receta">
-                        <div class="card-header text-center bg-success " > 
-                            {{item.disponibilidad_articulo.maestro_articulo.descripcion}}
-                        </div>
-                        <div class="card-body">
-                          <p><strong>Cantidad Necesaria:</strong> {{item.cant_necesaria}} </p>
-                          <!-- <p><strong>Cantidad Fisica:</strong> {{item.cant_fisica}}</p> -->
-                        </div>
-                    </span>
+                    <p-table #dt [value]="dataModal.receta" [paginator]="true" [rows]="5" [rowsPerPageOptions]="[5, 10, 20]" class="custom-datatable">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th pSortableColumn="disponibilidad_articulo.maestro_articulo.descripcion">
+                                    Descripción
+                                    <p-sortIcon field="disponibilidad_articulo.maestro_articulo.descripcion"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="cant_necesaria">
+                                    Cantidad Necesaria
+                                    <p-sortIcon field="cant_necesaria"></p-sortIcon>
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-rowData>
+                            <tr>
+                                <td>{{ rowData.disponibilidad_articulo.maestro_articulo.descripcion }}</td>
+                                <td class="text-center">{{ rowData.cant_necesaria }} </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
                 </ng-container>
                 
                 
@@ -196,123 +194,46 @@
             
         </div>
     </div>
-
-    <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalCrearTipoLabel">{{dataModal?.descripcion}}</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body text-left">
-                <p><strong>Costo Unditario:</strong>  {{dataModal?.costo_unitario}}</p>
-                <p><strong>Tipo de Articulo:</strong>  {{dataModal?.tipo_articulo?.description}}</p>
-                <p><strong>Unidad de Medida:</strong>  {{ dataModal?.conversion_UM?.uni_medida}} / {{ dataModal.conversion_UM?.seg_umedida}}</p>
-                <ng-container *ngIf="dataModal.receta && dataModal.receta.length > 0;">
-                    <h6 class="text-center">Receta:</h6>
-
-                    <span class="card text-center" *ngFor="let item of dataModal.receta" >
-                        <div class="card-header text-center bg-success"> 
-                            {{item.disponibilidad_articulo.maestro_articulo.descripcion}}
-                        </div>
-                        <div class="card-body">
-                          <p><strong>Cantidad Necesaria:</strong> {{item.cant_necesaria}} </p>
-                          <!-- <p><strong>Cantidad Fisica:</strong> {{item.cant_fisica}}</p> -->
-                        </div>
-                    </span>
-                </ng-container>
-                
-                
-                
-
-            </div>
-            
-        </div>
-    </div>
-</div>
 </div>
 
 
 <div class="modal fade" id="BebidaModal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
+        <div class="modal-content bg-dark">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalCrearTipoLabel">{{dataModal?.NombreArticulo?.descripcion}}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body text-left">
-                <p><strong>Costo Unditario:</strong>  {{dataModal?.NombreArticulo?.costo_unitario}}</p>
+            <div class="modal-body text-left bg-dark">
+                <p><strong>Costo Unditario:</strong>  {{dataModal?.NombreArticulo?.costo_unitario | currency }}</p>
                 <p><strong>Tipo de Articulo:</strong>  {{dataModal?.NombreArticulo?.tipo_articulo?.description}}</p>
                 <p><strong>Medida total:</strong>  {{dataModal?.cantidadTotalRecipiente}} ml</p>
 
                 
                     <h6 class="text-center">Receta:</h6>
                     
-                        <span class="card text-center">
-                            <div class="card-header text-center bg-success"> 
-                                {{dataModal?.PrimerComponenteArticulo?.descripcion}} 
-                            </div>
-                            <div class="card-body">
-                            <p><strong>Cantidad Necesaria:</strong> {{dataModal?.primerComponenteCantidad}} %</p>
-                            <!-- <p><strong>Cantidad Fisica:</strong> {{item.cant_fisica}}</p> -->
-                            </div>
-                        </span>
-
-                        <span class="card text-center">
-                            <div class="card-header text-center bg-success"> 
-                                {{dataModal?.SegundoComponenteArticulo?.descripcion}}
-                            </div>
-                            <div class="card-body">
-                            <p><strong>Cantidad Necesaria:</strong> {{dataModal?.segundoComponenteCantidad}} %</p>
-                            <!-- <p><strong>Cantidad Fisica:</strong> {{item.cant_fisica}}</p> -->
-                            </div>
-                        </span>
-
-                        <ng-component *ngIf="dataModal?.TercerComponenteArticulo !== null">
-                            <span class="card text-center">
-                                <div class="card-header text-center bg-success"> 
-                                    {{dataModal?.TercerComponenteArticulo?.descripcion}}
-                                </div>
-                                <div class="card-body">
-                                <p><strong>Cantidad Necesaria:</strong> {{dataModal?.tercerComponenteCantidad}} %</p>
-                                <!-- <p><strong>Cantidad Fisica:</strong> {{item.cant_fisica}}</p> -->
-                                </div>
-                            </span>
-    
-
-                        </ng-component>
-
-                        <ng-component *ngIf="dataModal?.CuartoComponenteArticulo !== null">
-                            <span class="card text-center">
-                                <div class="card-header text-center bg-success"> 
-                                    {{dataModal?.CuartoComponenteArticulo?.descripcion}}
-                                </div>
-                                <div class="card-body">
-                                <p><strong>Cantidad Necesaria:</strong> {{dataModal?.cuartoComponenteCantidad}} %</p>
-                                <!-- <p><strong>Cantidad Fisica:</strong> {{item.cant_fisica}}</p> -->
-                                </div>
-                            </span>
-    
-
-                        </ng-component>
-
-                        <ng-component *ngIf="dataModal?.QuintoComponenteArticulo !== null">
-                            <span class="card text-center">
-                                <div class="card-header text-center bg-success"> 
-                                    {{dataModal?.QuintoComponenteArticulo?.descripcion}}
-                                </div>
-                                <div class="card-body">
-                                <p><strong>Cantidad Necesaria:</strong> {{dataModal?.quintoComponenteCantidad}} %</p>
-                                <!-- <p><strong>Cantidad Fisica:</strong> {{item.cant_fisica}}</p> -->
-                                </div>
-                            </span>
-    
-
-                        </ng-component>
+                    <p-table #dt [value]="recetaList" [paginator]="true" [rows]="5" [rowsPerPageOptions]="[5, 10, 20]" class="custom-datatable">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th pSortableColumn="descripcion">
+                                    Descripción
+                                    <p-sortIcon field="descripcion"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="cantidadNecesaria">
+                                    Cantidad Necesaria
+                                    <p-sortIcon field="cantidadNecesaria"></p-sortIcon>
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-rowData>
+                            <tr>
+                                <td>{{ rowData.descripcion }}</td>
+                                <td class="text-center">{{ rowData.cantidadNecesaria }} %</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
                         
 
 
@@ -333,14 +254,14 @@
 
 <div class="modal fade" id="RecetaModal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
+        <div class="modal-content bg-dark">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalCrearTipoLabel">¿Qué receta desea crear?</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body text-center" >
+            <div class="modal-body text-center bg-dark" >
                 <label for="">Elija la opcion requerida:</label>
                 <br>
                 <select id="tipoReceta" [(ngModel)]="tipoRecetaSeleccionada">
@@ -349,7 +270,7 @@
                 </select>
             </div>
 
-            <div class="modal-footer">
+            <div class="modal-footer bg-dark">
                 <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="Reenviar()">Guardar</button>
             </div>
         </div>

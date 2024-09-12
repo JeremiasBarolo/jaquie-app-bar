@@ -1,14 +1,14 @@
 <app-breadcrumbs [titulo]= 'breadcrumbItems' class="mb-3"></app-breadcrumbs>
 
 <ng-container *ngIf="accion === 'receta'">
-  <div class="container">
-    <div class="card mb-3 border border-0 mx-auto">
-      <div class="card-body">
+  <div class="container bg-dark">
+    <div class="card mb-3 border border-0 mx-auto bg-dark">
+      <div class="card-body bg-dark">
         <form [formGroup]="form">
 
             <div class="form-group">
                 <label for="maestro">Artículo para la receta:</label>
-                <select class="form-control" id="maestro" formControlName="maestro">
+                <select class="form-control bg-dark" id="maestro" formControlName="maestro">
                     <option *ngFor="let maestro of listMaestro" [value]="maestro.id">{{maestro.descripcion}}</option>
                 </select>
                 <div *ngIf="form.get('maestro')?.invalid && form.get('maestro')?.touched" class="text-danger">
@@ -21,10 +21,10 @@
       <div class="row mt-4 ml-3">
         <div class="col-md-6 text-center">
           <h6>Articulos Disponibles</h6>
-          <div class="card mb-" style="height: 550px; overflow-y: auto;">
-            <div class="card-body">
+          <div class="card bg-dark" style="height: 550px; overflow-y: auto;">
+            <div class="card-body bg-dark">
               <ul class="list-group" *ngFor="let entity of listDisponibilidad">
-                <li class="list-group-item d-flex justify-content-between align-items-center">
+                <li class="list-group-item d-flex justify-content-between align-items-center bg-dark">
                   {{ entity.maestro_articulo.descripcion }}
                   <button class="btn btn-success" (click)="selectedEntity(entity)">Agregar a Receta</button>
                 </li>
@@ -37,9 +37,9 @@
         <div class="col-md-5 text-center">
           <h6>Articulos Seleccionados</h6>
           <div class="card mb-3" style="height: 550px; overflow-y: auto;">
-            <div class="card-body">
+            <div class="card-body bg-dark">
               <ul class="list-group" *ngFor="let entity of selectedEntities; let i = index">
-                <li class="list-group-item">
+                <li class="list-group-item bg-dark">
                   <div>
                     <p>{{ entity.maestro_articulo.descripcion }}</p>
                   </div>
@@ -74,14 +74,14 @@
 </ng-container>
 
 <ng-container *ngIf="accion === 'bebida'">
-  <div class="container">
-    <div class="card mb-3 border border-0 mx-auto">
-      <div class="card-body">
+  <div class="container bg-dark">
+    <div class="card mb-3 border border-0 mx-auto bg-dark">
+      <div class="card-body bg-dark">
         <form [formGroup]="form">
 
             <div class="form-group">
                 <label for="maestro">Artículo para la receta:</label>
-                <select class="form-control" id="maestro" formControlName="maestro">
+                <select class="form-control bg-dark" id="maestro" formControlName="maestro">
                     <option *ngFor="let maestro of listMaestro" [value]="maestro.id">{{maestro.descripcion}}</option>
                 </select>
                 <div *ngIf="form.get('maestro')?.invalid && form.get('maestro')?.touched" class="text-danger">
@@ -91,7 +91,7 @@
 
             <div class="form-group">
               <label for="recipiente">Recipiente:</label>
-              <select class="form-control" id="recipiente" formControlName="recipiente">
+              <select class="form-control bg-dark" id="recipiente" formControlName="recipiente">
                   <option value="500">Vaso Pequeño (500ml)</option>
                   <option value="750">Vaso Mediano (750ml)</option>
                   <option value="1000">Vaso Grande (1000ml)</option>
@@ -106,12 +106,12 @@
       </div>
   
       <div class="row mt-4 ml-3">
-        <div class="col-md-6 text-center">
+        <div class="col-md-6 text-center bg-dark">
           <h6>Articulos Disponibles</h6>
-          <div class="card mb-" style="height: 550px; overflow-y: auto;">
-            <div class="card-body">
+          <div class="card bg-dark" style="height: 550px; overflow-y: auto;">
+            <div class="card-body bg-dark">
               <ul class="list-group" *ngFor="let entity of listDisponibilidad">
-                <li class="list-group-item d-flex justify-content-between align-items-center">
+                <li class="list-group-item d-flex justify-content-between align-items-center bg-dark">
                   {{ entity.maestro_articulo.descripcion }}
                   <button class="btn btn-success" (click)="selectedEntity(entity)">Agregar a Receta</button>
                 </li>
@@ -123,10 +123,10 @@
         <!-- Lista de Insumos Seleccionados -->
         <div class="col-md-5 text-center">
           <h6>Articulos Seleccionados</h6>
-          <div class="card mb-3" style="height: 550px; overflow-y: auto;">
+          <div class="card mb-3 bg-dark" style="height: 550px; overflow-y: auto; " >
             <div class="card-body">
               <ul class="list-group" *ngFor="let entity of selectedEntities; let i = index">
-                <li class="list-group-item">
+                <li class="list-group-item bg-dark">
                   <div>
                     <p>{{ entity.maestro_articulo.descripcion }}</p>
                   </div>

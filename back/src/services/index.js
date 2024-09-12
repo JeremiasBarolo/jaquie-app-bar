@@ -11,6 +11,7 @@ const ventaService = require('./venta');
 const pedido_stockService = require('./pedido_stock');
 const pedido_produccionService = require('./pedido_produccion');
 const BebidasService = require('./Bebidas');
+const TipoFormaPagosService = require('./TipoFormaPagos');
 
 
 
@@ -27,5 +28,6 @@ module.exports = {
     ventaService,
     pedido_stockService,
     pedido_produccionService,
-    BebidasService
+    BebidasService,
+    TipoFormaPagosService
 };

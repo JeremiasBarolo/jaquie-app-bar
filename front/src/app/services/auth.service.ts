@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import {jwtDecode} from 'jwt-decode'; 
+ 
 
 @Injectable({
   providedIn: 'root'
@@ -32,8 +34,45 @@ export class AuthService {
     }
     return false;
   }
+ 
+
+
+  isAllowed(): any {
+    const token = this.getToken();
+    if (token) {
+      const decodedToken = this.decodeToken(token);
+      if(decodedToken.rol == 'ADMIN'){
+        return true;
+      }else{
+        return false;
+      }
+      
+    }
+    
+  }
+
+  
+
+  private decodeToken(token: string): any {
+    try {
+      return jwtDecode(token); 
+    } catch (Error) {
+      return null;
+    }
+  }
+
+  getUserData(): Observable<any> {
+    const token = this.getToken();
+    if (token) {
+      const decodedToken = this.decodeToken(token);
+      return of(decodedToken); 
+    }
+    return of(null);
+  }
 
   logout(): void {
     localStorage.removeItem('token');
   }
 }
+
+

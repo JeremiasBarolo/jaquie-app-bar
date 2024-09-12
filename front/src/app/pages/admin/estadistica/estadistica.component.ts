@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { EstadisticaService } from '../../../services/estadistica.service';
 import { Subject, takeUntil } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-estadistica',
@@ -18,10 +19,46 @@ export class EstadisticaComponent implements OnInit {
 
   chartOptions: any = {
     chart: {
-      type: 'line'
+      type: 'line',
+      foreColor: '#000',  
     },
     xaxis: {
       categories: [],
+      labels: {
+        style: {
+          colors: '#000',  
+          fontSize: '12px',
+          fontFamily: 'Arial, sans-serif',
+          fontWeight: 400,
+        }
+      }
+    },
+    yaxis: {
+      labels: {
+        style: {
+          colors: '#000',  
+          fontSize: '12px',
+          fontFamily: 'Arial, sans-serif',
+          fontWeight: 400,
+        }
+      }
+    },
+    dataLabels: {
+      enabled: true,
+      style: {
+        colors: ['#000'],  
+        fontSize: '12px',
+        fontFamily: 'Arial, sans-serif',
+        fontWeight: 'bold',
+      }
+    },
+    tooltip: {
+      enabled: true,
+      style: {
+        fontSize: '12px',
+        fontFamily: 'Arial, sans-serif',
+        colors: ['#000'],  
+      }
     },
     series: [
       {
@@ -30,8 +67,11 @@ export class EstadisticaComponent implements OnInit {
       }
     ]
   };
+  
+  
+  
 
-  constructor(private estadisticasService: EstadisticaService) { }
+  constructor(private estadisticasService: EstadisticaService, private router:Router) { }
 
   ngOnInit(): void {
     this.obtenerEstadisticas();
@@ -138,5 +178,9 @@ export class EstadisticaComponent implements OnInit {
         console.error('Error al borrar todas las estadísticas:', error);
       }
     );
+  }
+
+  verPDF(id: number) {
+    this.router.navigate(['/admin/estadisticas/ver-pdf', id]);
   }
 }

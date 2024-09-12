@@ -1,181 +1,124 @@
 import { Component, OnInit } from '@angular/core';
 import { MaestroArticulosService } from '../../services/maestro-articulos.service';
-import { DisponibilidadArticulosService } from '../../services/disponibilidad-articulos.service';
-import { RecetasService } from '../../services/recetas.service';
 import { BebidasService } from '../../services/bebidas.service';
+import { DisponibilidadArticulosService } from '../../services/disponibilidad-articulos.service';
 
 @Component({
   selector: 'app-consulta-disponibilidad',
   templateUrl: './consulta-disponibilidad.component.html',
-  styleUrl: './consulta-disponibilidad.component.css'
+  styleUrls: ['./consulta-disponibilidad.component.css']
 })
 export class ConsultaDisponibilidadComponent implements OnInit {
-  breadcrumbItems: string[] = ['Stock Disponible','Inicio', 'Stock Disponible'];
+  breadcrumbItems: string[] = ['Stock Disponible', 'Inicio', 'Stock Disponible'];
   maestros: any[] = [];
-  disponibilidades: any[] = [];
-  recetas: any[] = [];
-  bebidas:any[] = []
-  productos:any[] = []
+  bebidas: any[] = [];
+  productos: any[] = [];
   ProductosElaborados: any[] = [];
   BebidasStock: any[] = [];
-  filteredProductos: any[] = [];
-  filteredBebidas: any[] = [];
-  
+  filteredData: any[] = [];
+  disponibilidad: any[]=[];
+  listDisponibilidad: any[] = [];
+  allData: any[] = [];
 
   constructor(
     private maestroService: MaestroArticulosService,
-    private disponibilidadService: DisponibilidadArticulosService,
-    private recetasService: RecetasService,
-    private bebidasService: BebidasService
+    private bebidasService: BebidasService,
+    private disponibilidadService: DisponibilidadArticulosService
   ) { }
-
 
   ngOnInit(): void {
     this.loadAllEntities();
     
-    
-    
   }
 
-  loadAllEntities(){
+  loadAllEntities() {
     this.maestroService.getAll().subscribe((data: any) => {
-      
-      
-      this.maestros.push(...data);
+      this.maestros = data;
       this.calcularRecetas(this.maestros);
     });
 
     this.bebidasService.getAll().subscribe((data: any) => {
-      this.bebidas.push(...data)
-      this.calcularBebidas(this.bebidas)
+      this.bebidas = data;
+      this.calcularBebidas(this.bebidas);
     });
 
-    
+    this.disponibilidadService.getAll().subscribe((data: any) => {
+      data.map( (element: { maestro_articulo: { tipoId: number; }; }) =>{
+        if(element.maestro_articulo.tipoId == 2){
+          this.disponibilidad.push(element) 
+        }
+      })
+      this.calcularComidas(this.disponibilidad);
+    });
+
+    this.allData = [...this.ProductosElaborados];
+    this.filteredData = [...this.allData];
   }
 
   calcularRecetas(maestros: any[]) {
-    this.productos = []; 
-    maestros.map((element: any) => {
-      if (element.tipo_articulo.description === 'Productos Elaborados') {
-        this.productos.push(element);
-      }
-    });
-    
-    this.productos.forEach((productoElaborado: any) => {
+    this.productos = maestros.filter((element: any) => element.tipo_articulo.description === 'Productos Elaborados');
+
+    this.ProductosElaborados = this.productos.map((productoElaborado: any) => {
       const cantidadMaxima = this.calcularCantidadMaximaProductoElaborado(productoElaborado);
+      return {
+        id: productoElaborado.id,
+        name: productoElaborado.descripcion,
+        cantidadMaxima: cantidadMaxima,
+        tipo: 'Producto Elaborado'
+      };
+    });
 
-      if(cantidadMaxima === Infinity){
-        this.ProductosElaborados.push({
-          id: productoElaborado.id,
-          name: productoElaborado.descripcion,
-          cantidadMaxima: 0,
-        })
-      }else{
-        this.ProductosElaborados.push({
-          id: productoElaborado.id,
-          name: productoElaborado.descripcion,
-          cantidadMaxima: cantidadMaxima,
-        })
-      }
-      
-    })
-
-    this.filteredProductos = [...this.ProductosElaborados]
-    
-
-
+    this.allData = [...this.ProductosElaborados];
+    this.filteredData = [...this.allData];
   }
 
-
-
-
-  calcularBebidas(bebidas: any[]){  
+  calcularBebidas(bebidas: any[]) {
     this.bebidasService.create({traerStock:true}).subscribe((data: any) => {
       this.BebidasStock.push(...data)
-      this.filteredBebidas = [...this.BebidasStock]
+      this.allData = [...this.allData, ...this.BebidasStock];
+      this.filteredData = [...this.allData]
     })
 
-    
-    
   }
 
-
-  
-calcularCantidadMaximaProductoElaborado(productoElaborado: any): number {
-  let cantidadMaxima = Infinity; 
-  for (const receta of productoElaborado.receta) {
-    const disponibilidad = receta.disponibilidad_articulo;
-    if (disponibilidad && disponibilidad.cant_disponible !== null) {
-      const cantidadNecesaria = receta.cant_necesaria;
-      const cantidadDisponible = disponibilidad.cant_disponible;
-      const cantidadPosible = Math.floor(cantidadDisponible / cantidadNecesaria);
-      cantidadMaxima = Math.min(cantidadMaxima, cantidadPosible);
-    } else {
-      cantidadMaxima = 0;
-      break; 
+  calcularCantidadMaximaProductoElaborado(productoElaborado: any): number {
+    let cantidadMaxima = Infinity;
+    for (const receta of productoElaborado.receta) {
+      const disponibilidad = receta.disponibilidad_articulo;
+      if (disponibilidad && disponibilidad.cant_disponible !== null) {
+        const cantidadNecesaria = receta.cant_necesaria;
+        const cantidadDisponible = disponibilidad.cant_disponible;
+        const cantidadPosible = Math.floor(cantidadDisponible / cantidadNecesaria);
+        cantidadMaxima = Math.min(cantidadMaxima, cantidadPosible);
+      } else {
+        cantidadMaxima = 0;
+        break;
+      }
     }
+    return cantidadMaxima;
   }
 
-  return cantidadMaxima;
-}
 
-calcularCantidadExactaBebida(componentes:any[]){
-  let componentes_exactos: any[] = []
-
-
-  componentes.map(async receta => {
-    let alto = receta.cantidadMaxima * receta.cantidad
-    let total = alto / 100
-
-    let cant_principal = total / 1000
-    let cant_principal_exacta = cant_principal 
-
-    componentes_exactos.push({
-      id: receta.id,
-      cantidad: cant_principal_exacta,
-      cantidadMaxima: receta.cantidadMaxima,
+  calcularComidas(disponibilidad:any){
+    this.disponibilidad = disponibilidad.map((element: { id: any; maestro_articulo: { descripcion: any; }; cant_disponible: any; }) => {
+      return {
+        id: element.id,
+        name: element.maestro_articulo.descripcion,
+        cantidadMaxima: element.cant_disponible,
+        tipo: 'Comida'
+      }
     })
-  
-  })
-
-  return componentes_exactos
-
-
-}
-
-traerComponentesDeBebida(bebida:any ){
-
-  let componentes = []
-  
-
-  for (const key of ['primerComponente', 'segundoComponente', 'tercerComponente', 'cuartoComponente', 'quintoComponente']) {
-    if (bebida[key] !== null && bebida[`${key}Cantidad`] !== null) {
-      componentes.push({
-        id: bebida[key],
-        cantidad: bebida[`${key}Cantidad`],
-        cantidadMaxima:bebida.cantidadTotalRecipiente
-      });
-    }
+    this.allData = [...this.allData, ...this.disponibilidad];
+    this.filteredData = [...this.allData];
   }
 
-  return componentes
-}
-
-
-applyFilterProductos(event: any): void {
-  const value = event.target.value;
   
-  this.filteredProductos = this.ProductosElaborados.filter(insumo => {
-    return insumo.name.toLowerCase().includes(value.toLowerCase());
-  });
-}
 
-applyFilterBebidas(event: any): void {
-  const value = event.target.value;
-  
-  this.filteredBebidas = this.BebidasStock.filter(insumo => {
-    return insumo.name.toLowerCase().includes(value.toLowerCase());
-  });
-}
-
+  applyFilter(event: any): void {
+    const value = event.target.value;
+    
+    this.filteredData = this.allData.filter(disponible => {
+      return disponible.name.toLowerCase().includes(value.toLowerCase());
+    });
+  }
 }

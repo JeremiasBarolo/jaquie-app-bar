@@ -17,6 +17,10 @@ module.exports = (sequelize, DataTypes) => {
           foreignKey: 'ventaId',
         
         });
+        venta.belongsTo(models.TipoFormaPagos, {
+          foreignKey: 'tipoFormaPagoId',
+          onUpdate: 'CASCADE',
+        });
 
       
 
@@ -27,7 +31,6 @@ module.exports = (sequelize, DataTypes) => {
     mesa: DataTypes.STRING,
     precio: DataTypes.INTEGER,
     total: DataTypes.INTEGER,
-    forma_pago: DataTypes.STRING,
     estado: DataTypes.STRING
   }, {
     sequelize,

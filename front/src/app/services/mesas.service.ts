@@ -42,8 +42,6 @@ export class MesasService {
   }
 
   sumarPedido(id: number): Observable<any> {
-    console.log('ase');
-    
     return this.http.delete<any>(`http://localhost:8081/pedidosVenta/sumar/${id}`)
   }
 

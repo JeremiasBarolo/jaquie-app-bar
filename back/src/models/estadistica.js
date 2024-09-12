@@ -10,13 +10,24 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      estadistica.belongsTo(models.maestro_articulos, {
+        foreignKey: 'mejorArticuloId',
+        as: 'mejorArticulo',
+        onUpdate: 'CASCADE',
+      });
+
+      estadistica.hasMany(models.ProductosDelDia, {
+        foreignKey: 'estadisticaId',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      });
     }
   }
   estadistica.init({
     costo_total: DataTypes.INTEGER,
     recaudacion: DataTypes.INTEGER,
-    profit: DataTypes.INTEGER
+    profit: DataTypes.INTEGER,
+    totalArticulo: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'estadistica',

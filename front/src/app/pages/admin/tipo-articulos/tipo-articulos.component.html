@@ -49,7 +49,7 @@
           
         </div>
 
-        <br><br>
+        
         <div class="col col-md-6">
 
 
@@ -82,7 +82,7 @@
               <ng-template pTemplate="body" let-rowData>
                 <tr>
                   <td>{{ rowData.cant_principal}} {{ rowData.uni_medida }}</td>
-                  <td> ====> </td>
+                  <td> ==> </td>
                   <td>{{ rowData.cant_secundaria }} {{ rowData.seg_umedida }}</td>
                   <td>
                     <button data-target="#modalCrearConversion" data-toggle="modal" (click)="editarConversion(rowData)"routerLinkActive="router-link-active"
@@ -107,18 +107,18 @@
 <!-- Modal para crear un nuevo tipo de artículo -->
 <div class="modal fade" id="modalCrearTipo" tabindex="-1" role="dialog" aria-labelledby="modalCrearTipoLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
+        <div class="modal-content bg-dark bg-dark">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalCrearTipoLabel">Crear/Editar Tipo de Artículo</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body bg-dark">
                 <form [formGroup]="tipoForm" (ngSubmit)="guardarNuevoTipo()">
                     <div class="form-group">
                       <label for="nombreTipo">Descricion</label>
-                      <input type="text" class="form-control" id="nombreTipo" formControlName="description">
+                      <input type="text" class="form-control bg-dark" id="nombreTipo" formControlName="description">
                       <div *ngIf="tipoForm.get('nombre')?.invalid && tipoForm.get('nombre')?.touched" class="text-danger">
                         Descripcion del tipo es requerido
                       </div>
@@ -134,14 +134,14 @@
 <!-- Modal para eliminar tipo de artículo -->
 <div class="modal fade" id="EliminarTipo" tabindex="-1" role="dialog" aria-labelledby="modalCrearTipoLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
+        <div class="modal-content bg-dark">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalCrearTipoLabel">Desea usted eliminar este Tipo de Articulo?</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body text-center">
+            <div class="modal-body text-center bg-dark">
                 
                 <p>Eliminar este tipo de Articulo causara que todas las entidades que estes enlazadas a el queden sin un tipo de articulo definido.</p>
 
@@ -159,7 +159,7 @@
 <!-- Modal para crear un nuevo tipo de artículo -->
 <div class="modal fade" id="modalCrearConversion" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
+        <div class="modal-content bg-dark">
             <div class="modal-header">
                 <h5 class="modal-title" id="">Crear/Editar Tipo de Artículo</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -171,26 +171,26 @@
                     <div class="form-group">
 
                       <label for="nombreTipo">Unidad Principal</label>
-                      <input type="text" class="form-control" id="nombreTipo" formControlName="uni_medida">
+                      <input type="text" class="form-control bg-dark" id="nombreTipo" formControlName="uni_medida">
                       <div *ngIf="tipoForm.get('uni_medida')?.invalid && tipoForm.get('uni_medida')?.touched" class="text-danger">
                         La Unidad Principal es requerida.
                       </div>
 
                       <label for="nombreTipo">Valor Principal</label>
-                      <input type="text" class="form-control" id="nombreTipo" formControlName="cant_principal">
+                      <input type="text" class="form-control bg-dark" id="nombreTipo" formControlName="cant_principal">
                       <div *ngIf="tipoForm.get('seg_umedida')?.invalid && tipoForm.get('seg_umedida')?.touched" class="text-danger">
                         
                         La Cantidad Principal es requerida.
                       </div>
 
                       <label for="nombreTipo">Unidad Secundaria</label>
-                      <input type="text" class="form-control" id="nombreTipo" formControlName="seg_umedida">
+                      <input type="text" class="form-control bg-dark" id="nombreTipo" formControlName="seg_umedida">
                       <div *ngIf="tipoForm.get('cant_principal')?.invalid && tipoForm.get('cant_principal')?.touched" class="text-danger">
                         La Unidad Secundaria es requerida.
                       </div>
 
                       <label for="nombreTipo">Valor Secundario</label>
-                      <input type="text" class="form-control" id="nombreTipo" formControlName="cant_secundaria">
+                      <input type="text" class="form-control bg-dark" id="nombreTipo" formControlName="cant_secundaria">
                       <div *ngIf="tipoForm.get('nombre')?.invalid && tipoForm.get('nombre')?.touched" class="text-danger">
                          La Cantidad Secundaria es requerida.
                       </div>
@@ -206,14 +206,14 @@
 <!-- Modal para eliminar Conversion-->
 <div class="modal fade" id="EliminarConversion" tabindex="-1" role="dialog" aria-labelledby="modalCrearTipoLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
+        <div class="modal-content bg-dark">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalCrearTipoLabel">Desea usted eliminar esta Conversion?</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body text-center">
+            <div class="modal-body text-center bg-dark">
                 
                 <p>Eliminar esta conversion causara que todas las entidades que estes enlazadas a ella queden sin una conversion definida.</p>
 

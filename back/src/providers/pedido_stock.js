@@ -55,7 +55,7 @@ var models = require('../models');
                 })
             }else{
                 let conversion = await models.maestro_articulos.findByPk(Datapedido_stock.articuloId)
-                const conversionUM = conversion.conversionUM
+                const conversionUM = conversion.conversionUM || conversion.conversionId
 
                 await models.disponibilidad_articulos.create({
                     articuloId: Datapedido_stock.articuloId,

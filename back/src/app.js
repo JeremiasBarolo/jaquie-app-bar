@@ -15,7 +15,9 @@ const {
     pedido_produccionRouter,
     bebidasRouter,
     loginRouter,
-    agregarPedidoRouter
+    agregarPedidoRouter,
+    TipoFormaPagosRouter,
+    verPdfRouter
     
  } = require('./routes')
 const { initializeDB } = require('./db/initializeDB');
@@ -47,9 +49,11 @@ app.use("/pedido_stock", pedido_stockRouter)
 app.use("/pedido_produccion", pedido_produccionRouter)
 app.use("/bebidas", bebidasRouter)
 app.use("/login", loginRouter)
+app.use("/tipo_forma_pago", TipoFormaPagosRouter)
 app.use("/agregarPedido", agregarPedidoRouter)
 app.use("/traerPedidos", agregarPedidoRouter)
 app.use("/pedidosVenta", agregarPedidoRouter)
+app.use("/ver-pdf", verPdfRouter)
 
 
 

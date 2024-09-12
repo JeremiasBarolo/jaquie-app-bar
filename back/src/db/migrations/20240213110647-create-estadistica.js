@@ -10,13 +10,16 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       costo_total: {
-        type: Sequelize.INTEGER
+        type: Sequelize.BIGINT(100)
       },
       recaudacion: {
-        type: Sequelize.INTEGER
+        type: Sequelize.BIGINT(100)
       },
       profit: {
-        type: Sequelize.INTEGER
+        type: Sequelize.BIGINT(100)
+      },
+      totalArticulo: {
+        type: Sequelize.BIGINT(100)
       },
       createdAt: {
         allowNull: false,

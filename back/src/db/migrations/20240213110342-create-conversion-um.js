@@ -10,16 +10,16 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       uni_medida: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(200)
       },
       seg_umedida: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(200)
       },
       cant_principal: {
-        type: Sequelize.INTEGER
+        type: Sequelize.BIGINT(100)
       },
       cant_secundaria: {
-        type: Sequelize.INTEGER
+        type: Sequelize.BIGINT(100)
       },
       createdAt: {
         allowNull: false,
