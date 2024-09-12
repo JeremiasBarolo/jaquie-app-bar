@@ -19,7 +19,7 @@
                             <th>Costo Unit</th>
                             <th>Tipo Articulo</th>
                             <th>Unidad de Medida</th>
-                            <th>Recetas</th>
+                            
                             <th>Acciones</th>
                         </tr>
                     </ng-template>
@@ -30,14 +30,7 @@
                             <td data-target="#Modal" data-toggle="modal" (click)="showCardDetails(tipo)">{{ tipo.costo_unitario | currency }}</td>
                             <td data-target="#Modal" data-toggle="modal" (click)="showCardDetails(tipo)">{{ tipo.tipo_articulo.description }}</td>
                             <td data-target="#Modal" data-toggle="modal" (click)="showCardDetails(tipo)">{{ tipo.conversion_UM.uni_medida }} / {{ tipo.conversion_UM.seg_umedida }}</td>
-                            <td>
-                                <ng-container *ngIf="tipo.receta && tipo.receta.length > 0; else noContiene">
-                                    CONTIENE
-                                </ng-container>
-                                <ng-template #noContiene>
-                                    NO CONTIENE
-                                </ng-template>
-                            </td>
+                           
                             <td>
                                 <div class="d-flex justify-content-end">
                                     <button type="button" (click)="redirectCrearElaborado(tipo)" class="btn btn-outline-primary">

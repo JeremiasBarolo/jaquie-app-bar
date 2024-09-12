@@ -121,15 +121,24 @@
                     const costo = Math.floor(Math.random() * 100000);
                     const recaudacion = Math.floor(Math.random() * 200000) + costo; 
                     const profit = recaudacion - costo;
+
+                    
         
                     // Inserta un nuevo registro en la tabla estadistica
-                    await models.estadistica.create({
+                    let estadistica = await models.estadistica.create({
                         costo_total: costo,
                         recaudacion: recaudacion,
                         profit: profit,
-                        
+                        mejorArticuloId: 4,
+                        totalArticulo: Math.floor(Math.random() * 10) + 1,
                         createdAt: new Date(new Date().getTime() - i * 24 * 60 * 60 * 1000),
                         updatedAt: new Date() 
+                    });
+
+                    await models.ProductosDelDia.create({
+                        cantidad: Math.floor(Math.random() * 10) + 1,
+                        estadisticaId: estadistica.id,
+                        articuloId: 4,
                     });
                 }
             }

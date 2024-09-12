@@ -62,14 +62,14 @@ export class RecetasComponent {
 
       this.maestroArticulosService.getAll().pipe(takeUntil(this.destroy$)).subscribe(maestros => {
         maestros.forEach(maestro => {
-          if(maestro.tipo_articulo.description === 'Productos Elaborados'){
+          if(maestro.tipo_articulo.description === 'Productos Elaborados' && maestro.receta.length !== 0){
             this.listMaestro.push(maestro)
           }
         })
         
       })
       this.recetasService.getAll().pipe(takeUntil(this.destroy$)).subscribe(data => {
-        this.listRecetas = data;
+        this.listRecetas = data
       })
 
       this.bebidasService.getAll().pipe(takeUntil(this.destroy$)).subscribe(data => {

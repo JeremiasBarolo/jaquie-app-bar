@@ -189,6 +189,7 @@ export class CrearEditarComponent {
     if(this.accion === 'receta'){
       this.maestroArticulosService.getAll().pipe(takeUntil(this.destroy$)).subscribe(
         (maestros: any[]) => {
+          console.log('aca', maestros);
           
           this.listMaestro = maestros.filter(maestro => 
           maestro.tipo_articulo.description !== 'Bebidas' && 
@@ -209,7 +210,10 @@ export class CrearEditarComponent {
         (data: any[]) => {
           console.log(data);
           
-          this.listDisponibilidad = data
+          this.listDisponibilidad = data.filter(maestro => 
+            maestro.maestro_articulo.tipoId == 3
+          );
+
         },
         error => {
           console.error('Error al cargar la disponibilidad de artículos:', error);
