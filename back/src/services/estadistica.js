@@ -10,6 +10,10 @@
             return await estadisticaProvider.listOneestadistica(estadistica_id);
         };
 
+        const listDisponibilidad = async () => {
+            return await estadisticaProvider.listDisponibilidad();
+        };
+
         const createestadistica = async (estadisticaData) => {
             if(estadisticaData.cerrarCaja){
                 return await cerrarCaja.cerrarCaja(estadisticaData)
@@ -34,6 +38,6 @@
 
 
         module.exports = {
-        listAllestadistica, listOneestadistica, createestadistica, updateestadistica, deleteestadistica, 
+        listAllestadistica, listOneestadistica, createestadistica, updateestadistica, deleteestadistica, listDisponibilidad
         };
 

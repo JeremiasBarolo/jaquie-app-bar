@@ -39,7 +39,7 @@ export class ConsultaDisponibilidadComponent implements OnInit {
 
     this.bebidasService.getAll().subscribe((data: any) => {
       this.bebidas = data;
-      this.calcularBebidas(this.bebidas);
+      this.calcularBebidas();
     });
 
     this.disponibilidadService.getAll().subscribe((data: any) => {
@@ -72,7 +72,7 @@ export class ConsultaDisponibilidadComponent implements OnInit {
     this.filteredData = [...this.allData];
   }
 
-  calcularBebidas(bebidas: any[]) {
+  calcularBebidas() {
     this.bebidasService.create({traerStock:true}).subscribe((data: any) => {
       this.BebidasStock.push(...data)
       this.allData = [...this.allData, ...this.BebidasStock];

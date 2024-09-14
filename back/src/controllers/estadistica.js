@@ -17,6 +17,15 @@ const listAllestadistica = async (req, res) => {
   }
 };
 
+const listDisponibilidad = async (req, res) => {
+  try {
+    let estadistica = await estadisticaService.listDisponibilidad();
+    res.json(estadistica);
+  } catch (err) {
+    res.status(500).json({ action: "listAll", error: err.message });
+  }
+};
+
 const listOneestadistica = async (req, res) => {
   try {
     const id = req.params.estadistica_id;
@@ -61,7 +70,7 @@ const deleteestadistica = async (req, res) => {
 
 
 module.exports = {
-  listAllestadistica, listOneestadistica, createestadistica, updateestadistica, deleteestadistica, 
+  listAllestadistica, listOneestadistica, createestadistica, updateestadistica, deleteestadistica, listDisponibilidad
 };
 
 const formattedStats = async (stats) => {
