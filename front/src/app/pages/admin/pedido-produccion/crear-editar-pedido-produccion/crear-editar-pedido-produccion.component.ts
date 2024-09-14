@@ -39,25 +39,13 @@ export class CrearEditarPedidoProduccionComponent {
     this.form = this.fb.group({
       mesa: ['', Validators.required],
     });
-    this.agregarPedido = String(aRoute.snapshot.paramMap.get('agregarPedido'));
+    this.agregarPedido = String(aRoute.snapshot.paramMap.get('agregarPedido')) || 'falle'
     this.id = Number(aRoute.snapshot.paramMap.get('id'));
     
   }
 
   ngOnInit(): void {
-    if(this.id !== 0){
-      for (let i = 0; i < 2; i++){
-        setTimeout(() => {
-          this.loadAllEntities();
-          this.loadSelectedProducts();
-        }, 50)
-      }
-    }
-    
-    
     this.loadAllEntities();
-        this.loadSelectedProducts();
-    
     
   }
 
@@ -76,13 +64,19 @@ export class CrearEditarPedidoProduccionComponent {
 
     if (this.id !== 0) {
       try {
-        if(this.agregarPedido){
+        console.log(this.agregarPedido === null);
+        
+        if(this.agregarPedido == null){
           this.pedidoProduccionService.agregarPedido(this.id,{...this.recetaData, estado: this.entidad.estado}).pipe(takeUntil(this.destroy$)).subscribe(() => {
+            console.log('entre');
+            
             this.router.navigate(['admin/mesas']);
             this.toastr.success('Pedido Actualizado');
           });
         }else{
           this.pedidoProduccionService.update(this.id, {...this.recetaData, estado: this.entidad.estado}).pipe(takeUntil(this.destroy$)).subscribe(() => {
+            console.log('Baje');
+            
             this.router.navigate(['admin/mesas']);
             this.toastr.success('Pedido Actualizado');
           });
@@ -107,14 +101,7 @@ export class CrearEditarPedidoProduccionComponent {
  
 
   selectedEntity(entity: any) {
-    this.selectedEntities.push({ 
-      ...entity, 
-      cantidad: 1,
-      id:entity.id,
-      maestro_articulo: {
-        descripcion: entity.name 
-      }
-      });
+    this.selectedEntities.push({...entity});
     this.listMeaesto = this.listMeaesto.filter(item => item.id !== entity.id);
   }
 
@@ -127,7 +114,11 @@ export class CrearEditarPedidoProduccionComponent {
     if(this.id !== 0){
       this.estadisticasService.getDisponibilidadStock().pipe(takeUntil(this.destroy$)).subscribe(
         (maestros: any[]) => {
+         
+          
           this.listMeaesto = maestros
+          
+          this.loadSelectedProducts();
         },
         error => {
           console.error('Error al cargar los maestros de artículos:', error);
@@ -165,61 +156,59 @@ export class CrearEditarPedidoProduccionComponent {
   
   
   loadSelectedProducts() {
-    if (this.id) {
-      if(!this.agregarPedido){
+
+    if (this.id != 0) {
+      
+      // if(this.agregarPedido = null){
         this.mesasService.getById(this.id).pipe(takeUntil(this.destroy$)).subscribe(
           (res: any) => {
-            this.entidad = res
+            console.log(res);
+            this.entidad = res;
+            console.log(res.maestro_articulos);
+            
             if (res.maestro_articulos && res.maestro_articulos.length > 0) {
-              
-              const selectedEntitiesWithDescription = res.maestro_articulos.map((item: { id: any; pedido_produccion: { cant_requerida: any; }; descripcion: any; })  => {
-                return {
-                  id: item.id,
-                  cantidad: item.pedido_produccion.cant_requerida,
-                  maestro_articulo: {
-                    descripcion: item.descripcion
-                  }
-                };
-              });
-    
+
              
-              this.selectedEntities = [...selectedEntitiesWithDescription];
-              console.log('SelectedEntites:',this.selectedEntities);
-              
-              
-    
-              
-              this.listMeaesto = this.listMeaesto.filter(insumo =>
-                !this.selectedEntities.some(selected => selected.id === insumo.id)
-              );
-    
-              
+              res.maestro_articulos.forEach((item: { id: any; pedido_produccion: { cant_requerida: any; }; descripcion: any; }) => {
+                
+                const matchingInsumo = this.listMeaesto.find((insumo: { id: any }) => insumo.id === item.id);
+                
+                if (matchingInsumo) {
+                  this.selectedEntity({
+                    ...matchingInsumo,
+                    cantidad: item.pedido_produccion.cant_requerida,
+                  })
+                }
+              });
+        
             }
             this.form.patchValue({
               mesa: res.id,
-            }) 
+            });
           }
         );
   
         
-      }else{
-        this.mesasService.getById(this.id).pipe(takeUntil(this.destroy$)).subscribe(
-          (res: any) => {
-            this.entidad = res;
+      // }else{
+      //   console.log('baje');
+        
+      //   this.mesasService.getById(this.id).pipe(takeUntil(this.destroy$)).subscribe(
+      //     (res: any) => {
+      //       this.entidad = res;
         
             
-            this.listMesas = this.listMesas.filter(insumo => insumo.id === res.id);
+      //       this.listMesas = this.listMesas.filter(insumo => insumo.id === res.id);
         
             
-            this.form.patchValue({
-              mesa: res.id,
-            });
-          },
-          (error: any) => {
-            console.error('Error al obtener los datos:', error);
-          }
-        );
-      }
+      //       this.form.patchValue({
+      //         mesa: res.id,
+      //       });
+      //     },
+      //     (error: any) => {
+      //       console.error('Error al obtener los datos:', error);
+      //     }
+      //   );
+      // }
     }
       
   }
