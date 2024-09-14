@@ -6,6 +6,7 @@ import { MaestroArticulosService } from '../../../../services/maestro-articulos.
 import { PedidoProduccionService } from '../../../../services/pedido-produccion.service';
 import { MesasService } from '../../../../services/mesas.service';
 import { Subject, takeUntil } from 'rxjs';
+import { EstadisticaService } from '../../../../services/estadistica.service';
 
 @Component({
   selector: 'app-crear-editar-pedido-produccion',
@@ -30,6 +31,7 @@ export class CrearEditarPedidoProduccionComponent {
     private router: Router,
     private aRoute: ActivatedRoute,
     private maestroArticulosService: MaestroArticulosService,
+    private estadisticasService: EstadisticaService,
     private pedidoProduccionService: PedidoProduccionService,
     private mesasService: MesasService,
     private toastr: ToastrService
@@ -108,8 +110,9 @@ export class CrearEditarPedidoProduccionComponent {
     this.selectedEntities.push({ 
       ...entity, 
       cantidad: 1,
+      id:entity.id,
       maestro_articulo: {
-        descripcion: entity.descripcion 
+        descripcion: entity.name 
       }
       });
     this.listMeaesto = this.listMeaesto.filter(item => item.id !== entity.id);
@@ -122,9 +125,9 @@ export class CrearEditarPedidoProduccionComponent {
 
   loadAllEntities() {
     if(this.id !== 0){
-      this.maestroArticulosService.getAll().pipe(takeUntil(this.destroy$)).subscribe(
+      this.estadisticasService.getDisponibilidadStock().pipe(takeUntil(this.destroy$)).subscribe(
         (maestros: any[]) => {
-          this.listMeaesto = maestros.filter(maestro => maestro.tipo_articulo.description !== 'Insumos');
+          this.listMeaesto = maestros
         },
         error => {
           console.error('Error al cargar los maestros de artículos:', error);
@@ -140,9 +143,9 @@ export class CrearEditarPedidoProduccionComponent {
         }
       );
     } else {
-      this.maestroArticulosService.getAll().pipe(takeUntil(this.destroy$)).subscribe(
+      this.estadisticasService.getDisponibilidadStock().pipe(takeUntil(this.destroy$)).subscribe(
         (maestros: any[]) => {
-          this.listMeaesto = maestros.filter(maestro => maestro.tipo_articulo.description !== 'Insumos');
+          this.listMeaesto = maestros
         },
         error => {
           console.error('Error al cargar los maestros de artículos:', error);
