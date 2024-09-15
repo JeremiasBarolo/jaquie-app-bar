@@ -64,11 +64,13 @@ export class CrearEditarPedidoProduccionComponent {
 
     if (this.id !== 0) {
       try {
-        console.log(this.agregarPedido === null);
+        console.log('aaa',this.agregarPedido);
         
-        if(this.agregarPedido == null){
+        if(this.agregarPedido == 'agregarPedido'){
+          console.log('pase a agregar al pedido');
+          
           this.pedidoProduccionService.agregarPedido(this.id,{...this.recetaData, estado: this.entidad.estado}).pipe(takeUntil(this.destroy$)).subscribe(() => {
-            console.log('entre');
+            console.log('entre para enviar a nashe');
             
             this.router.navigate(['admin/mesas']);
             this.toastr.success('Pedido Actualizado');
@@ -159,7 +161,7 @@ export class CrearEditarPedidoProduccionComponent {
 
     if (this.id != 0) {
       
-      // if(this.agregarPedido = null){
+      if(this.agregarPedido == null){
         this.mesasService.getById(this.id).pipe(takeUntil(this.destroy$)).subscribe(
           (res: any) => {
             console.log(res);
@@ -189,26 +191,41 @@ export class CrearEditarPedidoProduccionComponent {
         );
   
         
-      // }else{
-      //   console.log('baje');
+      }else{
+        console.log('baje a nashe');
         
-      //   this.mesasService.getById(this.id).pipe(takeUntil(this.destroy$)).subscribe(
-      //     (res: any) => {
-      //       this.entidad = res;
+        this.mesasService.getById(this.id).pipe(takeUntil(this.destroy$)).subscribe(
+          (res: any) => {
+            this.entidad = res;
+            if (res.maestro_articulos && res.maestro_articulos.length > 0) {
+
+             
+              res.maestro_articulos.forEach((item: { id: any; pedido_produccion: { cant_requerida: any; }; descripcion: any; }) => {
+                
+                const matchingInsumo = this.listMeaesto.find((insumo: { id: any }) => insumo.id === item.id);
+                
+                if (matchingInsumo) {
+                  this.selectedEntity({
+                    ...matchingInsumo,
+                    cantidad: item.pedido_produccion.cant_requerida,
+                  })
+                }
+              });
+        
+            }
+            
+            this.listMesas = this.listMesas.filter(insumo => insumo.id === res.id);
         
             
-      //       this.listMesas = this.listMesas.filter(insumo => insumo.id === res.id);
-        
-            
-      //       this.form.patchValue({
-      //         mesa: res.id,
-      //       });
-      //     },
-      //     (error: any) => {
-      //       console.error('Error al obtener los datos:', error);
-      //     }
-      //   );
-      // }
+            this.form.patchValue({
+              mesa: res.id,
+            });
+          },
+          (error: any) => {
+            console.error('Error al obtener los datos:', error);
+          }
+        );
+      }
     }
       
   }

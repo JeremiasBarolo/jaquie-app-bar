@@ -183,6 +183,7 @@
                 let disponibilidad = await listOnedisponibilidad_articulos(insumo.id)
                 await disponibilidad.update({
                     cant_comprometida: disponibilidad.cant_comprometida - insumo.cant_restar,
+                    // cant_fisica: disponibilidad.cant_fisica - insumo.cant_restar
                 })
             } 
 
