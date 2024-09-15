@@ -1,6 +1,9 @@
 
 
     var models = require('../models');
+    const {listAllmaestro_articulos} = require('./maestro_articulos');
+    const {traerStockBebidas} = require('./Bebidas');
+    const {listAlldisponibilidad_articulos} = require('./disponibilidad_articulos');
 
     const listAllestadistica= async () => {
     try {
@@ -26,6 +29,86 @@
         throw err;
     }
     };
+
+
+    const calcularCantidadMaximaProductoElaborado = async (productoElaborado) => {
+        let cantidadMaxima = Infinity;
+        for (const receta of productoElaborado.receta) {
+            const disponibilidad = receta.disponibilidad_articulo;
+            if (disponibilidad && disponibilidad.cant_disponible !== null) {
+                const cantidadNecesaria = receta.cant_necesaria;
+                const cantidadDisponible = disponibilidad.cant_disponible;
+                const cantidadPosible = Math.floor(cantidadDisponible / cantidadNecesaria);
+                cantidadMaxima = Math.min(cantidadMaxima, cantidadPosible);
+            } else {
+                cantidadMaxima = 0;
+                break;
+            }
+        }
+        return cantidadMaxima;
+    };
+
+    const calcularComidas = async (comidas) => {
+        return comidas.map((element) => {
+            return {
+                id: element.maestro_articulo.id,
+                name: element.maestro_articulo.descripcion,
+                cantidadMaxima: element.cant_disponible,
+                cantidad:1,
+                tipo: 'Comida'
+            };
+        });
+    };
+    
+    const listDisponibilidad = async () => {
+        try {
+            let maestro = await listAllmaestro_articulos();
+            let disponibilidad = await listAlldisponibilidad_articulos()
+            let Comidas = disponibilidad.filter(maestro => maestro.maestro_articulo.tipoId == 2); 
+            let productosElaborados = maestro.filter(maestro => maestro.tipoId == 4); // Para productos elaborados
+            let Bebidas = await traerStockBebidas(); 
+            console.log(Bebidas);
+    
+            
+            productosElaborados = await Promise.all(
+                productosElaborados.map(async producto => {
+                    return {
+                        id: producto.id,
+                        name: producto.descripcion,
+                        cantidad:1,
+                        tipo: 'Bebida',
+                        cantidadMaxima: await calcularCantidadMaximaProductoElaborado(producto)
+                    };
+                })
+            );
+    
+            
+            Comidas = await calcularComidas(Comidas);
+            
+            
+            let disponibilidadTotal= [...Comidas, ...productosElaborados]
+
+            Bebidas.forEach(bebida => {
+                disponibilidadTotal.push({
+                    id: bebida.id,
+                    name: bebida.name,
+                    cantidad:1,
+                    cantidadMaxima: bebida.cantidadMaxima,
+                    tipo: 'Bebida'
+                });
+            });
+
+            
+
+            
+            return disponibilidadTotal
+    
+        } catch (err) {
+            console.error('🛑 Error when fetching disponibilidad', err);
+            throw err;
+        }
+    };
+    
 
     const listOneestadistica= async (estadistica_id) => {
     try {
@@ -153,6 +236,6 @@
 
 
     module.exports = {
-    listAllestadistica, listOneestadistica, createestadistica, updateestadistica, deleteestadistica, generarEstadisticasAleatorias
+    listAllestadistica, listOneestadistica, createestadistica, updateestadistica, deleteestadistica, generarEstadisticasAleatorias, listDisponibilidad
     };
 

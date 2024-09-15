@@ -22,7 +22,9 @@
             <div class="card-body bg-dark">
               <ul class="list-group" *ngFor="let entity of listMeaesto">
                 <li class="list-group-item d-flex justify-content-between align-items-center bg-dark">
-                  {{ entity.descripcion }}
+                  {{ entity.name }}
+                  <br>
+                  (Disponible = {{entity.cantidadMaxima}})
                   <button class="btn btn-success" (click)="selectedEntity(entity)">Agregar a Pedido</button>
                 </li>
               </ul>
@@ -38,7 +40,7 @@
               <ul class="list-group bg-dark" *ngFor="let entity of selectedEntities; let i = index">
                 <li class="list-group-item bg-dark">
                   <div>
-                    <p class="bg-dark">{{ entity.maestro_articulo.descripcion }}</p>
+                    <p class="bg-dark">{{ entity.name}}</p>
                   </div>
                   <div>
                     <label for="quantity{{ i }}">Cantidad:</label>
@@ -65,7 +67,7 @@
       </div>
       <div class="row mt-3">
         <div class="col-md-6 offset-md-3 text-center mb-3">
-          <button [routerLink]="['/admin/recetas']" type="button" class="btn btn-info">Volver</button>
+          <button [routerLink]="['/admin/pedido-produccion']" type="button" class="btn btn-info">Volver</button>
         </div>
       </div>
     </div>

@@ -15,6 +15,11 @@ export class EstadisticaService {
   
   
   //get all
+  getDisponibilidadStock(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/traerDisponibilidad`); 
+  }
+
+  //get all
   getAll(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}`); 
   }

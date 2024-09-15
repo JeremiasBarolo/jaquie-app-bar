@@ -151,9 +151,9 @@ cambiarEstado(id?: number, pedido?: any, estado?: string, devolverInsumos?: any,
 
       this.mesasService.update(id, {...pedido}).pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.toastr.success(`Mesa ${pedido.name} ${estado} exitosamente`)
-      setTimeout(() => {
-        window.location.reload();
-      }, 600);
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 600);
       })
 
 
@@ -307,9 +307,9 @@ this.mesasService.sumarPedido(this.idAccion).pipe(takeUntil(this.destroy$)).subs
   (response) => {
     if (response) {
       this.toastr.success('Pedido sumado exitosamente');
-      setTimeout(() => {
-        window.location.reload();
-      }, 600);
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 600);
     }
   },
   (error) => {

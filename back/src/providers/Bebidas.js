@@ -198,8 +198,10 @@ var models = require('../models');
                     }
                 }
                 resultados.push({
+                    id: bebida.nombre,
                     name: nombre.descripcion,
                     cantidadMaxima: cantidadMaxima,
+                    cantidad: 1,
                     tipo: 'Bebida'
                 });
             }
