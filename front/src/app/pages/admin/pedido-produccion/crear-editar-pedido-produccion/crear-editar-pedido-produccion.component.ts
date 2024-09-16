@@ -59,6 +59,8 @@ export class CrearEditarPedidoProduccionComponent {
       insumos: this.selectedEntities.map(entity => ({ id: entity.id, cantidad: entity.cantidad })),
       mesa: this.form.value.mesa,
     };
+
+
     
     
 
@@ -98,6 +100,12 @@ export class CrearEditarPedidoProduccionComponent {
       } catch (error) {
         console.log(error);
       }
+    }
+  }
+
+  validateCantidad(entity: any) {
+    if (entity.cantidad > entity.cantidadMaxima) {
+      entity.cantidad = entity.cantidadMaxima; 
     }
   }
  

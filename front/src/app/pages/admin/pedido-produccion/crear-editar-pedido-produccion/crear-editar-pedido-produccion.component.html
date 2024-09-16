@@ -44,7 +44,19 @@
                   </div>
                   <div>
                     <label for="quantity{{ i }}">Cantidad:</label>
-                    <input type="number" name="quantity{{ i }}" [(ngModel)]="entity.cantidad"/>
+                    <input 
+                      type="number" 
+                      id="quantity{{ i }}" 
+                      name="quantity{{ i }}" 
+                      [(ngModel)]="entity.cantidad" 
+                      [max]="entity.cantidadMaxima"
+                      (ngModelChange)="validateCantidad(entity)" 
+                    />
+                    
+                    <!-- Este span se mostrará solo si la cantidad excede la cantidad máxima -->
+                    <span *ngIf="entity.cantidad > entity.cantidadMaxima" class="error-message">
+                      La cantidad no puede ser mayor que {{ entity.cantidadMaxima }}.
+                    </span>
                   </div>
                   <button type="button" class="btn btn-outline-danger" aria-label="Eliminar Entidad" (click)="returnEntities(entity)">
                     <i class="fa-solid fa-trash"></i>
