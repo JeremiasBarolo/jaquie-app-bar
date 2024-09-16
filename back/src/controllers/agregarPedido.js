@@ -254,6 +254,8 @@ const sumarPedido = async (req, res) => {
                 await disponibilidad.update({
                         id: disponibilidad.id,
                         cant_fisica: disponibilidad.cant_fisica - cant_exacta,
+                        
+
                     });
                 
                 
@@ -280,7 +282,8 @@ const sumarPedido = async (req, res) => {
                     let cant_principal_exacta = total / 1000 
 
                     await disponibilidad.update({
-                        cant_fisica: disponibilidad.cant_fisica - (cant_principal_exacta * pedido.cant_requerida)
+                        cant_fisica: disponibilidad.cant_fisica - (cant_principal_exacta * pedido.cant_requerida),
+                        
                     })
 
                     
@@ -294,6 +297,7 @@ const sumarPedido = async (req, res) => {
             const disponibilidad = await models.disponibilidad_articulos.findOne({ where: { articuloId: maestro.id } });
             await disponibilidad.update({
                 cant_fisica: disponibilidad.cant_fisica - pedido.cant_requerida,
+                
             });
             
             

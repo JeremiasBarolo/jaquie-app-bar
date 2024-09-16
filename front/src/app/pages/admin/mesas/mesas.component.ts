@@ -307,12 +307,9 @@ this.mesasService.sumarPedido(this.idAccion).pipe(takeUntil(this.destroy$)).subs
   (response) => {
     if (response) {
       this.toastr.success('Pedido sumado exitosamente');
-      setTimeout(() => {
-        
         this.cardData.pedidoPreparacion = this.cardData.pedidoPreparacion.filter(
           (p: any) => p.id !== this.idAccion
         );
-      }, 600);
     }
   },
   (error) => {

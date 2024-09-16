@@ -180,13 +180,20 @@
                 
             //<================ UPDATE DE INSUMOS ==================>
             for (const insumo of insumos_recorridos) {
-                let disponibilidad = await listOnedisponibilidad_articulos(insumo.id)
-                let redondeado = parseFloat(insumo.cant_restar.toFixed(1));
+                let disponibilidad = await listOnedisponibilidad_articulos(insumo.id);
+                let redondeado = parseFloat(insumo.cant_restar.toFixed(2));
+            
+                
+                let nueva_cant_comprometida = parseFloat(disponibilidad.cant_comprometida) - redondeado;
+            
+                
+            
                 await disponibilidad.update({
-                    cant_comprometida: parseFloat(disponibilidad.cant_comprometida) - redondeado,
-                    // cant_fisica: disponibilidad.cant_fisica - insumo.cant_restar
-                })
-            } 
+                    cant_comprometida: nueva_cant_comprometida,
+                    
+                });
+            }
+                
 
             
 
